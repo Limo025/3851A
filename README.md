@@ -5,15 +5,6 @@ A full-stack marketplace web application with user authentication built using Re
 
 ---
 
-## Team
-
-| Role | Member |
-|------|--------|
-| Background Lead | Tan |
-| Methods Part 1 – System Architecture + Backend | Jimmy N |
-| Methods Part 2 – Database + Security | Kai Li |
-| Methods Part 3 – Frontend + Deployment + PM | |
-| Ethics + Integration + Editing | Jordan |
 
 ---
 
