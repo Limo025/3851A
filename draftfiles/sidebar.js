@@ -1,7 +1,16 @@
+let isOpen = false;
+
 function openNav() {
-  document.getElementById("sidebar").style.width = "400";
+  if (isOpen == true){
+      document.getElementById("sidebar").style.display = "none";
+      isOpen=false;
+  } else{
+      document.getElementById("sidebar").style.display = "block";
+      isOpen=true;
+  }
 }
 
 function closeNav() {
-  document.getElementById("sidebar").style.width = "0";
+  document.getElementById("sidebar").style.display = "none";
+  isOpen=false;
 }
