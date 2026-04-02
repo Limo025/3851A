@@ -1,0 +1,77 @@
+@font-face{ /*   FuseV2Bold, used for headings.   */
+    font-family: FuseV2Bold;
+    src: url(res/font/fuseV2bold.otf)
+}
+@font-face{ /*   FuseV2, used for sub-headings   */
+    font-family: FuseV2;
+    src: url(res/font/fusev2.otf)
+}
+@font-face{ /*   Corbel, used for plaintext  */
+    font-family: Corbel;
+    src: url(res/font/corbel.ttf)
+}
+body{
+    margin: 0;
+    background-color: #202020;
+}
+#headerElements{
+    margin-right: 15%;
+    margin-left: 12%;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+}
+#headerSection{
+    background-color: #000;
+    padding-top: 15px;
+    height: 90px;
+}
+#marketplaceLogo img{
+    position: fixed;
+    overflow-clip-margin: content-box;
+    overflow: visible;
+}
+#searchBar input[type=text]{
+    min-width: 750px;
+    min-height: 50px;
+    font-family: Corbel;
+    font-size: 28px;
+    border: 3px solid #005bf9;
+    border-radius: 25px;
+}
+#headerImage img{
+    max-width: 100%;
+    height: auto;
+    margin: 0;
+    z-index: -1;
+}
+#content{
+    background-color: white;
+    height: 20px;
+}
+#end{
+    background-color: #202020;
+    height: auto;
+    margin: 0;
+    color: white;
+    font-family: Corbel;
+}
+#end img{
+    padding: 50px;
+}
+#end p{
+    width: 500px;
+    height: fit-content;
+    padding-left: 50px;
+}
+.sidebar {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
