@@ -65,7 +65,7 @@ function App() {
                 <img src="src/icon/messagesIcon.png" alt="Messages" width={100} />
             </div>
             {/* Account */}
-            <div className="accountButton" onClick={(e) => window.location.href='/login'}>
+            <div className="accountButton" onClick={(e) => window.location.href='login.jsx'}>
                 <img src="src/icon/accountIcon.png" alt="Messages" width={100} />
             </div>
             {/* Options */}
@@ -126,10 +126,7 @@ function App() {
             <p>
                 <br />
                 <br />
-                The University of Newcastle acknowledges the traditional custodians of
-                the lands within our footprint areas: Awabakal, Darkinjung, Biripai,
-                Worimi, Wonnarua, and Eora Nations. We also pay respect to the wisdom of
-                our Elders past and present.
+                cockhead
                 <br />
                 DISCLAIMER: Every effort has been made to ensure the accuracy of the
                 information on this website. However, changes to courses and programs
