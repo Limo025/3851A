@@ -2,12 +2,81 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>marketplace-frontend</title>
+    <title>Marketplace</title>
   </head>
   <body>
+    <script type="text/javascript" src="src/js/script.js"></script>
+    <script type="text/javascript" src="src/js/sidebar.js"></script>
+    <!-- TOP PART OF THE PAGE-->
+
+    <div id="headerSection">
+        <div id="headerElements">
+        <!-- University Logo--> 
+        <div class="marketplaceLogo">
+            <a href="/">
+                <img src="src/img/logo.jpg" alt="University of Newcastle Marketplace" width="200" id="logo">
+            </a>
+        </div>
+        <!-- Search Bar -->
+        <div id="searchBar">
+            <input type="text" onkeypress="handleSearch(event)">
+        </div>
+        <!-- Icon Buttons -->
+            <!-- Messages -->
+            <div class="messageButton" onClick="window.location.href='/messages'">
+                <img src="src/icon/messagesIcon.png" alt="Messages" width="100">
+            </div>
+             <!-- Account -->
+            <div class="accountButton" onClick="window.location.href='/login'">
+                <img src="src/icon/accountIcon.png" alt="Messages" width="100">
+            </div>
+
+             <!-- Options -->
+            <div class="optionsButton">
+                <div class="optionsButtonImage">
+                    <img src="src/icon/optionsIcon.png" alt="Messages" width="100" onclick="openNav()">
+                </div>
+                <div class="sidebar" id="sidebar">
+                    <div class="sidebarContent">
+                        <div class="sidebarTop">
+                            <p>Sell</p>
+                            <p>Watchlist</p>
+                            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()" style="font-size:60px; color:white; text-decoration: none;">&times;</a>
+                            <p></p>
+                        </div>
+                        <a href="main.html"><p>Home</p></a>
+                        <p>Categories</p>
+                        <p>Message</p>
+                        <p>Purchase History</p>
+                        <p>Settings</p>
+                        <p>Help</p>
+                        <br>
+                        <p>About</p>
+                    </div>
+                </div>
+            </div>
+             
+            </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <div id="end">
+        <div id="endContents">
+        <a href="https://www.newcastle.edu.au/">
+            <img src="src/img/uniLogo.jpg" alt="University of Newcastle" width="200">
+        </a>
+        <p><br><br>The University of Newcastle acknowledges the traditional custodians of the lands
+        within our footprint areas: Awabakal, Darkinjung, Biripai, Worimi, Wonnarua, 
+        and Eora Nations. We also pay respect to the wisdom of our Elders past and 
+        present.<br>
+        DISCLAIMER: Every effort has been made to ensure the accuracy of the information
+        on this website. However, changes to courses and programs may occur. The 
+        University accepts no responsibility for any information supplied on this web 
+        site or any actions taken on the basis of the information. Users are advised 
+        to seek confirmation of the information from the relevant area of the University.</p>
+        </div>
+    </div>
   </body>
 </html>
