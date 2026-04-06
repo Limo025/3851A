@@ -1,31 +1,38 @@
 @font-face{ /*   FuseV2Bold, used for headings.   */
     font-family: FuseV2Bold;
-    src: url(res/font/fuseV2bold.otf)
+    src: url(src/font/fuseV2bold.otf)
 }
 @font-face{ /*   FuseV2, used for sub-headings   */
     font-family: FuseV2;
-    src: url(res/font/fusev2.otf)
+    src: url(src/font/fusev2.otf)
 }
 @font-face{ /*   Corbel, used for plaintext  */
     font-family: Corbel;
-    src: url(res/font/corbel.ttf)
+    src: url(src/font/corbel.ttf)
 }
 body{
     margin: 0;
     background-color: #202020;
 }
 h1{
-    font-family: FuseV2Bold;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif, Arial, Helvetica, sans-serif;
     font-size: 40px;
+}
+h3{
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif, Arial, Helvetica, sans-serif;
+    font-size: 25px;
+}
+p{
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif, Arial, Helvetica, sans-serif;
 }
 #headerElements{
     margin-right: 10%;
-    margin-left: 5%;
+    margin-left: 10%;
     display: grid;
     grid-template-columns: auto auto auto auto auto;
 }
 #headerSection{
-    background-color: #000;
+    background: linear-gradient(180deg, rgba(148, 148, 148, .9) 0, rgba(71, 71, 71, .9) 20%, rgba(19, 19, 19, .9) 40%, rgba(7, 7, 7, .93) 100%);
     padding-top: 15px;
     height: 90px;
     position: relative;
@@ -39,7 +46,7 @@ h1{
 #searchBar input[type=text]{
     min-width: 40vw;
     min-height: 70px;
-    font-family: Corbel;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif, Arial, Helvetica, sans-serif;
     font-size: 28px;
     border: 3px solid #005bf9;
     border-radius: 25px;
@@ -51,22 +58,35 @@ h1{
     z-index: -1;
 }
 #contentBackground{
-    background-color: white;
+    background: #000000;
+    background: radial-gradient(circle,rgba(0, 0, 0, 1) 55%, rgba(0, 108, 224, 1) 100%);
     min-height: 200px;
     height: fit-content;
 
 }
 #content{
-    margin-left: 20vw;
+    background: rgba(39, 39, 39, .7);
+    backdrop-filter: blur(1px) saturate(150%);
+    box-shadow: rgba(0, 0, 0, .25) 0 14px 28px, rgba(0, 0, 0, .22) 0 10px 10px;
+    color: white;
+    padding-left: 5%;
+    margin-left: 15vw;
+    margin-right: 15vw;
+    padding-top: 150px;
+    padding-bottom: 50px;
+}
+#wideContent{
+    margin-left: 10vw;
+    margin-right: 10vw;
     padding-top: 150px;
     padding-bottom: 50px;
 }
 #end{
-    background-color: #202020;
+    background: linear-gradient(0deg, rgba(148, 148, 148, .9) 0, rgba(71, 71, 71, .9) 20%, rgba(19, 19, 19, .9) 40%, rgba(7, 7, 7, .93) 100%);
     height: auto;
     margin: 0;
     color: white;
-    font-family: Corbel;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 #end img{
     padding: 50px;
@@ -89,15 +109,18 @@ h1{
   z-index: 1;
   text-align: right;
   width: 20vw;
-  height: 470px;
+  height: 500px;
   position: absolute;
+  border-bottom-left-radius: 10%;
+  border-bottom-right-radius: 10%;
   top: 90px;
   right: 0;
 
   /* decoration */
-  color: white;
-  font-family: Corbel;
-  background-color: #005bf9;
+  color: black;
+  font-weight:600;
+    background: #0055b0;
+    background: linear-gradient(180deg,rgba(0, 108, 224, 1) 54%, rgba(158, 255, 253, 1) 100%);
 
 }
 .sidebarTop p:hover{
@@ -105,12 +128,12 @@ h1{
     text-decoration: underline;
 }
 .sidebarTop{
-    background-color: #003fac;
+    background: rgba(0, 108, 224, 1);
     display: grid;
     grid-template-columns: auto auto auto auto;
     margin-right: -20px;
     font-size:25px; 
-    color:white; 
+    color:black; 
     text-decoration: none;
 }
 .sidebarContent{
@@ -123,7 +146,7 @@ h1{
     transition: font-size 0.2s;
 }
 .sidebarContent a{
-    color: white;
+    color: black;
     text-decoration: none;
 }
 .accountButton{
@@ -144,9 +167,27 @@ h1{
     width: fit-content;
     cursor: pointer;
 }
+.bigButton{
+    font-size:30px;
+    font-family: FuseV2;
+    padding: 20px;
+    position: relative;
+    border: 3px solid #005bf9;
+    border-radius: 25px;
+    background-color: white;
+    transition: background-color .2s, color .2s, border .2s;
+}
+.bigButton:hover{
+    background-color: #005bf9;
+    border: 3px solid #00225e;
+    color: white;
+    cursor: pointer;
+}
 
-
-
+.createAccountGrid{
+    display: grid;
+    grid-template-columns: auto auto ;
+}
 
 /* google button */
 .gsi-material-button {
