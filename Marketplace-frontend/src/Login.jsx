@@ -77,7 +77,7 @@ function App() {
       </button>
       <br />
       <h1> or, Create an Account</h1>
-      <button>Create an Account</button>
+      <button class="bigButton" onClick={()=> window.location.href='/createAccount'}>Create a Marketplace Account Here</button>
       <br />
     </div>
   </div>

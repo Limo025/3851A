@@ -24,7 +24,7 @@ h3{
 }
 #headerElements{
     margin-right: 10%;
-    margin-left: 5%;
+    margin-left: 10%;
     display: grid;
     grid-template-columns: auto auto auto auto auto;
 }
@@ -62,7 +62,14 @@ h3{
 
 }
 #content{
-    margin-left: 20vw;
+    margin-left: 22vw;
+    margin-right: 22vw;
+    padding-top: 150px;
+    padding-bottom: 50px;
+}
+#wideContent{
+    margin-left: 10vw;
+    margin-right: 10vw;
     padding-top: 150px;
     padding-bottom: 50px;
 }
@@ -149,9 +156,27 @@ h3{
     width: fit-content;
     cursor: pointer;
 }
+.bigButton{
+    font-size:30px;
+    font-family: FuseV2;
+    padding: 20px;
+    position: relative;
+    border: 3px solid #005bf9;
+    border-radius: 25px;
+    background-color: white;
+    transition: background-color .2s, color .2s, border .2s;
+}
+.bigButton:hover{
+    background-color: #005bf9;
+    border: 3px solid #00225e;
+    color: white;
+    cursor: pointer;
+}
 
-
-
+.createAccountGrid{
+    display: grid;
+    grid-template-columns: auto auto ;
+}
 
 /* google button */
 .gsi-material-button {
