@@ -18,6 +18,10 @@ h1{
     font-family: FuseV2Bold;
     font-size: 40px;
 }
+h3{
+    font-family: FuseV2;
+    font-size: 25px;
+}
 #headerElements{
     margin-right: 10%;
     margin-left: 5%;
