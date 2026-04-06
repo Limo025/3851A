@@ -12,7 +12,7 @@
 }
 body{
     margin: 0;
-    background-color: #202020;
+    background-color: rgba(148, 148, 148, .9)
 }
 h1{
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif, Arial, Helvetica, sans-serif;
@@ -33,7 +33,7 @@ p{
 }
 #headerSection{
     background: linear-gradient(180deg, rgba(148, 148, 148, .9) 0, rgba(71, 71, 71, .9) 20%, rgba(19, 19, 19, .9) 40%, rgba(7, 7, 7, .93) 100%);
-    padding-top: 15px;
+    padding-top: 5px;
     height: 90px;
     position: relative;
 }
@@ -59,7 +59,7 @@ p{
 }
 #contentBackground{
     background: #000000;
-    background: radial-gradient(circle,rgba(0, 0, 0, 1) 55%, rgba(0, 108, 224, 1) 100%);
+    background: radial-gradient(circle,rgba(255, 255, 255, 1) 55%, rgba(0, 108, 224, 1) 100%);
     min-height: 200px;
     height: fit-content;
 
@@ -111,8 +111,8 @@ p{
   width: 20vw;
   height: 500px;
   position: absolute;
-  border-bottom-left-radius: 10%;
-  border-bottom-right-radius: 10%;
+  border-bottom-left-radius: 20%;
+  border-bottom-right-radius: 20%;
   top: 90px;
   right: 0;
 
@@ -184,9 +184,25 @@ p{
     cursor: pointer;
 }
 
-.createAccountGrid{
+.createAccountForm{
     display: grid;
     grid-template-columns: auto auto ;
+    gap: 10px;
+    font-family: Corbel;
+    font-size: 20px;
+}
+
+.createAccountForm label{
+    font-family: Corbel;
+    font-size: 25px;
+    padding-right: 20px;
+}
+.createAccountForm input{
+    font-size: 25px;
+    font-family: FuseV2;
+    min-width: 20vw;
+    padding: 5px;
+    margin-right: 10px;
 }
 
 /* google button */
