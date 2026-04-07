@@ -2,10 +2,10 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './css/frutiger.css'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Home from './Home.jsx'
-import Login from './Login.jsx'
-import NotFound from './NotFound.jsx'
-import CreateAccount from './CreateAccount.jsx'
+import Home from './pages/Home.jsx'
+import Login from './pages/Login.jsx'
+import NotFound from './pages/NotFound.jsx'
+import CreateAccount from './pages/CreateAccount.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
