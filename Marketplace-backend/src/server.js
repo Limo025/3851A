@@ -4,6 +4,8 @@ import cors from 'cors';
 import { connectDB } from './config/mongodb.js';
 import authRoutes from './routes/auth.js';
 
+const PORT = process.env.PORT || 8000;
+
 const app = express();
 
 app.use(cors());
@@ -17,7 +19,7 @@ app.post('/hello', (req, res) => {
 });
 
 connectDB().then(() => {
-    app.listen(8000, () => {
-        console.log('Server is listening on port 8000');
+    app.listen(PORT, () => {
+        console.log('Server is listening on port' + PORT);
     });
 });
