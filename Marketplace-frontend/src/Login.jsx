@@ -35,11 +35,20 @@ function App() {
   <div id="contentBackground">
     <div id="content">
       <h1> Login using:</h1>
-      <button>Normal Login</button>
-      <br />
+      <form class="loginAccountForm">
+          {/* Username */}
+          <label for="username">Username:</label><br />
+          <input type="text" id="username" name="username" required/><br />
+
+          {/* Password */}
+          <label for="password">Password:</label><br />
+          <input type="password" id="password" name="password" minLength="8" required/><br />
+          <input type="submit"></input>
+
+        </form>
       <br />
       {/* bear with me, google is strict with this stuff...*/}
-      <button className="gsi-material-button">
+      {/*<button className="gsi-material-button">
         <div className="gsi-material-button-state" />
         <div className="gsi-material-button-content-wrapper">
           <div className="gsi-material-button-icon">
@@ -74,7 +83,7 @@ function App() {
           </span>
           <span style={{ display: "none" }}>Continue with Google</span>
         </div>
-      </button>
+      </button>*/}
       <br />
       <h1> or, Create an Account</h1>
       <button class="bigButton" onClick={()=> window.location.href='/createAccount'}>Create a Marketplace Account Here</button>

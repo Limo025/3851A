@@ -173,7 +173,7 @@ h3{
     cursor: pointer;
 }
 
-.createAccountForm{
+.createAccountForm, .loginAccountForm{
     display: grid;
     grid-template-columns: auto auto ;
     gap: 10px;
@@ -181,10 +181,9 @@ h3{
     font-size: 20px;
 }
 
-.createAccountForm label{
-    font-family: FuseV2;
+.createAccountForm label, .loginAccountForm label{
+    font-family: Corbel;
     font-size: 25px;
-    font-style:italic;
     padding-right: 20px;
 }
 .createAccountForm input{
@@ -192,6 +191,14 @@ h3{
     font-family: FuseV2;
     min-width: 20vw;
     padding: 5px;
+    margin-right: 10px;
+}
+.loginAccountForm input{
+    font-size: 25px;
+    font-family: FuseV2;
+    max-width: 300px;
+    padding: 5px;
+    margin-right: 50px;
 }
 
 /* google button */
