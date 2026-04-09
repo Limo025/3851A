@@ -201,6 +201,13 @@ h3{
     margin-right: 50px;
 }
 
+.createAccountForm button{
+    font-size: 25px;
+    font-family: FuseV2;
+    min-width: 20vw;
+    padding: 5px;
+}
+
 /* google button */
 .gsi-material-button {
   -moz-user-select: none;

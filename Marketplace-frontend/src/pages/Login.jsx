@@ -1,20 +1,23 @@
 import { useState } from 'react'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
-let isOpen = false;
+//replace this whole thing with toggleNav()
+// let isOpen = false;
 
-function openNav() {
-  if (isOpen == true){
-      document.getElementById("sidebar").style.display = "none";
-      isOpen=false;
-  } else{
-      document.getElementById("sidebar").style.display = "block";
-      isOpen=true;
-  }
-}
-function closeNav() {
-  document.getElementById("sidebar").style.display = "none";
-  isOpen=false;
-}
+// function openNav() {
+//   if (isOpen == true){
+//       document.getElementById("sidebar").style.display = "none";
+//       isOpen=false;
+//   } else{
+//       document.getElementById("sidebar").style.display = "block";
+//       isOpen=true;
+//   }
+// }
+// function closeNav() {
+//   document.getElementById("sidebar").style.display = "none";
+//   isOpen=false;
+// }
 
 function handleSearch(event) {
     if (event.key === 'Enter') {
@@ -27,25 +30,50 @@ function handleSearch(event) {
 }
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  const [count, setCount] = useState(0);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const navigate = useNavigate();
+
+  const toggleNav = () => setIsNavOpen(!isNavOpen);
+
+  async function logIn() {
+        try {
+            await signInWithEmailAndPassword(getAuth(), email, password);
+            navigate('/');
+        } catch (e) {
+            setError(e instanceof Error ? e.message : 'An error occurred');
+        }
+    } 
 
   return (
 <>
   {/* MAIN CONTENT*/}
   <div id="contentBackground">
     <div id="content">
-      <h1> Login using:</h1>
-      <form class="loginAccountForm">
-          {/* Username */}
-          <label for="username">Username:</label><br />
-          <input type="text" id="username" name="username" required/><br />
+      <h1>Login page</h1>
+      {error && <p>{error}</p>}
+      <form id="loginForm">
+        <label for="email">Email: </label>
+        <input
+          placeholder="Your email address"
+          id='email'
+          value={email}
+          onChange={e => setEmail(e.target.value)} />
+          <label for="password">Password: </label>
+        <input
+          placeholder="Your password"
+          id='password'
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)} />
+      </form>
+      <button onClick={logIn}>Log In</button>
 
-          {/* Password */}
-          <label for="password">Password:</label><br />
-          <input type="password" id="password" name="password" minLength="8" required/><br />
-          <input type="submit"></input>
-
-        </form>
+      <br />
       <br />
       {/* bear with me, google is strict with this stuff...*/}
       {/*<button className="gsi-material-button">
