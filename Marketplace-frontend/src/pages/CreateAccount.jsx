@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from 'react-router-dom';
 let isOpen = false;
 
@@ -34,9 +33,16 @@ function App() {
   async function createAccount() {
     if (password !== confirmPassword) {
         setError('Password and Confirm password do not match!');
+        return;
     }
     try {
-        await createUserWithEmailAndPassword(getAuth(), email, password);
+        const res = await fetch('http://localhost:8000/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password, username }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
         navigate('/login');
     } catch (e) {
         setError(e instanceof Error ? e.message : 'An error occurred');

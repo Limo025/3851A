@@ -1,0 +1,479 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\User\\source\\repos\\3851A\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-backend\\.env.example||{8B382828-6202-11D1-8870-0000F87579D2}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-backend\\.env.example||{8B382828-6202-11D1-8870-0000F87579D2}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-backend\\src\\server.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-backend\\src\\server.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\vite.config.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-frontend\\vite.config.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\README.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-frontend\\README.md||{EFC0BB08-EA7D-40C6-A696-C870411A895B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-frontend\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\package-lock.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-frontend\\package-lock.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-frontend\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\eslint.config.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-frontend\\eslint.config.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-frontend\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\main.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-frontend\\src\\main.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\pages\\NotFound.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-frontend\\src\\pages\\NotFound.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\pages\\Login.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-frontend\\src\\pages\\Login.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\pages\\Home.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-frontend\\src\\pages\\Home.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\pages\\CreateAccount.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-frontend\\src\\pages\\CreateAccount.jsx||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\App.test.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backup\\Marketplace-frontend\\src\\App.test.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\App.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backup\\Marketplace-frontend\\src\\App.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\App.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backup\\Marketplace-frontend\\src\\App.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\pages\\LoginPage.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backup\\Marketplace-frontend\\src\\pages\\LoginPage.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\pages\\HomePage.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backup\\Marketplace-frontend\\src\\pages\\HomePage.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\pages\\CreateAccountPages.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backup\\Marketplace-frontend\\src\\pages\\CreateAccountPages.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\hooks\\useUser.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backup\\Marketplace-frontend\\src\\hooks\\useUser.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\public\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backup\\Marketplace-frontend\\public\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-backend\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-backend\\package.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\Marketplace-backend\\package-lock.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Marketplace-backend\\package-lock.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backup\\Marketplace-frontend\\.gitignore||{3B902123-F8A7-4915-9F01-361F908088D0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\package-lock.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:backup\\Marketplace-frontend\\package-lock.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 18,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "server.js",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-backend\\src\\server.js",
+              "RelativeDocumentMoniker": "Marketplace-backend\\src\\server.js",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-backend\\src\\server.js",
+              "RelativeToolTip": "Marketplace-backend\\src\\server.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-04-09T13:01:06.157Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\.gitignore",
+              "RelativeDocumentMoniker": ".gitignore",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\.gitignore",
+              "RelativeToolTip": ".gitignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-04-09T13:00:55.302Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "vite.config.js",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\vite.config.js",
+              "RelativeDocumentMoniker": "Marketplace-frontend\\vite.config.js",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\vite.config.js",
+              "RelativeToolTip": "Marketplace-frontend\\vite.config.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-04-09T13:00:54.091Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "README.md",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\README.md",
+              "RelativeDocumentMoniker": "Marketplace-frontend\\README.md",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\README.md",
+              "RelativeToolTip": "Marketplace-frontend\\README.md",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001818|",
+              "WhenOpened": "2026-04-09T13:00:50.256Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "package.json",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\package.json",
+              "RelativeDocumentMoniker": "Marketplace-frontend\\package.json",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\package.json",
+              "RelativeToolTip": "Marketplace-frontend\\package.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-09T13:00:48.137Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "package-lock.json",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\package-lock.json",
+              "RelativeDocumentMoniker": "Marketplace-frontend\\package-lock.json",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\package-lock.json",
+              "RelativeToolTip": "Marketplace-frontend\\package-lock.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-09T13:00:46.942Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "index.html",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\index.html",
+              "RelativeDocumentMoniker": "Marketplace-frontend\\index.html",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\index.html",
+              "RelativeToolTip": "Marketplace-frontend\\index.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-04-09T13:00:43.274Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "eslint.config.js",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\eslint.config.js",
+              "RelativeDocumentMoniker": "Marketplace-frontend\\eslint.config.js",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\eslint.config.js",
+              "RelativeToolTip": "Marketplace-frontend\\eslint.config.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-04-09T13:00:39.621Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\.gitignore",
+              "RelativeDocumentMoniker": "Marketplace-frontend\\.gitignore",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\.gitignore",
+              "RelativeToolTip": "Marketplace-frontend\\.gitignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-04-09T13:00:38.546Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "main.jsx",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\main.jsx",
+              "RelativeDocumentMoniker": "Marketplace-frontend\\src\\main.jsx",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\main.jsx",
+              "RelativeToolTip": "Marketplace-frontend\\src\\main.jsx",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2026-04-09T13:00:28.437Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "NotFound.jsx",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\pages\\NotFound.jsx",
+              "RelativeDocumentMoniker": "Marketplace-frontend\\src\\pages\\NotFound.jsx",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\pages\\NotFound.jsx",
+              "RelativeToolTip": "Marketplace-frontend\\src\\pages\\NotFound.jsx",
+              "ViewState": "AgIAACoAAAAAAAAAAAAowAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2026-04-09T13:00:25.803Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "Home.jsx",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\pages\\Home.jsx",
+              "RelativeDocumentMoniker": "Marketplace-frontend\\src\\pages\\Home.jsx",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\pages\\Home.jsx",
+              "RelativeToolTip": "Marketplace-frontend\\src\\pages\\Home.jsx",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2026-04-09T12:59:52.859Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "Login.jsx",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\pages\\Login.jsx",
+              "RelativeDocumentMoniker": "Marketplace-frontend\\src\\pages\\Login.jsx",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\pages\\Login.jsx",
+              "RelativeToolTip": "Marketplace-frontend\\src\\pages\\Login.jsx",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAQwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2026-04-09T12:59:28.872Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "CreateAccount.jsx",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\pages\\CreateAccount.jsx",
+              "RelativeDocumentMoniker": "Marketplace-frontend\\src\\pages\\CreateAccount.jsx",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-frontend\\src\\pages\\CreateAccount.jsx",
+              "RelativeToolTip": "Marketplace-frontend\\src\\pages\\CreateAccount.jsx",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003663|",
+              "WhenOpened": "2026-04-09T12:59:27.743Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "App.test.js",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\App.test.js",
+              "RelativeDocumentMoniker": "backup\\Marketplace-frontend\\src\\App.test.js",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\App.test.js",
+              "RelativeToolTip": "backup\\Marketplace-frontend\\src\\App.test.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-04-09T12:59:19.089Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "App.js",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\App.js",
+              "RelativeDocumentMoniker": "backup\\Marketplace-frontend\\src\\App.js",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\App.js",
+              "RelativeToolTip": "backup\\Marketplace-frontend\\src\\App.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-04-09T12:59:17.663Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "App.css",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\App.css",
+              "RelativeDocumentMoniker": "backup\\Marketplace-frontend\\src\\App.css",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\App.css",
+              "RelativeToolTip": "backup\\Marketplace-frontend\\src\\App.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-04-09T12:59:15.953Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "LoginPage.js",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\pages\\LoginPage.js",
+              "RelativeDocumentMoniker": "backup\\Marketplace-frontend\\src\\pages\\LoginPage.js",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\pages\\LoginPage.js",
+              "RelativeToolTip": "backup\\Marketplace-frontend\\src\\pages\\LoginPage.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-04-09T12:59:13.709Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": ".env.example",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-backend\\.env.example",
+              "RelativeDocumentMoniker": "Marketplace-backend\\.env.example",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-backend\\.env.example",
+              "RelativeToolTip": "Marketplace-backend\\.env.example",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-04-09T12:58:26.741Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "HomePage.js",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\pages\\HomePage.js",
+              "RelativeDocumentMoniker": "backup\\Marketplace-frontend\\src\\pages\\HomePage.js",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\pages\\HomePage.js",
+              "RelativeToolTip": "backup\\Marketplace-frontend\\src\\pages\\HomePage.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-04-09T12:59:12.608Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "CreateAccountPages.js",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\pages\\CreateAccountPages.js",
+              "RelativeDocumentMoniker": "backup\\Marketplace-frontend\\src\\pages\\CreateAccountPages.js",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\pages\\CreateAccountPages.js",
+              "RelativeToolTip": "backup\\Marketplace-frontend\\src\\pages\\CreateAccountPages.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-04-09T12:59:11.426Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "useUser.js",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\hooks\\useUser.js",
+              "RelativeDocumentMoniker": "backup\\Marketplace-frontend\\src\\hooks\\useUser.js",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\src\\hooks\\useUser.js",
+              "RelativeToolTip": "backup\\Marketplace-frontend\\src\\hooks\\useUser.js",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001646|",
+              "WhenOpened": "2026-04-09T12:59:08.429Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "index.html",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\public\\index.html",
+              "RelativeDocumentMoniker": "backup\\Marketplace-frontend\\public\\index.html",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\public\\index.html",
+              "RelativeToolTip": "backup\\Marketplace-frontend\\public\\index.html",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-04-09T12:58:52.181Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "package.json",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-backend\\package.json",
+              "RelativeDocumentMoniker": "Marketplace-backend\\package.json",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-backend\\package.json",
+              "RelativeToolTip": "Marketplace-backend\\package.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-09T12:58:29.416Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "package-lock.json",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-backend\\package-lock.json",
+              "RelativeDocumentMoniker": "Marketplace-backend\\package-lock.json",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\Marketplace-backend\\package-lock.json",
+              "RelativeToolTip": "Marketplace-backend\\package-lock.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-09T12:58:28.385Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "package-lock.json",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\package-lock.json",
+              "RelativeDocumentMoniker": "backup\\Marketplace-frontend\\package-lock.json",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\package-lock.json",
+              "RelativeToolTip": "backup\\Marketplace-frontend\\package-lock.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-04-09T12:58:00.329Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": ".gitignore",
+              "DocumentMoniker": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\.gitignore",
+              "RelativeDocumentMoniker": "backup\\Marketplace-frontend\\.gitignore",
+              "ToolTip": "C:\\Users\\User\\source\\repos\\3851A\\backup\\Marketplace-frontend\\.gitignore",
+              "RelativeToolTip": "backup\\Marketplace-frontend\\.gitignore",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2026-04-09T12:57:55.664Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

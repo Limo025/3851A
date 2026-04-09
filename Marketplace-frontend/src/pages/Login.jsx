@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 
 //replace this whole thing with toggleNav()
@@ -42,12 +41,18 @@ function App() {
 
   async function logIn() {
         try {
-            await signInWithEmailAndPassword(getAuth(), email, password);
+            const res = await fetch('http://localhost:8000/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error);
             navigate('/');
         } catch (e) {
             setError(e instanceof Error ? e.message : 'An error occurred');
         }
-    } 
+    }
 
   return (
 <>
