@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { Link, useNavigate } from 'react-router-dom';
 let isOpen = false;
 
 function openNav() {
@@ -15,9 +17,32 @@ function closeNav() {
   isOpen=false;
 }
 
-function App() {
-  const [count, setCount] = useState(0)
 
+
+function App() {
+  const [count, setCount] = useState(0);
+  
+  const [username, setUsername] = useState('');
+  const [dob, setDob] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  
+  const navigate = useNavigate();
+
+  async function createAccount() {
+    if (password !== confirmPassword) {
+        setError('Password and Confirm password do not match!');
+    }
+    try {
+        await createUserWithEmailAndPassword(getAuth(), email, password);
+        navigate('/login');
+    } catch (e) {
+        setError(e instanceof Error ? e.message : 'An error occurred');
+    }
+  }
+  
   return (
 <>
   {/* MAIN CONTENT*/}
@@ -26,40 +51,33 @@ function App() {
     <div id="content">
       <h1> Create Account</h1>
       <h3>All fields are required. </h3><br />
+      {error && <p>{error}</p>}
       <hr /><br />
         <form class="createAccountForm">
 
-          {/* Given Name (s) */}
-          <label for="givenName">Given Name(s):</label>
-          <input type="text" id="givenName" name="givenName" required/>
-
-          {/* Family Name */}
-          <label for="surname">Family Name:</label>
-          <input type="text" id="surname" name="surname" required/>
-
           {/* Username */}
           <label for="username">Username:</label>
-          <input type="text" id="username" name="username" required/><br />
+          <input type="text" value={username} id="username" name="username" required onChange={e => setUsername(e.target.value)} /><br />
           <i>This will be your displayed name by default, unless changed otherwise.</i>
 
           {/* Date of Birth */}
           <label for="dob">Date of Birth</label>
-          <input type="date" id="dob" name="dob" max="2009-01-01" required/><br />
+          <input type="date" value={dob} id="dob" name="dob" max="2009-01-01" required onChange={e => setDob(e.target.value)} /><br />
           <i>You must be at least 18 years of age to use the Marketplace.</i>
 
           {/* E-Mail Address */}
           <label for="email">Email Address:</label>
-          <input type="email" id="email" name="email" required/>
+          <input type="email" value={email} id="email" name="email" required onChange={e => setEmail(e.target.value)} />
 
           {/* Password */}
           <label for="password">Password:</label>
-          <input type="password" id="password" name="password" minLength="8" required/>
+          <input type="password" value={password} id="password" name="password" minLength="8" required onChange={e => setPassword(e.target.value)} />
           <br />
           <i>Minimum 8 characters.</i>
 
           {/* Confirm Password */}
           <label for="passwordConfirm">Confirm Password:</label>
-          <input type="password" id="passwordConfirm" name="passwordConfirm" required/><hr /><br></br>
+          <input type="password" value={confirmPassword} id="passwordConfirm" name="passwordConfirm" required onChange={e => setConfirmPassword(e.target.value)} /><hr /><br></br>
           
           {/* Terms and Conditions */}
           <label for="terms">Community Marketplace Terms and Conditions Agreement:</label>
@@ -78,10 +96,12 @@ function App() {
           <input type="checkbox" id="conduct" name="conduct" value="conductTrue" required></input>
           <br />
           <i>Code of Conduct: (put link here)</i>
-          <input type="submit"></input>
+          
 
         </form>
+        <button onClick={createAccount}>Create Account</button>
         <hr />
+        <Link to='/login'>Already have an account? Log In</Link>
     </div>
   </div>
 </>
