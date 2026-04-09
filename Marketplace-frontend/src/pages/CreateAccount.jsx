@@ -31,8 +31,10 @@ function App() {
   const navigate = useNavigate();
 
   async function createAccount() {
+    document.getElementById("loadingIcon").style.display = "inline";
     if (password !== confirmPassword) {
         setError('Password and Confirm password do not match!');
+        document.getElementById("loadingIcon").style.display = "none";
         return;
     }
     try {
@@ -46,6 +48,7 @@ function App() {
         navigate('/login');
     } catch (e) {
         setError(e instanceof Error ? e.message : 'An error occurred');
+        document.getElementById("loadingIcon").style.display = "none";
     }
   }
   
@@ -102,12 +105,13 @@ function App() {
           <input type="checkbox" id="conduct" name="conduct" value="conductTrue" required></input>
           <br />
           <i>Code of Conduct: (put link here)</i>
+          <button class="bigButton" onClick={createAccount}>Create Account</button>
+        <img id="loadingIcon" class="loadingIcon" src="src/icon/loading.gif" alt="loading" />
           
 
         </form>
-        <button onClick={createAccount}>Create Account</button>
         <hr />
-        <Link to='/login'>Already have an account? Log In</Link>
+        <Link to='/login'><h3>Already have an account? Log In</h3></Link>
     </div>
   </div>
 </>

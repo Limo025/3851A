@@ -40,6 +40,7 @@ function App() {
   const toggleNav = () => setIsNavOpen(!isNavOpen);
 
   async function logIn() {
+      document.getElementById("loadingIcon").style.display = "inline";
         try {
             const res = await fetch('http://localhost:8000/auth/login', {
                 method: 'POST',
@@ -51,6 +52,7 @@ function App() {
             navigate('/');
         } catch (e) {
             setError(e instanceof Error ? e.message : 'An error occurred');
+            document.getElementById("loadingIcon").style.display = "none";
         }
     }
 
@@ -61,7 +63,7 @@ function App() {
     <div id="content">
       <h1>Login page</h1>
       {error && <p>{error}</p>}
-      <form id="loginForm">
+      <form id="loginForm" class="loginAccountForm">
         <label for="email">Email: </label>
         <input
           placeholder="Your email address"
@@ -76,7 +78,8 @@ function App() {
           value={password}
           onChange={e => setPassword(e.target.value)} />
       </form>
-      <button onClick={logIn}>Log In</button>
+      <button class="bigButton" onClick={logIn}>Log In</button>
+      <img id="loadingIcon" class="loadingIcon" src="src/icon/loading.gif" alt="loading" />
 
       <br />
       <br />

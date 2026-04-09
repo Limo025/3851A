@@ -208,6 +208,13 @@ h3{
     padding: 5px;
 }
 
+.loadingIcon{
+  height: 50px;
+  padding-left:50px;
+  position: relative;
+  top: 10px;
+  display:none;
+}
 /* google button */
 .gsi-material-button {
   -moz-user-select: none;
