@@ -184,7 +184,7 @@ p{
     cursor: pointer;
 }
 
-.createAccountForm{
+.createAccountForm, .loginAccountForm{
     display: grid;
     grid-template-columns: auto auto ;
     gap: 10px;
@@ -192,7 +192,7 @@ p{
     font-size: 20px;
 }
 
-.createAccountForm label{
+.createAccountForm label, .loginAccountForm label{
     font-family: Corbel;
     font-size: 25px;
     padding-right: 20px;
@@ -204,7 +204,13 @@ p{
     padding: 5px;
     margin-right: 10px;
 }
-
+.loginAccountForm input{
+    font-size: 25px;
+    font-family: FuseV2;
+    max-width: 300px;
+    padding: 5px;
+    margin-right: 50px;
+}
 /* google button */
 .gsi-material-button {
   -moz-user-select: none;

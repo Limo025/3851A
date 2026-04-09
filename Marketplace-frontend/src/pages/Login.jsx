@@ -76,7 +76,7 @@ function App() {
       <br />
       <br />
       {/* bear with me, google is strict with this stuff...*/}
-      <button className="gsi-material-button">
+      {/*<button className="gsi-material-button">
         <div className="gsi-material-button-state" />
         <div className="gsi-material-button-content-wrapper">
           <div className="gsi-material-button-icon">
@@ -111,7 +111,7 @@ function App() {
           </span>
           <span style={{ display: "none" }}>Continue with Google</span>
         </div>
-      </button>
+      </button>*/}
       <br />
       <h1> or, Create an Account</h1>
       <button class="bigButton" onClick={()=> window.location.href='/createAccount'}>Create a Marketplace Account Here</button>
