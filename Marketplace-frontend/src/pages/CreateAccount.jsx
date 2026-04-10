@@ -105,11 +105,12 @@ function App() {
           <input type="checkbox" id="conduct" name="conduct" value="conductTrue" required></input>
           <br />
           <i>Code of Conduct: (put link here)</i>
-          <button class="bigButton" onClick={createAccount}>Create Account</button>
-        <img id="loadingIcon" class="loadingIcon" src="src/icon/loading.gif" alt="loading" />
+
           
 
         </form>
+        <button class="bigButton" onClick={createAccount}>Create Account</button>
+        <img id="loadingIcon" class="loadingIcon" src="src/icon/loading.gif" alt="loading" />
         <hr />
         <Link to='/login'><h3>Already have an account? Log In</h3></Link>
     </div>
