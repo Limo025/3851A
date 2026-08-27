@@ -4,7 +4,7 @@ import Listing from '../models/Listing.js';
 import User from '../models/User.js';
 import { listingImagesUpload } from '../middleware/upload.js';
 import imageStorage from '../services/imageStorage.js';
-import { parseListingQuery, ValidationError } from '../validation/listings.js';
+import { parseListingQuery, validateListingFields, ValidationError } from '../validation/listings.js';
 
 const SAFE_SELLER_FIELDS = '_id username';
 
@@ -21,6 +21,47 @@ export function createListingRouter({
   imageStore = imageStorage,
 } = {}) {
   const router = express.Router();
+
+  router.post('/', authenticate, uploadMiddleware, async (req, res) => {
+    const { value, errors } = validateListingFields(req.body);
+    if (errors.length > 0) {
+      return res.status(400).json({ error: errors.join('; ') });
+    }
+    if (!Array.isArray(req.files) || req.files.length === 0) {
+      return res.status(400).json({ error: 'At least one image is required' });
+    }
+    if (!req.user?.uid) {
+      return res.status(401).json({ error: 'Authentication is required' });
+    }
+
+    let uploadedImages = [];
+    try {
+      const seller = await UserModel.findOne({ uid: req.user.uid });
+      if (!seller) {
+        return res.status(401).json({ error: 'Authenticated user was not found' });
+      }
+
+      uploadedImages = await imageStore.uploadImages(req.files);
+      const listing = await ListingModel.create({
+        ...value,
+        seller: seller._id,
+        images: uploadedImages,
+      });
+      const populatedListing = await listing.populate('seller', SAFE_SELLER_FIELDS);
+
+      return res.status(201).json(populatedListing);
+    } catch {
+      if (uploadedImages.length > 0) {
+        try {
+          await imageStore.deleteImages(uploadedImages.map(({ publicId }) => publicId));
+        } catch {
+          // The client must not receive storage-provider details when compensation fails.
+        }
+      }
+
+      return res.status(500).json({ error: 'Failed to create listing' });
+    }
+  });
 
   router.get('/', async (req, res) => {
     try {
