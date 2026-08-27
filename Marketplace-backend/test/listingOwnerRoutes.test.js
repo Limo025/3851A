@@ -152,6 +152,39 @@ test('PUT distinguishes malformed and missing listing ids before mutation', asyn
   });
 });
 
+test('PUT authorizes the listing before multipart parsing', async () => {
+  let uploadCalls = 0;
+  const listing = makeListing();
+  const ListingModel = {
+    findById(id) {
+      return id === listingId ? listing : null;
+    },
+  };
+  const uploadMiddleware = (req, _res, next) => {
+    uploadCalls += 1;
+    req.body = validFields;
+    req.files = [];
+    next();
+  };
+
+  await withListingApp(baseDependencies({ ListingModel, uploadMiddleware }), async (baseUrl) => {
+    const malformed = await fetch(`${baseUrl}/api/listings/not-an-id`, { method: 'PUT' });
+    assert.equal(malformed.status, 400);
+    assert.equal(uploadCalls, 0);
+
+    const missing = await fetch(`${baseUrl}/api/listings/${missingListingId}`, { method: 'PUT' });
+    assert.equal(missing.status, 404);
+    assert.equal(uploadCalls, 0);
+
+    const foreign = await fetch(`${baseUrl}/api/listings/${listingId}`, {
+      method: 'PUT',
+      headers: { 'x-firebase-uid': 'firebase-b' },
+    });
+    assert.equal(foreign.status, 403);
+    assert.equal(uploadCalls, 0);
+  });
+});
+
 test('PUT retains approved images, persists a new image, and cleans removed assets', async () => {
   let savedImages;
   let deletedPublicIds;

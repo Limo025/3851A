@@ -28,6 +28,36 @@ export function createListingRouter({
 } = {}) {
   const router = express.Router();
 
+  async function authorizeOwnedListing(req, res, next) {
+    if (!mongoose.isObjectIdOrHexString(req.params.id)) {
+      return res.status(400).json({ error: 'Listing id is invalid' });
+    }
+    if (!req.user?.uid) {
+      return res.status(401).json({ error: 'Authentication is required' });
+    }
+
+    try {
+      const currentUser = await UserModel.findOne({ uid: req.user.uid });
+      if (!currentUser) {
+        return res.status(401).json({ error: 'Authenticated user was not found' });
+      }
+
+      const listing = await ListingModel.findById(req.params.id);
+      if (!listing) {
+        return res.status(404).json({ error: 'Listing not found' });
+      }
+      if (listing.seller.toString() !== currentUser._id.toString()) {
+        return res.status(403).json({ error: 'You do not own this listing' });
+      }
+
+      req.currentUser = currentUser;
+      req.listing = listing;
+      return next();
+    } catch {
+      return res.status(500).json({ error: 'Failed to authorize listing management' });
+    }
+  }
+
   router.post('/', authenticate, uploadMiddleware, async (req, res) => {
     const { value, errors } = validateListingFields(req.body);
     if (errors.length > 0) {
@@ -119,28 +149,10 @@ export function createListingRouter({
     }
   });
 
-  router.put('/:id', authenticate, uploadMiddleware, async (req, res) => {
-    if (!mongoose.isObjectIdOrHexString(req.params.id)) {
-      return res.status(400).json({ error: 'Listing id is invalid' });
-    }
-    if (!req.user?.uid) {
-      return res.status(401).json({ error: 'Authentication is required' });
-    }
-
+  router.put('/:id', authenticate, authorizeOwnedListing, uploadMiddleware, async (req, res) => {
     let uploadedImages = [];
     try {
-      const currentUser = await UserModel.findOne({ uid: req.user.uid });
-      if (!currentUser) {
-        return res.status(401).json({ error: 'Authenticated user was not found' });
-      }
-
-      const listing = await ListingModel.findById(req.params.id);
-      if (!listing) {
-        return res.status(404).json({ error: 'Listing not found' });
-      }
-      if (listing.seller.toString() !== currentUser._id.toString()) {
-        return res.status(403).json({ error: 'You do not own this listing' });
-      }
+      const listing = req.listing;
 
       const { value, errors } = validateListingFields(req.body);
       if (errors.length > 0) {
@@ -210,27 +222,9 @@ export function createListingRouter({
     }
   });
 
-  router.delete('/:id', authenticate, async (req, res) => {
-    if (!mongoose.isObjectIdOrHexString(req.params.id)) {
-      return res.status(400).json({ error: 'Listing id is invalid' });
-    }
-    if (!req.user?.uid) {
-      return res.status(401).json({ error: 'Authentication is required' });
-    }
-
+  router.delete('/:id', authenticate, authorizeOwnedListing, async (req, res) => {
     try {
-      const currentUser = await UserModel.findOne({ uid: req.user.uid });
-      if (!currentUser) {
-        return res.status(401).json({ error: 'Authenticated user was not found' });
-      }
-
-      const listing = await ListingModel.findById(req.params.id);
-      if (!listing) {
-        return res.status(404).json({ error: 'Listing not found' });
-      }
-      if (listing.seller.toString() !== currentUser._id.toString()) {
-        return res.status(403).json({ error: 'You do not own this listing' });
-      }
+      const listing = req.listing;
 
       const publicIds = (Array.isArray(listing.images) ? listing.images : []).map(({ publicId }) => publicId);
       await listing.deleteOne();
