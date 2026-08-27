@@ -30,18 +30,27 @@ export function createSidebarController({ sidebar, toggle, close }) {
   };
 }
 
-export function initializeSidebar({ sidebar, toggle, close }) {
+export function initializeSidebar({ sidebar, toggle, close, documentRef = globalThis.document }) {
   const controller = createSidebarController({ sidebar, toggle, close });
   const handleToggle = () => controller.toggle();
   const handleClose = () => controller.close();
+  const handlePointerDown = (event) => {
+    if (sidebar.hidden || sidebar.contains(event.target) || toggle.contains(event.target)) {
+      return;
+    }
+
+    controller.close({ restoreFocus: false });
+  };
 
   toggle.addEventListener('click', handleToggle);
   close.addEventListener('click', handleClose);
   sidebar.addEventListener('keydown', controller.handleKeyDown);
+  documentRef.addEventListener('pointerdown', handlePointerDown);
 
   return () => {
     toggle.removeEventListener('click', handleToggle);
     close.removeEventListener('click', handleClose);
     sidebar.removeEventListener('keydown', controller.handleKeyDown);
+    documentRef.removeEventListener('pointerdown', handlePointerDown);
   };
 }

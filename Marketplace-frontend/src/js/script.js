@@ -41,7 +41,7 @@ export function initializeHeader({ documentRef, windowRef, sessionManager = sess
 
   if (!searchForm || !searchInput || !accountLink || !accountImage || !logoutButton
     || !sidebar || !sidebarToggle || !sidebarClose) {
-    return;
+    return () => {};
   }
 
   function applyAuthView() {
@@ -60,18 +60,32 @@ export function initializeHeader({ documentRef, windowRef, sessionManager = sess
   }
 
   applyAuthView();
-  sessionManager.subscribe?.(applyAuthView);
+  const unsubscribe = sessionManager.subscribe?.(applyAuthView) ?? (() => {});
 
-  searchForm.addEventListener('submit', (event) => {
+  const handleSearchSubmit = (event) => {
     event.preventDefault();
     const destination = buildMarketplaceSearchUrl(searchInput.value);
     if (destination) {
       windowRef.location.assign(destination);
     }
+  };
+  const handleLogout = () => logout(sessionManager, windowRef.location);
+
+  searchForm.addEventListener('submit', handleSearchSubmit);
+  logoutButton.addEventListener('click', handleLogout);
+  const teardownSidebar = initializeSidebar({
+    sidebar,
+    toggle: sidebarToggle,
+    close: sidebarClose,
+    documentRef,
   });
 
-  logoutButton.addEventListener('click', () => logout(sessionManager, windowRef.location));
-  initializeSidebar({ sidebar, toggle: sidebarToggle, close: sidebarClose });
+  return () => {
+    unsubscribe();
+    teardownSidebar();
+    searchForm.removeEventListener('submit', handleSearchSubmit);
+    logoutButton.removeEventListener('click', handleLogout);
+  };
 }
 
 if (typeof document !== 'undefined' && typeof window !== 'undefined') {
