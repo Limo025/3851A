@@ -107,6 +107,20 @@ test('session module can be imported without browser storage', async () => {
   assert.equal(await manager.getAccessToken(), null);
 });
 
+test('session observers receive login and logout changes in the same browser tab', () => {
+  const storage = createStorage();
+  const manager = createSessionManager({ storage });
+  const states = [];
+  const unsubscribe = manager.subscribe(() => states.push(manager.hasSession()));
+
+  manager.saveLogin({ idToken: 'id', refreshToken: 'refresh', expiresIn: '3600' });
+  manager.clear();
+  unsubscribe();
+  manager.saveLogin({ idToken: 'ignored', refreshToken: 'ignored', expiresIn: '3600' });
+
+  assert.deepEqual(states, [true, false]);
+});
+
 test('api client refreshes and attaches the bearer token for authenticated JSON requests', async () => {
   const calls = [];
   const apiFetch = createApiClient({

@@ -38,6 +38,13 @@ function isStoredSession(value) {
 
 export function createSessionManager({ storage, fetchImpl = globalThis.fetch, now = Date.now, baseUrl = apiBaseUrl() } = {}) {
   const getStorage = () => storage ?? browserStorage();
+  const listeners = new Set();
+
+  function notify() {
+    for (const listener of listeners) {
+      listener();
+    }
+  }
 
   function readSession() {
     const activeStorage = getStorage();
@@ -60,6 +67,7 @@ export function createSessionManager({ storage, fetchImpl = globalThis.fetch, no
 
   function clear() {
     getStorage()?.removeItem(SESSION_KEY);
+    notify();
   }
 
   function saveLogin({ idToken, refreshToken, expiresIn }) {
@@ -73,6 +81,12 @@ export function createSessionManager({ storage, fetchImpl = globalThis.fetch, no
       refreshToken,
       expiresAt: now() + Number(expiresIn) * 1000,
     }));
+    notify();
+  }
+
+  function subscribe(listener) {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
   }
 
   async function getAccessToken() {
@@ -112,6 +126,7 @@ export function createSessionManager({ storage, fetchImpl = globalThis.fetch, no
     hasSession: () => Boolean(readSession()),
     getAccessToken,
     clear,
+    subscribe,
   };
 }
 

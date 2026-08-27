@@ -1,5 +1,6 @@
 .marketplace-page {
   background: #fff;
+  box-sizing: border-box;
   color: #202020;
   font-family: Corbel, Arial, sans-serif;
   min-height: 100vh;
@@ -115,7 +116,7 @@
 .listing-grid {
   display: grid;
   gap: 20px;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
 }
 
 .listing-card {
@@ -164,6 +165,7 @@
   font-family: FuseV2Bold, Arial, sans-serif;
   font-size: 1.35rem;
   margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .listing-card__title a {
@@ -200,6 +202,8 @@
 
 .listing-card__details dd {
   margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .listing-card__actions {
@@ -211,6 +215,7 @@
 .seller-listing-actions {
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
 }
 
@@ -267,6 +272,7 @@
 .listing-pagination {
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   gap: 14px;
   justify-content: center;
   margin-top: 32px;
@@ -343,6 +349,7 @@
   font-family: FuseV2Bold, Arial, sans-serif;
   font-size: 2.4rem;
   margin: 0;
+  overflow-wrap: anywhere;
 }
 
 .listing-detail__price {
@@ -356,6 +363,7 @@
   font-size: 1.15rem;
   line-height: 1.5;
   margin: 0 0 24px;
+  overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 
@@ -378,6 +386,8 @@
 
 .listing-detail__details dd {
   margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .listing-detail__contact {
@@ -549,6 +559,14 @@
 
   .listing-form {
     padding: 16px;
+  }
+
+  .image-uploader {
+    padding: 12px;
+  }
+
+  .image-uploader__previews {
+    grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr));
   }
 
   .listing-filters__search-row {
