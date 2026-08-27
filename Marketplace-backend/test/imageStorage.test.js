@@ -75,6 +75,41 @@ test('uploadImages cleans up prior assets when a later upload fails', async () =
   assert.equal(requests[2].options.body.get('signature'), '9ef481ae9c697a137f96f62d2f73547ba1f01a60');
 });
 
+test('uploadImages reports both the upload and cleanup errors when compensation fails', async () => {
+  const requests = [];
+  const store = createImageStorage({
+    config,
+    now: fixedNow,
+    fetchImpl: async (url, options) => {
+      requests.push({ url, options });
+      if (requests.length === 1) {
+        return jsonResponse({ secure_url: 'https://cdn.test/a.webp', public_id: 'marketplace/a' });
+      }
+      return jsonResponse({ error: { message: 'request failed' } }, { ok: false, status: requests.length === 2 ? 400 : 500 });
+    },
+  });
+
+  await assert.rejects(
+    store.uploadImages([
+      { buffer: Buffer.from('one'), originalname: 'one.webp', mimetype: 'image/webp' },
+      { buffer: Buffer.from('two'), originalname: 'two.webp', mimetype: 'image/webp' },
+    ]),
+    (error) => {
+      assert.ok(error instanceof AggregateError);
+      assert.equal(error.message, 'Image upload failed and cleanup was incomplete');
+      assert.equal(error.cause, error.errors[0]);
+      assert.equal(error.errors.length, 2);
+      assert.match(error.errors[0].message, /400/);
+      assert.ok(error.errors[1] instanceof AggregateError);
+      assert.match(error.errors[1].errors[0].message, /500/);
+      assert.doesNotMatch(error.message, /top-secret/);
+      return true;
+    },
+  );
+
+  assert.equal(requests.length, 3);
+});
+
 test('deleteImages attempts every asset and reports aggregate destroy failures', async () => {
   const requests = [];
   const store = createImageStorage({

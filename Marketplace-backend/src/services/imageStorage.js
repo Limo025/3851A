@@ -69,49 +69,53 @@ export function createImageStorage({
     await request(destroyUrl(activeConfig.cloudName), formData);
   }
 
-  return {
-    async uploadImages(files) {
-      const activeConfig = validateCloudinaryConfig(config);
-      const uploadedImages = [];
+  async function deleteImages(publicIds) {
+    const results = await Promise.allSettled(publicIds.map((publicId) => destroyImage(publicId)));
+    const failures = results
+      .filter((result) => result.status === 'rejected')
+      .map((result) => result.reason);
 
-      try {
-        for (const file of files) {
-          const formData = signedFormData({ folder: CLOUDINARY_FOLDER }, activeConfig);
-          const blob = new Blob([file.buffer], { type: file.mimetype });
-          formData.set('file', blob, file.originalname || 'image');
+    if (failures.length > 0) {
+      throw new AggregateError(failures, 'Failed to delete one or more Cloudinary images');
+    }
+  }
 
-          const response = await request(uploadUrl(activeConfig.cloudName), formData);
-          if (!response?.secure_url || !response.public_id) {
-            throw cloudinaryError();
-          }
+  async function uploadImages(files) {
+    const activeConfig = validateCloudinaryConfig(config);
+    const uploadedImages = [];
 
-          uploadedImages.push({ url: response.secure_url, publicId: response.public_id });
+    try {
+      for (const file of files) {
+        const formData = signedFormData({ folder: CLOUDINARY_FOLDER }, activeConfig);
+        const blob = new Blob([file.buffer], { type: file.mimetype });
+        formData.set('file', blob, file.originalname || 'image');
+
+        const response = await request(uploadUrl(activeConfig.cloudName), formData);
+        if (!response?.secure_url || !response.public_id) {
+          throw cloudinaryError();
         }
-      } catch (error) {
-        if (uploadedImages.length > 0) {
-          try {
-            await this.deleteImages(uploadedImages.map(({ publicId }) => publicId));
-          } catch {
-            // Preserve the upload failure; callers can log an explicit delete failure.
-          }
+
+        uploadedImages.push({ url: response.secure_url, publicId: response.public_id });
+      }
+    } catch (error) {
+      if (uploadedImages.length > 0) {
+        try {
+          await deleteImages(uploadedImages.map(({ publicId }) => publicId));
+        } catch (cleanupError) {
+          throw new AggregateError(
+            [error, cleanupError],
+            'Image upload failed and cleanup was incomplete',
+            { cause: error },
+          );
         }
-        throw error;
       }
+      throw error;
+    }
 
-      return uploadedImages;
-    },
+    return uploadedImages;
+  }
 
-    async deleteImages(publicIds) {
-      const results = await Promise.allSettled(publicIds.map((publicId) => destroyImage(publicId)));
-      const failures = results
-        .filter((result) => result.status === 'rejected')
-        .map((result) => result.reason);
-
-      if (failures.length > 0) {
-        throw new AggregateError(failures, 'Failed to delete one or more Cloudinary images');
-      }
-    },
-  };
+  return { uploadImages, deleteImages };
 }
 
 const imageStorage = createImageStorage();
