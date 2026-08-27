@@ -1,11 +1,25 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import Listing from '../models/Listing.js';
+import User from '../models/User.js';
+import { listingImagesUpload } from '../middleware/upload.js';
+import imageStorage from '../services/imageStorage.js';
 import { parseListingQuery, ValidationError } from '../validation/listings.js';
 
 const SAFE_SELLER_FIELDS = '_id username';
 
-export function createListingRouter({ ListingModel = Listing } = {}) {
+async function verifyToken(req, res, next) {
+  const { verifyToken: firebaseVerifyToken } = await import('../middleware/auth.js');
+  return firebaseVerifyToken(req, res, next);
+}
+
+export function createListingRouter({
+  ListingModel = Listing,
+  UserModel = User,
+  authenticate = verifyToken,
+  uploadMiddleware = listingImagesUpload,
+  imageStore = imageStorage,
+} = {}) {
   const router = express.Router();
 
   router.get('/', async (req, res) => {
