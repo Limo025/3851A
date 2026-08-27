@@ -1,27 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { apiFetch } from '../api/client.js';
+import { formatListingDate, formatListingPrice } from '../utils/listingFormat.js';
 import '../css/listings.css';
-
-const currencyFormatter = new Intl.NumberFormat('en-AU', {
-  style: 'currency',
-  currency: 'AUD',
-});
 
 function displayValue(value, fallback = 'Not specified') {
   return value || fallback;
-}
-
-function formatPrice(price) {
-  const amount = Number(price);
-  return Number.isFinite(amount) ? currencyFormatter.format(amount) : 'Price unavailable';
-}
-
-function formatDate(dateValue) {
-  const date = new Date(dateValue);
-  return Number.isNaN(date.getTime())
-    ? 'Date unavailable'
-    : date.toLocaleDateString('en-AU', { dateStyle: 'long' });
 }
 
 export default function ListingDetail() {
@@ -125,12 +109,12 @@ export default function ListingDetail() {
         <div className="listing-detail__content">
           <p className="listing-card__category">{displayValue(listing.category)}</p>
           <h1>{title}</h1>
-          <p className="listing-detail__price">{formatPrice(listing.price)}</p>
+          <p className="listing-detail__price">{formatListingPrice(listing.price)}</p>
           <p className="listing-detail__description">{displayValue(listing.description, 'No description provided.')}</p>
           <dl className="listing-detail__details">
             <div><dt>Condition</dt><dd>{displayValue(listing.condition)}</dd></div>
             <div><dt>Seller</dt><dd>{displayValue(listing.seller?.username, 'Unknown seller')}</dd></div>
-            <div><dt>Listed</dt><dd>{formatDate(listing.createdAt)}</dd></div>
+            <div><dt>Listed</dt><dd>{formatListingDate(listing.createdAt)}</dd></div>
           </dl>
           <button className="listing-detail__contact" type="button" disabled>Contact Seller — messaging coming later</button>
         </div>
