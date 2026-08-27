@@ -66,6 +66,66 @@ test('POST /auth/refresh rejects a missing refresh token', async () => {
   assert.equal(called, false);
 });
 
+test('POST /auth/refresh rejects missing, non-string, and blank refresh token bodies', async () => {
+  let called = false;
+  await withAuthApp(async () => {
+    called = true;
+  }, async (baseUrl) => {
+    const requests = [
+      undefined,
+      { refreshToken: 123 },
+      { refreshToken: {} },
+      { refreshToken: '   ' },
+    ];
+
+    for (const body of requests) {
+      const response = await fetch(`${baseUrl}/auth/refresh`, {
+        method: 'POST',
+        ...(body === undefined ? {} : {
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        }),
+      });
+
+      assert.equal(response.status, 400);
+      assert.deepEqual(await response.json(), { error: 'Refresh token is required' });
+    }
+  });
+  assert.equal(called, false);
+});
+
+test('POST /auth/refresh rejects successful Firebase responses missing an ID token', async () => {
+  await withAuthApp(async () => ({
+    ok: true,
+    json: async () => ({ refresh_token: 'new-refresh', expires_in: '3600' }),
+  }), async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken: 'old-refresh' }),
+    });
+
+    assert.equal(response.status, 500);
+    assert.deepEqual(await response.json(), { error: 'Unable to refresh session' });
+  });
+});
+
+test('POST /auth/refresh rejects successful Firebase responses with an invalid expiry', async () => {
+  await withAuthApp(async () => ({
+    ok: true,
+    json: async () => ({ id_token: 'new-id', refresh_token: 'new-refresh', expires_in: 'not-a-duration' }),
+  }), async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken: 'old-refresh' }),
+    });
+
+    assert.equal(response.status, 500);
+    assert.deepEqual(await response.json(), { error: 'Unable to refresh session' });
+  });
+});
+
 test('POST /auth/refresh reports Firebase rejection as unauthorized', async () => {
   await withAuthApp(async () => ({ ok: false, json: async () => ({ error: { message: 'INVALID_REFRESH_TOKEN' } }) }), async (baseUrl) => {
     const response = await fetch(`${baseUrl}/auth/refresh`, {

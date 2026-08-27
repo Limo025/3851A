@@ -82,8 +82,8 @@ export function createAuthRouter({
     });
 
     router.post('/refresh', async (req, res) => {
-        const { refreshToken } = req.body;
-        if (!refreshToken) {
+        const refreshToken = req.body?.refreshToken;
+        if (typeof refreshToken !== 'string' || !refreshToken.trim()) {
             return res.status(400).json({ error: 'Refresh token is required' });
         }
 
@@ -93,7 +93,7 @@ export function createAuthRouter({
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: new URLSearchParams({ grant_type: 'refresh_token', refresh_token: refreshToken }).toString(),
+                    body: new URLSearchParams({ grant_type: 'refresh_token', refresh_token: refreshToken.trim() }).toString(),
                 }
             );
             if (!response.ok) {
@@ -101,10 +101,16 @@ export function createAuthRouter({
             }
 
             const data = await response.json();
+            const idToken = typeof data.id_token === 'string' ? data.id_token.trim() : '';
+            const nextRefreshToken = typeof data.refresh_token === 'string' ? data.refresh_token.trim() : '';
+            const expiresIn = typeof data.expires_in === 'string' ? data.expires_in.trim() : '';
+            if (!idToken || !nextRefreshToken || !expiresIn || !Number.isFinite(Number(expiresIn)) || Number(expiresIn) <= 0) {
+                throw new Error('Malformed token refresh response');
+            }
             res.json({
-                idToken: data.id_token,
-                refreshToken: data.refresh_token,
-                expiresIn: data.expires_in,
+                idToken,
+                refreshToken: nextRefreshToken,
+                expiresIn,
             });
         } catch {
             res.status(500).json({ error: 'Unable to refresh session' });
