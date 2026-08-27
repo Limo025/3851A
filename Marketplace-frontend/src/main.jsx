@@ -6,6 +6,7 @@ import Home from './pages/Home.jsx'
 import Login from './pages/Login.jsx'
 import NotFound from './pages/NotFound.jsx'
 import CreateAccount from './pages/CreateAccount.jsx'
+import Marketplace from './pages/Marketplace.jsx'
 import { initializeApp } from "firebase/app"
 
 const firebaseConfig = {
@@ -26,6 +27,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/createAccount" element={<CreateAccount />} />
+        <Route path="/marketplace" element={<Marketplace />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

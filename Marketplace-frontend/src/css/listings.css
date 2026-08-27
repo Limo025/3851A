@@ -1,0 +1,259 @@
+.marketplace-page {
+  background: #fff;
+  color: #202020;
+  font-family: Corbel, Arial, sans-serif;
+  min-height: 100vh;
+  padding: 48px 24px 64px;
+}
+
+.marketplace-page__content {
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.marketplace-page__header h1 {
+  margin: 0;
+}
+
+.marketplace-page__header p {
+  font-size: 1.2rem;
+  margin: 8px 0 28px;
+}
+
+.listing-filters {
+  align-items: end;
+  background: #f5f8ff;
+  border: 2px solid #005bf9;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 20px;
+}
+
+.listing-filters label {
+  color: #00225e;
+  display: grid;
+  font-family: FuseV2, Arial, sans-serif;
+  font-size: 1rem;
+  gap: 6px;
+}
+
+.listing-filters input,
+.listing-filters select,
+.listing-filters button {
+  border: 1px solid #005bf9;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font: inherit;
+  min-height: 42px;
+  padding: 8px 10px;
+}
+
+.listing-filters__search {
+  grid-column: 1 / -1;
+}
+
+.listing-filters__search > label {
+  margin-bottom: 6px;
+}
+
+.listing-filters__search-row {
+  display: flex;
+  gap: 8px;
+}
+
+.listing-filters__search-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.listing-filters button,
+.listing-pagination button {
+  background: #005bf9;
+  border: 2px solid #005bf9;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+  font-family: FuseV2, Arial, sans-serif;
+  padding: 9px 16px;
+}
+
+.listing-filters button:hover,
+.listing-pagination button:hover:not(:disabled) {
+  background: #00225e;
+  border-color: #00225e;
+}
+
+.listing-filters button:focus-visible,
+.listing-filters input:focus-visible,
+.listing-filters select:focus-visible,
+.listing-pagination button:focus-visible,
+.listing-card a:focus-visible {
+  outline: 3px solid #202020;
+  outline-offset: 2px;
+}
+
+.marketplace-page__count {
+  font-size: 1.1rem;
+  margin: 24px 0 16px;
+}
+
+.listing-state {
+  background: #f5f8ff;
+  border-left: 5px solid #005bf9;
+  font-size: 1.1rem;
+  margin: 0;
+  padding: 20px;
+}
+
+.listing-state--error {
+  background: #fff0f0;
+  border-color: #b00020;
+  color: #7a0015;
+}
+
+.listing-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.listing-card {
+  background: #fff;
+  border: 1px solid #aebbd1;
+  box-shadow: 0 2px 8px rgb(0 34 94 / 14%);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.listing-card__image {
+  aspect-ratio: 4 / 3;
+  background: #e6ecf7;
+  display: block;
+  object-fit: cover;
+  width: 100%;
+}
+
+.listing-card__image--empty {
+  align-items: center;
+  color: #42526d;
+  display: flex;
+  font-family: FuseV2, Arial, sans-serif;
+  justify-content: center;
+  padding: 12px;
+  text-align: center;
+}
+
+.listing-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 18px;
+}
+
+.listing-card__category {
+  color: #005bf9;
+  font-family: FuseV2, Arial, sans-serif;
+  font-size: 0.9rem;
+  margin: 0 0 8px;
+}
+
+.listing-card__title {
+  font-family: FuseV2Bold, Arial, sans-serif;
+  font-size: 1.35rem;
+  margin: 0;
+}
+
+.listing-card__title a {
+  color: #202020;
+  text-decoration: none;
+}
+
+.listing-card__title a:hover {
+  color: #005bf9;
+  text-decoration: underline;
+}
+
+.listing-card__price {
+  color: #00225e;
+  font-family: FuseV2Bold, Arial, sans-serif;
+  font-size: 1.35rem;
+  margin: 14px 0;
+}
+
+.listing-card__details {
+  display: grid;
+  gap: 8px;
+  margin: auto 0 0;
+}
+
+.listing-card__details div {
+  display: flex;
+  gap: 6px;
+}
+
+.listing-card__details dt {
+  font-family: FuseV2, Arial, sans-serif;
+}
+
+.listing-card__details dd {
+  margin: 0;
+}
+
+.listing-card__actions {
+  border-top: 1px solid #d6deed;
+  margin-top: 16px;
+  padding-top: 16px;
+}
+
+.listing-pagination {
+  align-items: center;
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-top: 32px;
+}
+
+.listing-pagination button:disabled {
+  background: #77839a;
+  border-color: #77839a;
+  cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .listing-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .listing-filters__search {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .marketplace-page {
+    padding: 28px 14px 40px;
+  }
+
+  .marketplace-page__header h1 {
+    font-size: 2rem;
+  }
+
+  .listing-filters {
+    padding: 14px;
+  }
+
+  .listing-filters__search-row {
+    flex-direction: column;
+  }
+
+  .listing-pagination {
+    font-size: 0.9rem;
+    gap: 8px;
+  }
+
+  .listing-pagination button {
+    padding: 8px 10px;
+  }
+}
