@@ -8,6 +8,7 @@ import Item from './pages/Item.jsx'
 import NotFound from './pages/NotFound.jsx'
 import CreateAccount from './pages/CreateAccount.jsx'
 import Search from './pages/Search.jsx'
+import Messages from './pages/Messages.jsx'
 import { initializeApp } from "firebase/app"
 
 const firebaseConfig = {
@@ -30,6 +31,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/item" element={<Item />} />
         <Route path="/createAccount" element={<CreateAccount />} />
         <Route path="/search" element={<Search />} />
+        <Route path="/messages" element={<Messages />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
