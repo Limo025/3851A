@@ -4,6 +4,7 @@ import { apiFetch } from '../api/client.js';
 import ListingFilters from '../components/ListingFilters.jsx';
 import ListingGrid from '../components/ListingGrid.jsx';
 import '../css/listings.css';
+import { clampPage } from '../utils/pagination.js';
 
 function readFilters(searchParams) {
   return {
@@ -34,6 +35,7 @@ export default function Marketplace() {
 
   useEffect(() => {
     const controller = new AbortController();
+    let redirectedToValidPage = false;
 
     async function fetchListings() {
       setLoading(true);
@@ -44,6 +46,14 @@ export default function Marketplace() {
           signal: controller.signal,
         });
         if (!controller.signal.aborted) {
+          const validPage = clampPage(requestedPage, data.pages);
+          if (requestedPage !== validPage) {
+            const nextParams = new URLSearchParams(queryString);
+            nextParams.set('page', String(validPage));
+            redirectedToValidPage = true;
+            setSearchParams(nextParams, { replace: true });
+            return;
+          }
           setResponse(data);
         }
       } catch (requestError) {
@@ -51,7 +61,7 @@ export default function Marketplace() {
           setError(requestError instanceof Error ? requestError.message : 'Unable to load listings. Please try again.');
         }
       } finally {
-        if (!controller.signal.aborted) {
+        if (!controller.signal.aborted && !redirectedToValidPage) {
           setLoading(false);
         }
       }
@@ -59,7 +69,7 @@ export default function Marketplace() {
 
     fetchListings();
     return () => controller.abort();
-  }, [queryString]);
+  }, [queryString, requestedPage, setSearchParams]);
 
   function updateParameters(updates, resetPage = false) {
     const nextParams = new URLSearchParams(searchParams);

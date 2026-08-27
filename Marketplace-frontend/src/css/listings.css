@@ -130,6 +130,7 @@
 .listing-card__image {
   aspect-ratio: 4 / 3;
   background: #e6ecf7;
+  box-sizing: border-box;
   display: block;
   object-fit: cover;
   width: 100%;
