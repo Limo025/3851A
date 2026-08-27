@@ -51,6 +51,13 @@ test('parseListingQuery escapes search and whitelists sort', () => {
   assert.equal(parsed.limit, 10);
 });
 
+test('parseListingQuery rejects a supplied non-string search', () => {
+  assert.throws(
+    () => parseListingQuery({ search: ['phone', 'tablet'] }),
+    (error) => error.name === 'ValidationError' && Array.isArray(error.errors),
+  );
+});
+
 test('parseListingQuery rejects invalid bounds and ignores unrecognized keys', () => {
   assert.throws(
     () => parseListingQuery({ minPrice: '20', maxPrice: '10' }),

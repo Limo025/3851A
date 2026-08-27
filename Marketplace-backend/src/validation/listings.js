@@ -83,11 +83,12 @@ export function parseListingQuery(query = {}) {
   let maxPrice;
 
   if (query.search !== undefined) {
-    const search = trimString(query.search);
-    if (search.length > 100) {
+    if (typeof query.search !== 'string') {
+      errors.push('Search must be a string');
+    } else if (query.search.trim().length > 100) {
       errors.push('Search must be at most 100 characters');
-    } else if (search) {
-      filter.title = { $regex: new RegExp(escapeRegex(search), 'i') };
+    } else if (query.search.trim()) {
+      filter.title = { $regex: new RegExp(escapeRegex(query.search.trim()), 'i') };
     }
   }
   if (query.category !== undefined) {
