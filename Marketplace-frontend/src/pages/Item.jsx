@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 //replace this whole thing with toggleNav()
@@ -18,6 +18,8 @@ import { useNavigate } from 'react-router-dom';
 //   isOpen=false;
 // }
 
+var strictModeLoop = false;
+
 function handleSearch(event) {
     if (event.key === 'Enter') {
         alert('hello world');
@@ -29,7 +31,11 @@ function handleSearch(event) {
 }
 
 function loadItemData(event){
-
+    if (strictModeLoop){
+        return;
+    }
+    strictModeLoop = true;
+    
   const urlParams = new URLSearchParams(window.location.search);
   if(urlParams.has('itemid')){
     const itemID = urlParams.get('itemid');
@@ -62,7 +68,7 @@ function itemSmallClick(event, a){
 }
 
 function App() {
-
+  useEffect(() => {loadItemData();}, []);
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [count, setCount] = useState(0);
   const [email, setEmail] = useState('');
@@ -92,7 +98,7 @@ function App() {
 
   return (
 <>
-  <div id="contentBackground" onLoad={loadItemData}>
+  <div id="contentBackground">
     <div id="content">
       <div class="itemInformation ">
           <div class="itemInformationGrid">
