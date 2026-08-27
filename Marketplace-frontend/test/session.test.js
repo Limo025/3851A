@@ -64,6 +64,42 @@ test('session clears itself and throws AuthenticationError when refresh fails', 
   assert.equal(storage.getItem('marketplace.auth'), null);
 });
 
+test('session rejects and clears stored data that cannot supply or refresh an access token', () => {
+  const storage = createStorage();
+  const manager = createSessionManager({ storage });
+  const malformedSessions = [
+    {},
+    { idToken: 'id', refreshToken: '', expiresAt: 2_000_000 },
+    { idToken: 'id', refreshToken: 'refresh', expiresAt: 'later' },
+  ];
+
+  for (const value of malformedSessions) {
+    storage.setItem('marketplace.auth', JSON.stringify(value));
+    assert.equal(manager.hasSession(), false);
+    assert.equal(storage.getItem('marketplace.auth'), null);
+  }
+});
+
+test('session remains usable when its access token expired but its refresh data is valid', async () => {
+  const storage = createStorage();
+  storage.setItem('marketplace.auth', JSON.stringify({
+    idToken: 'expired-id',
+    refreshToken: 'refresh',
+    expiresAt: 999_999,
+  }));
+  const manager = createSessionManager({
+    storage,
+    now: () => 1_000_000,
+    fetchImpl: async () => ({
+      ok: true,
+      json: async () => ({ idToken: 'new-id', refreshToken: 'new-refresh', expiresIn: '3600' }),
+    }),
+  });
+
+  assert.equal(manager.hasSession(), true);
+  assert.equal(await manager.getAccessToken(), 'new-id');
+});
+
 test('session module can be imported without browser storage', async () => {
   const manager = createSessionManager();
   assert.equal(manager.hasSession(), false);

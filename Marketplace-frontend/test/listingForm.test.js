@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { buildReturnPath, getLoginRedirect } from '../src/auth/returnPath.js';
+import { AuthenticationError } from '../src/auth/session.js';
+import { handleAuthenticationError } from '../src/auth/handleAuthenticationError.js';
+import { buildReturnPath, getLoginRedirect, getPostLoginPath } from '../src/auth/returnPath.js';
 import {
   buildListingFormData,
   createImagePreviews,
@@ -22,6 +24,19 @@ test('protected routes preserve the complete requested return path', () => {
     state: { from: '/sell?draft=1', message: 'Please log in to access seller tools.' },
   });
   assert.equal(getLoginRedirect(true, { pathname: '/sell' }), null);
+});
+
+test('post-login navigation returns to a validated internal app path', () => {
+  assert.equal(getPostLoginPath({ from: '/sell' }), '/sell');
+  assert.equal(getPostLoginPath({ from: '/sell?draft=1#images' }), '/sell?draft=1#images');
+});
+
+test('post-login navigation falls back home for malformed or external state', () => {
+  assert.equal(getPostLoginPath(), '/');
+  assert.equal(getPostLoginPath({ from: 42 }), '/');
+  assert.equal(getPostLoginPath({ from: 'https://attacker.test/steal' }), '/');
+  assert.equal(getPostLoginPath({ from: '//attacker.test/steal' }), '/');
+  assert.equal(getPostLoginPath({ from: '/\\attacker.test/steal' }), '/');
 });
 
 test('image selection accepts only supported images within the count and size limits', () => {
@@ -114,4 +129,38 @@ test('submission lock ignores a repeated submit until the active request settles
   releaseRequest('created');
   assert.equal(await first, 'created');
   assert.equal(lock.current, false);
+});
+
+test('create authentication failure clears session and redirects back through login', () => {
+  let clearCalls = 0;
+  const navigations = [];
+  const handled = handleAuthenticationError(new AuthenticationError(), {
+    sessionManager: { clear: () => { clearCalls += 1; } },
+    navigate: (to, options) => navigations.push({ to, options }),
+    returnPath: '/sell',
+  });
+
+  assert.equal(handled, true);
+  assert.equal(clearCalls, 1);
+  assert.deepEqual(navigations, [{
+    to: '/login',
+    options: {
+      replace: true,
+      state: { from: '/sell', message: 'Please log in to access seller tools.' },
+    },
+  }]);
+});
+
+test('non-authentication create failures remain available to the listing form', () => {
+  let clearCalls = 0;
+  const navigations = [];
+  const handled = handleAuthenticationError(new Error('Upload failed'), {
+    sessionManager: { clear: () => { clearCalls += 1; } },
+    navigate: (to, options) => navigations.push({ to, options }),
+    returnPath: '/sell',
+  });
+
+  assert.equal(handled, false);
+  assert.equal(clearCalls, 0);
+  assert.deepEqual(navigations, []);
 });

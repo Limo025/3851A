@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { session } from '../auth/session.js';
+import { getPostLoginPath } from '../auth/returnPath.js';
 
 function App() {
   const [email, setEmail] = useState('');
@@ -8,6 +9,7 @@ function App() {
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   async function logIn() {
       document.getElementById("loadingIcon").style.display = "inline";
@@ -20,7 +22,7 @@ function App() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.error);
             session.saveLogin(data);
-            navigate('/');
+            navigate(getPostLoginPath(location.state), { replace: true });
         } catch (e) {
             setError(e instanceof Error ? e.message : 'An error occurred');
             document.getElementById("loadingIcon").style.display = "none";

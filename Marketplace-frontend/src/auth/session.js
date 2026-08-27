@@ -24,6 +24,18 @@ function apiBaseUrl() {
   return import.meta.env?.VITE_API_URL || 'http://localhost:8000';
 }
 
+function isStoredSession(value) {
+  return Boolean(
+    value
+    && typeof value === 'object'
+    && typeof value.idToken === 'string'
+    && value.idToken.trim()
+    && typeof value.refreshToken === 'string'
+    && value.refreshToken.trim()
+    && Number.isFinite(value.expiresAt),
+  );
+}
+
 export function createSessionManager({ storage, fetchImpl = globalThis.fetch, now = Date.now, baseUrl = apiBaseUrl() } = {}) {
   const getStorage = () => storage ?? browserStorage();
 
@@ -34,7 +46,12 @@ export function createSessionManager({ storage, fetchImpl = globalThis.fetch, no
     }
 
     try {
-      return JSON.parse(activeStorage.getItem(SESSION_KEY) || 'null');
+      const value = JSON.parse(activeStorage.getItem(SESSION_KEY) || 'null');
+      if (!isStoredSession(value)) {
+        activeStorage.removeItem(SESSION_KEY);
+        return null;
+      }
+      return value;
     } catch {
       activeStorage.removeItem(SESSION_KEY);
       return null;
