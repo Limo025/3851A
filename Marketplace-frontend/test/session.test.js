@@ -144,3 +144,49 @@ test('api client preserves FormData headers and exposes server errors', async ()
     return true;
   });
 });
+
+test('api client translates an authenticated 401 response into AuthenticationError without retrying', async () => {
+  let fetchCalls = 0;
+  const apiFetch = createApiClient({
+    baseUrl: 'http://api.test',
+    sessionManager: { getAccessToken: async () => 'stale-token' },
+    fetchImpl: async () => {
+      fetchCalls += 1;
+      return {
+        ok: false,
+        status: 401,
+        headers: new Headers({ 'Content-Type': 'application/json' }),
+        json: async () => { throw new Error('Malformed authentication response'); },
+      };
+    },
+  });
+
+  await assert.rejects(apiFetch('/api/listings/mine', { auth: true }), (error) => {
+    assert.equal(error instanceof AuthenticationError, true);
+    assert.equal(error.message, 'Your session has expired. Please log in again.');
+    return true;
+  });
+  assert.equal(fetchCalls, 1);
+});
+
+test('api client keeps public 401 responses as ApiError', async () => {
+  let accessTokenCalls = 0;
+  const apiFetch = createApiClient({
+    baseUrl: 'http://api.test',
+    sessionManager: { getAccessToken: async () => { accessTokenCalls += 1; } },
+    fetchImpl: async () => ({
+      ok: false,
+      status: 401,
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+      json: async () => ({ error: 'Login required' }),
+    }),
+  });
+
+  await assert.rejects(apiFetch('/public-but-unauthorized'), (error) => {
+    assert.equal(error instanceof ApiError, true);
+    assert.equal(error.status, 401);
+    assert.equal(error.message, 'Login required');
+    return true;
+  });
+  assert.equal(accessTokenCalls, 0);
+});

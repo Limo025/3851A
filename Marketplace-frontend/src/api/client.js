@@ -1,4 +1,4 @@
-import { session } from '../auth/session.js';
+import { AuthenticationError, session } from '../auth/session.js';
 
 function apiBaseUrl() {
   return import.meta.env?.VITE_API_URL || 'http://localhost:8000';
@@ -33,6 +33,10 @@ export function createApiClient({ fetchImpl = globalThis.fetch, sessionManager =
       headers: requestHeaders,
       body: body === undefined || isFormData ? body : JSON.stringify(body),
     });
+    if (auth && response.status === 401) {
+      throw new AuthenticationError();
+    }
+
     const contentType = response.headers?.get?.('Content-Type') || '';
     const data = contentType.includes('application/json') ? await response.json() : null;
 
