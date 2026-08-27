@@ -34,7 +34,7 @@ function App() {
         
         {/* BACKGROUND IMAGE FOR MAIN PAGE*/}
         <div id="headerImage">
-            <img src="src/img/background.png" alt="background image" />
+            <img src="src/img/panorama_background.webp" alt="background image" />
         </div>
         <div id="contentBackground">
             <div class="wideContent">

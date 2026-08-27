@@ -22,3 +22,14 @@ homepage.
 When a user searches for an item, the words they search are segmented into tags. 
     eg. Kitchen Fridge = 'kitchen' + 'fridge'. 
 This information is then added to the user's cookies, which 
+
+Meeting notes for 28/8
+- Started work on Items and how they are displayed
+    ( demonstrate home page + item page)
+    ( discuss ui elements)
+    ( discuss grabbing data from url)
+    ( discuss how the backend would work with the item page. )
+- Started work on Searching for Items
+    ( demonstrate basic functionality and url stuff)
+    ( discuss intent to use external API for autocomplete in search bar)
+    ( discuss how the backend would work with the item page. )

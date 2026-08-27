@@ -46,6 +46,15 @@ function loadItemData(event){
         // now it would search items in a database with the query.
         
 
+        /*
+                    <div class='recItem'>
+                        <img class='recItemImage' alt='itemImageNotFound' src="src/img/testImage_3.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+        */
+
     }else{  // send the user to a 404 page, as we don't have all the data in the URL params to load. 
         window.location.href = '/invalid';
     }

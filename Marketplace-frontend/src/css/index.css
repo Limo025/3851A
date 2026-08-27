@@ -120,8 +120,7 @@ h3{
     position: relative;
 }
 #headerImage img{
-    max-width: 100%;
-    height: auto;
+    max-height: 312px;
     margin: 0;
     z-index: -1;
 }
@@ -245,6 +244,10 @@ p{
     border: 3px solid #005bf9;
     border-radius: 25px;
     font-family: Corbel;
+}
+#searchBarAutocompleteBox{
+    max-width: 775px;
+    background-color: white;
 }
 .sidebar {
   /* positioning */
