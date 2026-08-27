@@ -39,6 +39,11 @@ test('post-login navigation falls back home for malformed or external state', ()
   assert.equal(getPostLoginPath({ from: '/\\attacker.test/steal' }), '/');
 });
 
+test('post-login navigation rejects paths that normalize to protocol-relative form', () => {
+  assert.equal(getPostLoginPath({ from: '/..//attacker.test' }), '/');
+  assert.equal(getPostLoginPath({ from: '/%2e%2e//attacker.test' }), '/');
+});
+
 test('image selection accepts only supported images within the count and size limits', () => {
   const current = [imageFile('current.jpg')];
   const valid = imageFile('valid.webp', { type: 'image/webp' });

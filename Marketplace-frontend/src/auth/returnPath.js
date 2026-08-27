@@ -35,7 +35,13 @@ export function getPostLoginPath(state) {
   try {
     const appOrigin = 'https://marketplace.invalid';
     const resolved = new URL(candidate, appOrigin);
-    if (resolved.origin !== appOrigin) return '/';
+    if (
+      resolved.origin !== appOrigin
+      || !resolved.pathname.startsWith('/')
+      || resolved.pathname.startsWith('//')
+    ) {
+      return '/';
+    }
     return `${resolved.pathname}${resolved.search}${resolved.hash}`;
   } catch {
     return '/';
