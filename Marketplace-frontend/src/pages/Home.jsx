@@ -37,12 +37,82 @@ function App() {
             <img src="src/img/background.png" alt="background image" />
         </div>
         <div id="contentBackground">
-            <div id="content">
-                <h3>This section of the main page is where recommended items for the user will go. </h3>
+            <div class="wideContent">
+                <h3>Recently viewed</h3>
             </div>
-             <div id="wideContent">
-                <h3>|---- Minimum distance from screen, allows user to focus on elements in middle of screen. </h3>
+                <div class='recItemsHomepage'>
+
+                    <div class='recItem'>
+                        <img class='recItemImage' alt='itemImageNotFound' src="src/img/testImage_2.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    <div class='recItem'>
+                        <img class='recItemImage' alt='itemImageNotFound' src="src/img/testImage_1.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    <div class='recItem'>
+                        <img class='recItemImage' alt='itemImageNotFound' src="src/img/testImage_2.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    <div class='recItem'>
+                        <img class='recItemImage' alt='itemImageNotFound' src="src/img/testImage_3.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    <div class='recItem'>
+                        <img class='recItemImage' alt='itemImageNotFound' src="src/img/testImage_1.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    
+                </div>
+        </div>
+                <div id="contentBackground">
+            <div class="wideContent">
+                <h3>Recommended Items </h3>
             </div>
+                <div class='recItemsHomepage'>
+                    
+                    <div class='recItem'>
+                        <img class='recItemImage' alt='itemImageNotFound' src="src/img/testImage_2.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    <div class='recItem'>
+                        <img class='recItemImage' alt='itemImageNotFound' src="src/img/testImage_1.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    <div class='recItem'>
+                        <img class='recItemImage' alt='itemImageNotFound' src="src/img/testImage_2.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    <div class='recItem'>
+                        <img class='recItemImage' alt='itemImageNotFound' src="src/img/testImage_3.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    <div class='recItem'>
+                        <img class='recItemImage' alt='itemImageNotFound' src="src/img/testImage_1.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    
+                </div>
         </div>
         </>
 
