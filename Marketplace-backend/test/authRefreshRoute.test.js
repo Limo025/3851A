@@ -4,10 +4,11 @@ import { once } from 'node:events';
 import express from 'express';
 import { createAuthRouter } from '../src/routes/auth.js';
 
-async function withAuthApp(fetchImpl, run) {
+async function withAuthApp(fetchImpl, run, options = {}) {
   const app = express().use(express.json()).use('/auth', createAuthRouter({
     firebaseAuth: {},
     fetchImpl,
+    ...options,
   }));
   const server = app.listen(0, '127.0.0.1');
   await once(server, 'listening');
@@ -150,4 +151,44 @@ test('POST /auth/refresh reports network failures without leaking details', asyn
     assert.equal(response.status, 500);
     assert.deepEqual(await response.json(), { error: 'Unable to refresh session' });
   });
+});
+
+test('POST /auth/refresh aborts provider requests at the configured timeout and returns a controlled response', async () => {
+  let receivedSignal;
+  await withAuthApp((_url, options) => {
+    receivedSignal = options.signal;
+    return new Promise((_resolve, reject) => {
+      options.signal.addEventListener('abort', () => reject(new Error('aborted by timeout')), { once: true });
+    });
+  }, async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/auth/refresh`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refreshToken: 'old-refresh' }),
+    });
+
+    assert.equal(response.status, 504);
+    assert.deepEqual(await response.json(), { error: 'Authentication provider timed out' });
+  }, { timeoutMs: 1 });
+  assert.equal(receivedSignal?.aborted, true);
+});
+
+test('POST /auth/login aborts provider requests at the configured timeout and returns a controlled response', async () => {
+  let receivedSignal;
+  await withAuthApp((_url, options) => {
+    receivedSignal = options.signal;
+    return new Promise((_resolve, reject) => {
+      options.signal.addEventListener('abort', () => reject(new Error('aborted by timeout')), { once: true });
+    });
+  }, async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'seller@example.test', password: 'password' }),
+    });
+
+    assert.equal(response.status, 504);
+    assert.deepEqual(await response.json(), { error: 'Authentication provider timed out' });
+  }, { timeoutMs: 1 });
+  assert.equal(receivedSignal?.aborted, true);
 });

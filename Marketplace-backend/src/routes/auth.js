@@ -1,5 +1,6 @@
 import express from 'express';
 import User from '../models/User.js';
+import { fetchWithTimeout, isProviderTimeoutError } from '../services/providerRequest.js';
 
 async function defaultFirebaseAuthResolver() {
     const { auth } = await import('../config/firebase.js');
@@ -10,6 +11,10 @@ export function createAuthRouter({
     firebaseAuth,
     fetchImpl = globalThis.fetch,
     resolveFirebaseAuth = defaultFirebaseAuthResolver,
+    timeoutMs = 10_000,
+    setTimeoutImpl,
+    clearTimeoutImpl,
+    AbortControllerImpl,
 } = {}) {
     const router = express.Router();
     let resolvedFirebaseAuth = firebaseAuth;
@@ -50,13 +55,14 @@ export function createAuthRouter({
         }
 
         try {
-            const response = await fetchImpl(
+            const response = await fetchWithTimeout(fetchImpl,
                 `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.FIREBASE_API_KEY}`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password, returnSecureToken: true }),
-                }
+                },
+                { provider: 'Firebase', timeoutMs, setTimeoutImpl, clearTimeoutImpl, AbortControllerImpl },
             );
             const data = await response.json();
 
@@ -76,6 +82,9 @@ export function createAuthRouter({
                     : { uid: data.localId, email: data.email },
             });
         } catch (err) {
+            if (isProviderTimeoutError(err)) {
+                return res.status(504).json({ error: 'Authentication provider timed out' });
+            }
             console.error('Login error:', err);
             res.status(500).json({ error: 'Login failed' });
         }
@@ -88,13 +97,14 @@ export function createAuthRouter({
         }
 
         try {
-            const response = await fetchImpl(
+            const response = await fetchWithTimeout(fetchImpl,
                 `https://securetoken.googleapis.com/v1/token?key=${process.env.FIREBASE_API_KEY}`,
                 {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                     body: new URLSearchParams({ grant_type: 'refresh_token', refresh_token: refreshToken.trim() }).toString(),
-                }
+                },
+                { provider: 'Firebase', timeoutMs, setTimeoutImpl, clearTimeoutImpl, AbortControllerImpl },
             );
             if (!response.ok) {
                 return res.status(401).json({ error: 'Unable to refresh session' });
@@ -112,7 +122,10 @@ export function createAuthRouter({
                 refreshToken: nextRefreshToken,
                 expiresIn,
             });
-        } catch {
+        } catch (error) {
+            if (isProviderTimeoutError(error)) {
+                return res.status(504).json({ error: 'Authentication provider timed out' });
+            }
             res.status(500).json({ error: 'Unable to refresh session' });
         }
     });

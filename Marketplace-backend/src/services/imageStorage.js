@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { cloudinaryConfig, validateCloudinaryConfig } from '../config/cloudinary.js';
+import { fetchWithTimeout, isProviderTimeoutError } from './providerRequest.js';
 
 const CLOUDINARY_FOLDER = 'marketplace/listings';
 
@@ -28,13 +29,24 @@ export function createImageStorage({
   fetchImpl = globalThis.fetch,
   config = cloudinaryConfig,
   now = () => Date.now(),
+  timeoutMs = 10_000,
+  setTimeoutImpl,
+  clearTimeoutImpl,
+  AbortControllerImpl,
 } = {}) {
   async function request(url, formData) {
     let response;
 
     try {
-      response = await fetchImpl(url, { method: 'POST', body: formData });
-    } catch {
+      response = await fetchWithTimeout(fetchImpl, url, { method: 'POST', body: formData }, {
+        provider: 'Cloudinary',
+        timeoutMs,
+        setTimeoutImpl,
+        clearTimeoutImpl,
+        AbortControllerImpl,
+      });
+    } catch (error) {
+      if (isProviderTimeoutError(error)) throw error;
       throw cloudinaryError();
     }
 

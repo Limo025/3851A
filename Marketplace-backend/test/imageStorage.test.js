@@ -130,3 +130,46 @@ test('deleteImages attempts every asset and reports aggregate destroy failures',
   assert.equal(requests[0].url, 'https://api.cloudinary.com/v1_1/demo-cloud/image/destroy');
   assert.deepEqual(requests.map(({ options }) => options.body.get('public_id')).sort(), ['marketplace/a', 'marketplace/b']);
 });
+
+test('provider timeout aborts an in-flight Cloudinary request and exposes a controlled error', async () => {
+  let receivedSignal;
+  const store = createImageStorage({
+    config,
+    timeoutMs: 1,
+    fetchImpl: (_url, options) => {
+      receivedSignal = options.signal;
+      return new Promise((_resolve, reject) => {
+        options.signal.addEventListener('abort', () => reject(new Error('aborted by timeout')), { once: true });
+      });
+    },
+  });
+
+  await assert.rejects(
+    store.uploadImages([{
+      buffer: Buffer.from('image-data'),
+      originalname: 'desk.webp',
+      mimetype: 'image/webp',
+    }]),
+    (error) => error?.code === 'PROVIDER_TIMEOUT'
+      && error?.statusCode === 504
+      && error.message === 'Cloudinary request timed out',
+  );
+  assert.equal(receivedSignal?.aborted, true);
+});
+
+test('successful Cloudinary requests clear their timeout timer', async () => {
+  let clearCalls = 0;
+  const store = createImageStorage({
+    config,
+    setTimeoutImpl: () => Symbol('timer'),
+    clearTimeoutImpl: () => { clearCalls += 1; },
+    fetchImpl: async () => jsonResponse({ secure_url: 'https://cdn.test/a.webp', public_id: 'marketplace/a' }),
+  });
+
+  await store.uploadImages([{
+    buffer: Buffer.from('image-data'),
+    originalname: 'desk.webp',
+    mimetype: 'image/webp',
+  }]);
+  assert.equal(clearCalls, 1);
+});

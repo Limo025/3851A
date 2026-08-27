@@ -4,6 +4,7 @@ import Listing from '../models/Listing.js';
 import User from '../models/User.js';
 import { listingImagesUpload } from '../middleware/upload.js';
 import imageStorage from '../services/imageStorage.js';
+import { isProviderTimeoutError } from '../services/providerRequest.js';
 import { MAX_LISTING_IMAGES } from '../constants/listings.js';
 import {
   parseListingQuery,
@@ -86,7 +87,7 @@ export function createListingRouter({
       const populatedListing = await listing.populate('seller', SAFE_SELLER_FIELDS);
 
       return res.status(201).json(populatedListing);
-    } catch {
+    } catch (error) {
       if (uploadedImages.length > 0) {
         try {
           await imageStore.deleteImages(uploadedImages.map(({ publicId }) => publicId));
@@ -95,6 +96,9 @@ export function createListingRouter({
         }
       }
 
+      if (isProviderTimeoutError(error)) {
+        return res.status(504).json({ error: 'Image storage provider timed out' });
+      }
       return res.status(500).json({ error: 'Failed to create listing' });
     }
   });
@@ -209,7 +213,7 @@ export function createListingRouter({
       }
 
       return res.json(listing);
-    } catch {
+    } catch (error) {
       if (uploadedImages.length > 0) {
         try {
           await imageStore.deleteImages(uploadedImages.map(({ publicId }) => publicId));
@@ -218,6 +222,9 @@ export function createListingRouter({
         }
       }
 
+      if (isProviderTimeoutError(error)) {
+        return res.status(504).json({ error: 'Image storage provider timed out' });
+      }
       return res.status(500).json({ error: 'Failed to update listing' });
     }
   });
