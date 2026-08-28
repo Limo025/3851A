@@ -9,6 +9,7 @@ import NotFound from './pages/NotFound.jsx'
 import CreateAccount from './pages/CreateAccount.jsx'
 import Search from './pages/Search.jsx'
 import Messages from './pages/Messages.jsx'
+import Settings from './pages/Settings.jsx'
 import { initializeApp } from "firebase/app"
 
 const firebaseConfig = {

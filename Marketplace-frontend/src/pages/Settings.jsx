@@ -26,6 +26,16 @@ function handleSearch(event) {
     }
 }
 
+function initialiseSettings(event){
+  // 1. settings should only be visible to users that are logged in. Do a quick check to see if the
+  /*    users logged in, and if not, redirect them to the login page. 
+
+     2. Decide with project peers if personal settings should be stored in the DB or cookies. 
+
+     3. Retrieve settings from DB / Cookies, and set them. 
+
+  */
+}
 function App() {
   const [count, setCount] = useState(0)
 
@@ -34,7 +44,8 @@ function App() {
   {/* MAIN CONTENT*/}
   <div id="contentBackground">
     <div id="content">
-      <h1> Settings </h1>
+      <h1> Error 404</h1>
+      <h3> The website you were trying to go to is either unavailable, or doesn't exist.<br /> If you think this is a mistake, please contact support. </h3>
 
     </div>
   </div>

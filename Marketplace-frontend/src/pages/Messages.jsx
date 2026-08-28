@@ -28,7 +28,7 @@ function handleSearch(event) {
 
 function App() {
   const [count, setCount] = useState(0)
-
+  // if user isn't logged in, redirect them to login page. 
   return (
 <>
   {/* MAIN CONTENT*/}
@@ -64,10 +64,13 @@ function App() {
           <p>example communication (receiver's username would go here)</p>
 
           <div class="receiverMessage">
-            <p>hello there</p>
+            <p>example receiver message</p>
           </div>
           <div class="senderMessage">
-            <p>general kenobi!</p>
+            <p>example sender message</p>
+          </div>
+          <div class="messageTextInput">
+              <input class="messageTextBox" type="text" placeholder="Type here..."></input>
           </div>
         </div>
       </div>

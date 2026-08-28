@@ -38,7 +38,7 @@ function App() {
         </div>
         <div id="contentBackground">
             <div class="wideContent">
-                <h3>Recently viewed</h3>
+                <h1>Recently viewed</h1>
             </div>
                 <div class='recItemsHomepage'>
 
@@ -77,7 +77,7 @@ function App() {
         </div>
                 <div id="contentBackground">
             <div class="wideContent">
-                <h3>Recommended Items </h3>
+                <h1>Recommended Items </h1>
             </div>
                 <div class='recItemsHomepage'>
                     
