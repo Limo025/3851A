@@ -216,6 +216,7 @@ h3{
     width: max-content;
     padding: 10px;
     border-radius: 15px;
+    font-family: FuseV2;
 }
 .messageUserIcon{
     height: 80px;
@@ -235,6 +236,7 @@ h3{
     border: 2px solid rgba(2, 2, 2, 1);
     transition: border 0.2s;
     cursor:pointer;
+    background-color: rgba(0, 0, 0, 0.3);
 }
 .messageUserName{
     grid-column: 2;
@@ -254,6 +256,7 @@ h3{
     padding: 10px;
     border-radius: 15px;
     align-items: center;
+    font-family: FuseV2;
 }
 .messageTextButton{
     border: 5px solid rgb(1, 98, 163);
@@ -265,12 +268,14 @@ h3{
     padding: 10px;
     margin-left: 50px;
     border-radius: 15px;
+    font-family: FuseV2;
 }
 .messageTextButton:hover{
     background-color: rgb(161, 217, 255);
     color: black;
     border: 5px solid rgb(43, 116, 165);
     transition: background-color 0.2s, color 0.2s, border 0.2s;
+    cursor: pointer;
 }
 
 .receiverMessage{
