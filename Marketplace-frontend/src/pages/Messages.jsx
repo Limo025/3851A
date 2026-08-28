@@ -16,6 +16,24 @@ function closeNav() {
   isOpen=false;
 }
 
+function receiveTextFromInput(text){
+  console.log(text);
+  document.getElementById('messageTextBox').value = "";
+      // generate a new sender message
+}
+
+function receiveTextFromInputViaKey(event){
+    if (event.key === 'Enter' && event.target.value.trim() != ''){
+      // user entered text into input box, and pressed enter key to input text into service. 
+      const text = event.target.value.trim();
+      receiveTextFromInput(text);
+    }
+}
+
+function receiveTextFromInputViaButton(){
+    receiveTextFromInput(document.getElementById('messageTextBox').value);
+}
+
 function handleSearch(event) {
     if (event.key === 'Enter') {
         alert('hello world');
@@ -70,7 +88,8 @@ function App() {
             <p>example sender message</p>
           </div>
           <div class="messageTextInput">
-              <input class="messageTextBox" type="text" placeholder="Type here..."></input>
+              <input id="messageTextBox" class="messageTextBox" type="text" placeholder="Type here..." onKeyDown={receiveTextFromInputViaKey}></input>
+              <button class="messageTextButton" onClick={receiveTextFromInputViaButton}>Send</button>
           </div>
         </div>
       </div>
