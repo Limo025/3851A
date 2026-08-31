@@ -75,7 +75,7 @@ router.post('/login', async (req, res) => {
             user: user
                 ? { uid: user.uid, email: user.email, username: user.username }
                 : { uid: data.localId, email: data.email },
-        });
+        });         //  not storing this anywhere
     } catch (err) {
         console.error('Login error:', err);
         res.status(500).json({ error: 'Login failed' });
