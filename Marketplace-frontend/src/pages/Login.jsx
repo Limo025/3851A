@@ -1,43 +1,15 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
-
-//replace this whole thing with toggleNav()
-// let isOpen = false;
-
-// function openNav() {
-//   if (isOpen == true){
-//       document.getElementById("sidebar").style.display = "none";
-//       isOpen=false;
-//   } else{
-//       document.getElementById("sidebar").style.display = "block";
-//       isOpen=true;
-//   }
-// }
-// function closeNav() {
-//   document.getElementById("sidebar").style.display = "none";
-//   isOpen=false;
-// }
-
-function handleSearch(event) {
-    if (event.key === 'Enter') {
-        alert('hello world');
-        const query = event.target.value.trim();
-        if (query) {
-            window.location.href = '/search?=' + encodeURIComponent(query);
-        }
-    }
-}
+import { useLocation, useNavigate } from 'react-router-dom';
+import { session } from '../auth/session.js';
+import { getPostLoginPath } from '../auth/returnPath.js';
 
 function App() {
-  const [isNavOpen, setIsNavOpen] = useState(false);
-  const [count, setCount] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
-
-  const toggleNav = () => setIsNavOpen(!isNavOpen);
+  const location = useLocation();
 
   async function logIn() {
       document.getElementById("loadingIcon").style.display = "inline";
@@ -49,7 +21,8 @@ function App() {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error);
-            navigate('/');
+            session.saveLogin(data);
+            navigate(getPostLoginPath(location.state), { replace: true });
         } catch (e) {
             setError(e instanceof Error ? e.message : 'An error occurred');
             document.getElementById("loadingIcon").style.display = "none";
