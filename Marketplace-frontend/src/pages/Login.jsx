@@ -2,13 +2,11 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { session } from '../auth/session.js';
 import { getPostLoginPath } from '../auth/returnPath.js';
-import { getPasswordInputType } from '../auth/loginForm.js';
 
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,48 +38,26 @@ function App() {
 <>
   {/* MAIN CONTENT*/}
   <div id="contentBackground">
-    <div id="content" className="login-page">
+    <div id="content">
       <h1>Log in</h1>
+      {error && <p>{error}</p>}
       <form id="loginForm" className="loginAccountForm" onSubmit={handleSubmit}>
-        <label htmlFor="email">Your Email</label>
+        <label htmlFor="email">Email: </label>
         <input
-          placeholder="name@example.com"
+          placeholder="Your email address"
           id='email'
-          type="email"
-          autoComplete="email"
           value={email}
           onChange={e => setEmail(e.target.value)} />
-        <label htmlFor="password">Password</label>
-        <div className={`login-password-field${error ? ' login-password-field--error' : ''}`}>
-          <input
-            placeholder="Your password"
-            id='password'
-            type={getPasswordInputType(isPasswordVisible)}
-            autoComplete="current-password"
-            aria-invalid={Boolean(error)}
-            aria-describedby={error ? 'login-error' : undefined}
-            value={password}
-            onChange={e => setPassword(e.target.value)} />
-          <button
-            className="login-password-toggle"
-            type="button"
-            aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
-            aria-pressed={isPasswordVisible}
-            onClick={() => setIsPasswordVisible(visible => !visible)}
-          >
-            <svg aria-hidden="true" viewBox="0 0 24 24">
-              <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z" />
-              <circle cx="12" cy="12" r="2.75" />
-              {!isPasswordVisible && <path d="m4 4 16 16" />}
-            </svg>
-          </button>
-        </div>
-        <div className="login-support-row">
-          <p id="login-error" className="login-error" role={error ? 'alert' : undefined}>{error}</p>
-          <Link className="login-forgot-link" to="/forgot-password">Forgot password?</Link>
-        </div>
+          <label htmlFor="password">Password: </label>
+        <input
+          placeholder="Your password"
+          id='password'
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)} />
         <div className="login-actions">
-          <button className="bigButton login-submit" type="submit">Continue</button>
+          <button className="bigButton login-submit" type="submit">Log In</button>
+          <Link className="login-forgot-link" to="/forgot-password">Forgot password?</Link>
           <img id="loadingIcon" className="loadingIcon" src="/src/icon/loading.gif" alt="Signing in" />
         </div>
       </form>
