@@ -326,29 +326,123 @@ h3{
   top: 10px;
   display:none;
 }
+.login-page{
+    max-width: 480px;
+}
+.loginAccountForm{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.loginAccountForm label{
+    font-family: Corbel, Arial, sans-serif;
+    font-size: 18px;
+    padding: 0;
+}
+.loginAccountForm > input,
+.login-password-field{
+    margin-bottom: 10px;
+}
 .loginAccountForm input{
-    font-size: 25px;
-    font-family: FuseV2;
-    max-width: 300px;
-    padding: 5px;
+    border: 1px solid #c8cdd8;
+    border-radius: 12px;
+    box-sizing: border-box;
+    font-family: Corbel, Arial, sans-serif;
+    font-size: 17px;
+    max-width: none;
+    min-height: 50px;
+    padding: 12px 14px;
+    transition: border-color .2s, box-shadow .2s;
     width: 100%;
+}
+.loginAccountForm input:focus{
+    border-color: #005bf9;
+    box-shadow: 0 0 0 3px rgba(0, 91, 249, 0.14);
+    outline: none;
+}
+.login-password-field{
+    position: relative;
+}
+.login-password-field input{
+    padding-right: 52px;
+}
+.login-password-field--error input{
+    border-color: #ef4655;
+}
+.login-password-field--error input:focus{
+    box-shadow: 0 0 0 3px rgba(239, 70, 85, 0.14);
+}
+.login-password-toggle{
+    align-items: center;
+    background: transparent;
+    border: 0;
+    color: #8a93a4;
+    cursor: pointer;
+    display: flex;
+    height: 42px;
+    justify-content: center;
+    padding: 9px;
+    position: absolute;
+    right: 5px;
+    top: 4px;
+    width: 42px;
+}
+.login-password-toggle svg{
+    fill: none;
+    height: 22px;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.7;
+    width: 22px;
+}
+.login-password-toggle:hover{
+    color: #005bf9;
+}
+.login-password-toggle:focus-visible{
+    border-radius: 8px;
+    outline: 3px solid rgba(0, 91, 249, 0.35);
+}
+.login-support-row{
+    align-items: center;
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+    min-height: 24px;
+}
+.login-error{
+    color: #ef4655;
+    font-family: Corbel, Arial, sans-serif;
+    margin: 0;
 }
 .login-actions{
     display: grid;
     gap: 12px;
-    grid-column: 2;
-    margin-top: 14px;
-    max-width: 300px;
+    margin-top: 8px;
+    max-width: none;
 }
 .login-submit{
+    background: #005bf9;
+    border: 2px solid #005bf9;
+    border-radius: 10px;
     box-sizing: border-box;
+    color: white;
+    font-family: FuseV2, Arial, sans-serif;
+    font-size: 19px;
+    min-height: 52px;
+    padding: 12px 18px;
     width: 100%;
+}
+.login-submit:hover{
+    background: #0048c7;
+    border-color: #0048c7;
 }
 .login-forgot-link{
     color: #005bf9;
-    justify-self: start;
-    font-family: FuseV2, Arial, sans-serif;
+    flex-shrink: 0;
+    font-family: Corbel, Arial, sans-serif;
     margin: 0;
+    text-decoration: none;
 }
 .login-forgot-link:hover{
     color: #00225e;
