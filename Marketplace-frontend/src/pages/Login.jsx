@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { session } from '../auth/session.js';
 import { getPostLoginPath } from '../auth/returnPath.js';
 
@@ -36,14 +36,14 @@ function App() {
     <div id="content">
       <h1>Login page</h1>
       {error && <p>{error}</p>}
-      <form id="loginForm" class="loginAccountForm">
-        <label for="email">Email: </label>
+      <form id="loginForm" className="loginAccountForm">
+        <label htmlFor="email">Email: </label>
         <input
           placeholder="Your email address"
           id='email'
           value={email}
           onChange={e => setEmail(e.target.value)} />
-          <label for="password">Password: </label>
+          <label htmlFor="password">Password: </label>
         <input
           placeholder="Your password"
           id='password'
@@ -51,8 +51,9 @@ function App() {
           value={password}
           onChange={e => setPassword(e.target.value)} />
       </form>
-      <button class="bigButton" onClick={logIn}>Log In</button>
-      <img id="loadingIcon" class="loadingIcon" src="src/icon/loading.gif" alt="loading" />
+      <Link className="login-forgot-link" to="/forgot-password">Forgot password?</Link>
+      <button className="bigButton" onClick={logIn}>Log In</button>
+      <img id="loadingIcon" className="loadingIcon" src="src/icon/loading.gif" alt="loading" />
 
       <br />
       <br />
@@ -95,7 +96,7 @@ function App() {
       </button>*/}
       <br />
       <h1> or, Create an Account</h1>
-      <button class="bigButton" onClick={()=> window.location.href='/createAccount'}>Create a Marketplace Account Here</button>
+      <button className="bigButton" onClick={()=> window.location.href='/createAccount'}>Create a Marketplace Account Here</button>
       <br />
     </div>
   </div>

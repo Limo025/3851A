@@ -333,6 +333,123 @@ h3{
     padding: 5px;
     margin-right: 50px;
 }
+.login-forgot-link{
+    color: #005bf9;
+    display: inline-block;
+    font-family: FuseV2, Arial, sans-serif;
+    margin: 14px 0 22px;
+}
+.login-forgot-link:hover{
+    color: #00225e;
+}
+.login-forgot-link:focus-visible{
+    outline: 3px solid #202020;
+    outline-offset: 3px;
+}
+.password-reset-page{
+    box-sizing: border-box;
+    min-height: 70vh;
+    padding: 90px 24px;
+}
+.password-reset-card{
+    background: #fff;
+    border: 1px solid #cbd6e8;
+    border-top: 8px solid #005bf9;
+    box-shadow: 0 18px 50px rgba(0, 34, 94, 0.14);
+    box-sizing: border-box;
+    margin: 0 auto;
+    max-width: 620px;
+    padding: 42px;
+}
+.password-reset-card__eyebrow{
+    color: #005bf9;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+}
+.password-reset-card h1{
+    color: #202020;
+    margin: 0;
+}
+.password-reset-card__intro{
+    color: #42526d;
+    font-family: Corbel, Arial, sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin: 14px 0 28px;
+}
+.password-reset-card__success,
+.password-reset-card__error{
+    border-left: 5px solid;
+    font-family: Corbel, Arial, sans-serif;
+    margin: 0 0 20px;
+    padding: 14px 16px;
+}
+.password-reset-card__success{
+    background: #effaf2;
+    border-color: #1e7a3b;
+    color: #135428;
+}
+.password-reset-card__error{
+    background: #fff0f0;
+    border-color: #b00020;
+    color: #7a0015;
+}
+.password-reset-form{
+    display: grid;
+    gap: 10px;
+}
+.password-reset-form label{
+    color: #00225e;
+    font-family: FuseV2, Arial, sans-serif;
+    font-size: 1.05rem;
+}
+.password-reset-form input{
+    border: 1px solid #aebbd1;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font: 1.05rem Corbel, Arial, sans-serif;
+    min-height: 48px;
+    padding: 10px 12px;
+    width: 100%;
+}
+.password-reset-form button{
+    background: #005bf9;
+    border: 2px solid #005bf9;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    font: 1rem FuseV2, Arial, sans-serif;
+    justify-self: start;
+    margin-top: 8px;
+    min-height: 46px;
+    padding: 10px 20px;
+}
+.password-reset-form button:hover:not(:disabled){
+    background: #00225e;
+    border-color: #00225e;
+}
+.password-reset-form button:disabled{
+    background: #77839a;
+    border-color: #77839a;
+    cursor: wait;
+}
+.password-reset-form input:focus-visible,
+.password-reset-form button:focus-visible,
+.password-reset-card__back:focus-visible{
+    outline: 3px solid #202020;
+    outline-offset: 3px;
+}
+.password-reset-card__back{
+    color: #005bf9;
+    display: inline-block;
+    font-family: FuseV2, Arial, sans-serif;
+    margin-top: 26px;
+}
+.password-reset-card__back:hover{
+    color: #00225e;
+}
                                                                                     /*    O     */
 .optionsButton{
     width: fit-content;
@@ -578,6 +695,16 @@ p{
     }
     h1{
         font-size: 34px;
+    }
+    .password-reset-page{
+        padding: 48px 14px;
+    }
+    .password-reset-card{
+        padding: 28px 20px;
+    }
+    .password-reset-form button{
+        justify-self: stretch;
+        width: 100%;
     }
 }
 /* google button */
