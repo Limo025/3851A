@@ -29,14 +29,19 @@ function App() {
         }
     }
 
+  function handleSubmit(event) {
+    event.preventDefault();
+    logIn();
+  }
+
   return (
 <>
   {/* MAIN CONTENT*/}
   <div id="contentBackground">
     <div id="content">
-      <h1>Login page</h1>
+      <h1>Log in</h1>
       {error && <p>{error}</p>}
-      <form id="loginForm" className="loginAccountForm">
+      <form id="loginForm" className="loginAccountForm" onSubmit={handleSubmit}>
         <label htmlFor="email">Email: </label>
         <input
           placeholder="Your email address"
@@ -50,13 +55,13 @@ function App() {
           type="password"
           value={password}
           onChange={e => setPassword(e.target.value)} />
+        <div className="login-actions">
+          <button className="bigButton login-submit" type="submit">Log In</button>
+          <Link className="login-forgot-link" to="/forgot-password">Forgot password?</Link>
+          <img id="loadingIcon" className="loadingIcon" src="/src/icon/loading.gif" alt="Signing in" />
+        </div>
       </form>
-      <Link className="login-forgot-link" to="/forgot-password">Forgot password?</Link>
-      <button className="bigButton" onClick={logIn}>Log In</button>
-      <img id="loadingIcon" className="loadingIcon" src="src/icon/loading.gif" alt="loading" />
 
-      <br />
-      <br />
       {/* bear with me, google is strict with this stuff...*/}
       {/*<button className="gsi-material-button">
         <div className="gsi-material-button-state" />
@@ -94,10 +99,10 @@ function App() {
           <span style={{ display: "none" }}>Continue with Google</span>
         </div>
       </button>*/}
-      <br />
-      <h1> or, Create an Account</h1>
-      <button className="bigButton" onClick={()=> window.location.href='/createAccount'}>Create a Marketplace Account Here</button>
-      <br />
+      <div className="login-create-account">
+        <p>New to Marketplace?</p>
+        <button className="bigButton" onClick={()=> window.location.href='/createAccount'}>Create an account</button>
+      </div>
     </div>
   </div>
 </>

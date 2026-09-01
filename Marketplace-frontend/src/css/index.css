@@ -331,13 +331,24 @@ h3{
     font-family: FuseV2;
     max-width: 300px;
     padding: 5px;
-    margin-right: 50px;
+    width: 100%;
+}
+.login-actions{
+    display: grid;
+    gap: 12px;
+    grid-column: 2;
+    margin-top: 14px;
+    max-width: 300px;
+}
+.login-submit{
+    box-sizing: border-box;
+    width: 100%;
 }
 .login-forgot-link{
     color: #005bf9;
-    display: inline-block;
+    justify-self: start;
     font-family: FuseV2, Arial, sans-serif;
-    margin: 14px 0 22px;
+    margin: 0;
 }
 .login-forgot-link:hover{
     color: #00225e;
@@ -345,6 +356,25 @@ h3{
 .login-forgot-link:focus-visible{
     outline: 3px solid #202020;
     outline-offset: 3px;
+}
+.login-actions .loadingIcon{
+    justify-self: center;
+    padding-left: 0;
+}
+.login-create-account{
+    border-top: 1px solid #cbd6e8;
+    margin-top: 42px;
+    padding-top: 28px;
+}
+.login-create-account p{
+    color: #42526d;
+    font-family: FuseV2, Arial, sans-serif;
+    font-size: 1.15rem;
+    margin: 0 0 14px;
+}
+.login-create-account .bigButton{
+    font-size: 1.2rem;
+    padding: 14px 18px;
 }
 .password-reset-page{
     box-sizing: border-box;
@@ -674,6 +704,10 @@ p{
         margin-right: 0;
         max-width: 100%;
         width: 100%;
+    }
+    .login-actions{
+        grid-column: auto;
+        max-width: 100%;
     }
 }
 
