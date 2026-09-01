@@ -12,6 +12,13 @@
   max-width: 1200px;
 }
 
+.marketplace-page__header {
+  align-items: end;
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+}
+
 .marketplace-page__header h1 {
   margin: 0;
 }
@@ -21,51 +28,75 @@
   margin: 8px 0 28px;
 }
 
+.marketplace-page__query {
+  background: #eaf1ff;
+  border-left: 4px solid #005bf9;
+  color: #00225e;
+  flex: 0 1 auto;
+  max-width: 420px;
+  overflow-wrap: anywhere;
+  padding: 10px 14px;
+}
+
+.marketplace-page__query strong {
+  font-family: FuseV2, Arial, sans-serif;
+}
+
 .listing-filters {
   align-items: end;
-  background: #f5f8ff;
-  border: 2px solid #005bf9;
+  background: #f7f9fc;
+  border: 1px solid #cbd6e8;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgb(0 34 94 / 8%);
   display: grid;
-  gap: 16px;
+  gap: 18px 14px;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  padding: 20px;
+  padding: 22px;
+}
+
+.listing-filters__heading {
+  align-items: center;
+  display: flex;
+  gap: 20px;
+  grid-column: 1 / -1;
+  justify-content: space-between;
+  padding-bottom: 2px;
+}
+
+.listing-filters__heading p {
+  color: #53627a;
+  font-family: Corbel, Arial, sans-serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.08em;
+  margin: 0 0 2px;
+  text-transform: uppercase;
+}
+
+.listing-filters__heading h2 {
+  color: #00225e;
+  font-family: FuseV2Bold, Arial, sans-serif;
+  font-size: 1.45rem;
+  margin: 0;
 }
 
 .listing-filters label {
-  color: #00225e;
+  color: #24344f;
   display: grid;
   font-family: FuseV2, Arial, sans-serif;
-  font-size: 1rem;
-  gap: 6px;
+  font-size: 0.95rem;
+  gap: 7px;
 }
 
 .listing-filters input,
 .listing-filters select,
 .listing-filters button {
-  border: 1px solid #005bf9;
-  border-radius: 4px;
+  background: #fff;
+  border: 1px solid #aebbd1;
+  border-radius: 8px;
   box-sizing: border-box;
   font: inherit;
-  min-height: 42px;
-  padding: 8px 10px;
-}
-
-.listing-filters__search {
-  grid-column: 1 / -1;
-}
-
-.listing-filters__search > label {
-  margin-bottom: 6px;
-}
-
-.listing-filters__search-row {
-  display: flex;
-  gap: 8px;
-}
-
-.listing-filters__search-row input {
-  flex: 1;
-  min-width: 0;
+  min-height: 44px;
+  padding: 9px 11px;
 }
 
 .listing-filters button,
@@ -79,10 +110,22 @@
   padding: 9px 16px;
 }
 
+.listing-filters .listing-filters__clear {
+  background: transparent;
+  border-color: #005bf9;
+  border-radius: 999px;
+  color: #005bf9;
+  min-height: 40px;
+}
+
 .listing-filters button:hover,
 .listing-pagination button:hover:not(:disabled) {
   background: #00225e;
   border-color: #00225e;
+}
+
+.listing-filters .listing-filters__clear:hover {
+  color: #fff;
 }
 
 .listing-filters button:focus-visible,
@@ -531,16 +574,23 @@
 }
 
 @media (max-width: 768px) {
+  .marketplace-page__header {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .marketplace-page__query {
+    margin-top: 0;
+    max-width: none;
+  }
+
   .listing-detail {
     grid-template-columns: 1fr;
   }
 
   .listing-filters {
-    grid-template-columns: 1fr;
-  }
-
-  .listing-filters__search {
-    grid-column: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -554,7 +604,14 @@
   }
 
   .listing-filters {
+    grid-template-columns: 1fr;
     padding: 14px;
+  }
+
+  .listing-filters__heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
   }
 
   .listing-form {
@@ -567,10 +624,6 @@
 
   .image-uploader__previews {
     grid-template-columns: repeat(auto-fit, minmax(min(120px, 100%), 1fr));
-  }
-
-  .listing-filters__search-row {
-    flex-direction: column;
   }
 
   .listing-pagination {

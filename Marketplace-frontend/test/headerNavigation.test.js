@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
   buildMarketplaceSearchUrl,
+  getMarketplaceSearchTerm,
   getHeaderAuthView,
   initializeHeader,
   logout,
@@ -49,6 +50,14 @@ test('header search trims and safely encodes a marketplace query', () => {
     '/marketplace?search=desk%20%26%20chair',
   );
   assert.equal(buildMarketplaceSearchUrl('   '), null);
+});
+
+test('header search reflects the active marketplace query without leaking it onto other pages', () => {
+  assert.equal(
+    getMarketplaceSearchTerm({ pathname: '/marketplace', search: '?search=desk%20lamp&category=Furniture' }),
+    'desk lamp',
+  );
+  assert.equal(getMarketplaceSearchTerm({ pathname: '/messages', search: '?search=private' }), '');
 });
 
 test('header auth view exposes seller navigation only for an active session', () => {

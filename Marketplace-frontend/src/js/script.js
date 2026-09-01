@@ -6,6 +6,14 @@ export function buildMarketplaceSearchUrl(rawQuery) {
   return query ? '/marketplace?search=' + encodeURIComponent(query) : null;
 }
 
+export function getMarketplaceSearchTerm({ pathname = '', search = '' } = {}) {
+  if (pathname !== '/marketplace') {
+    return '';
+  }
+
+  return new URLSearchParams(search).get('search') || '';
+}
+
 export function getHeaderAuthView(hasSession) {
   return hasSession
     ? {
@@ -43,6 +51,8 @@ export function initializeHeader({ documentRef, windowRef, sessionManager = sess
     || !sidebar || !sidebarToggle || !sidebarClose) {
     return () => {};
   }
+
+  searchInput.value = getMarketplaceSearchTerm(windowRef.location);
 
   function applyAuthView() {
     const view = getHeaderAuthView(sessionManager.hasSession());

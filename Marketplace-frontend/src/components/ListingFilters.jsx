@@ -16,29 +16,15 @@ const sortOptions = [
   ['price_desc', 'Price: high to low'],
 ];
 
-export default function ListingFilters({ filters, onSearch, onFilterChange }) {
-  function handleSubmit(event) {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    onSearch(formData.get('search')?.trim() || '');
-  }
-
+export default function ListingFilters({ filters, onFilterChange, onClear }) {
   return (
-    <form className="listing-filters" onSubmit={handleSubmit} aria-label="Search and filter listings">
-      <div className="listing-filters__search">
-        <label htmlFor="listing-search">Search listings</label>
-        <div className="listing-filters__search-row">
-          <input
-            key={filters.search}
-            id="listing-search"
-            name="search"
-            type="search"
-            defaultValue={filters.search}
-            maxLength="100"
-            placeholder="Search by title"
-          />
-          <button type="submit">Search</button>
+    <form className="listing-filters" aria-label="Filter listings">
+      <div className="listing-filters__heading">
+        <div>
+          <p>Refine results</p>
+          <h2>Filters</h2>
         </div>
+        <button className="listing-filters__clear" type="button" onClick={onClear}>Clear filters</button>
       </div>
 
       <label>

@@ -4,6 +4,7 @@ import { apiFetch } from '../api/client.js';
 import ListingFilters from '../components/ListingFilters.jsx';
 import ListingGrid from '../components/ListingGrid.jsx';
 import '../css/listings.css';
+import { clearMarketplaceFilters } from '../utils/marketplaceFilters.js';
 import { clampPage } from '../utils/pagination.js';
 
 function readFilters(searchParams) {
@@ -83,12 +84,12 @@ export default function Marketplace() {
     setSearchParams(nextParams);
   }
 
-  function handleSearch(search) {
-    updateParameters({ search }, true);
-  }
-
   function handleFilterChange(name, value) {
     updateParameters({ [name]: value }, true);
+  }
+
+  function handleClearFilters() {
+    setSearchParams(clearMarketplaceFilters(searchParams));
   }
 
   function goToPage(page) {
@@ -99,11 +100,14 @@ export default function Marketplace() {
     <main className="marketplace-page">
       <div className="marketplace-page__content">
         <header className="marketplace-page__header">
-          <h1>Marketplace</h1>
-          <p>Browse items listed by the university community.</p>
+          <div>
+            <h1>Marketplace</h1>
+            <p>Browse items listed by the university community.</p>
+          </div>
+          {filters.search ? <p className="marketplace-page__query">Results for <strong>{filters.search}</strong></p> : null}
         </header>
 
-        <ListingFilters filters={filters} onSearch={handleSearch} onFilterChange={handleFilterChange} />
+        <ListingFilters filters={filters} onFilterChange={handleFilterChange} onClear={handleClearFilters} />
 
         <p className="marketplace-page__count" aria-live="polite">
           {loading ? 'Loading results…' : `${response.total} listing${response.total === 1 ? '' : 's'} found`}
