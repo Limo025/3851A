@@ -10,6 +10,8 @@ import CreateAccount from './pages/CreateAccount.jsx'
 import Search from './pages/Search.jsx'
 import Messages from './pages/Messages.jsx'
 import Settings from './pages/Settings.jsx'
+import About from './pages/About.jsx'
+import Categories from './pages/Categories.jsx'
 import { initializeApp } from "firebase/app"
 
 const firebaseConfig = {
@@ -33,6 +35,9 @@ createRoot(document.getElementById('root')).render(
         <Route path="/createAccount" element={<CreateAccount />} />
         <Route path="/search" element={<Search />} />
         <Route path="/messages" element={<Messages />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/categories" element={<Categories />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
