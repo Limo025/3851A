@@ -15,7 +15,6 @@ function closeNav() {
   document.getElementById("sidebar").style.display = "none";
   isOpen=false;
 }
-
 function handleSearch(event) {
     if (event.key === 'Enter') {
         alert('hello world');
@@ -27,7 +26,14 @@ function handleSearch(event) {
 }
 
 function App() {
+  const [selectedCategory, setSelectedCategory] = useState(' ');
   const [count, setCount] = useState(0)
+
+   const clickOnCategory = (e) => {
+    const categoryName = e.currentTarget.querySelector('.categoryName')?.textContent?.trim();
+    setSelectedCategory(categoryName);
+    window.location = "search?query=" + categoryName;
+  };
 
   return (
 <>
@@ -35,7 +41,27 @@ function App() {
   <div id="contentBackground">
     <div id="content">
       <h1> Categories </h1>
-
+      {/*  This is a sample grid - REACT should create one for appropriate categories.  */}
+      <div class="categoryGrid">
+        <div class="categoryBox" onClick={clickOnCategory}>
+          <p class="categoryName">CategoryA</p>
+        </div>
+        <div class="categoryBox" onClick={clickOnCategory}>
+          <p class="categoryName">CategoryB</p>
+        </div>
+        <div class="categoryBox" onClick={clickOnCategory}>
+          <p class="categoryName">CategoryC</p>
+        </div>
+        <div class="categoryBox" onClick={clickOnCategory}>
+          <p class="categoryName">CategoryD</p>
+        </div>
+        <div class="categoryBox" onClick={clickOnCategory}>
+          <p class="categoryName">CategoryE</p>
+        </div>
+        <div class="categoryBox" onClick={clickOnCategory}>
+          <p class="categoryName">CategoryF</p>
+        </div>
+      </div>
     </div>
   </div>
 </>
