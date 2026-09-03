@@ -9,6 +9,8 @@ import ForgotPassword from './pages/ForgotPassword.jsx'
 import Item from './pages/Item.jsx'
 import NotFound from './pages/NotFound.jsx'
 import CreateAccount from './pages/CreateAccount.jsx'
+import About from './pages/About.jsx'
+import Categories from './pages/Categories.jsx'
 import Search from './pages/Search.jsx'
 import Messages from './pages/Messages.jsx'
 import Settings from './pages/Settings.jsx'
@@ -43,6 +45,8 @@ createRoot(document.getElementById('root')).render(
         <Route path="/search" element={<Search />} />
         <Route path="/messages" element={<Messages />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/categories" element={<Categories />} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/listings/:id" element={<ListingDetail />} />
         <Route path="/sell" element={<RequireAuth><CreateListing /></RequireAuth>} />
