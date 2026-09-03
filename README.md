@@ -19,6 +19,7 @@ A full-stack marketplace web application with user authentication built using Re
 - Node.js + Express 5
 - Firebase Admin SDK (authentication & token verification)
 - MongoDB + Mongoose
+- Cloudinary
 
 ---
 
