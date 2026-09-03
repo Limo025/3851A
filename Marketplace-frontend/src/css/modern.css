@@ -1,0 +1,593 @@
+@font-face{ /*   FuseV2Bold, used for headings.   */
+    font-family: FuseV2Bold;
+    src: url(src/font/fuseV2bold.otf)
+}
+@font-face{ /*   FuseV2, used for sub-headings   */
+    font-family: FuseV2;
+    src: url(src/font/fusev2.otf)
+}
+@font-face{ /*   Corbel, used for plaintext  */
+    font-family: Corbel;
+    src: url(src/font/corbel.ttf)
+}
+                                                                                    /*    A     */
+.accountButton{
+    width: fit-content;
+    cursor: pointer;
+    height: fit-content;
+}                                                                                   
+                                                                                    /*    B     */
+body{
+    margin: 0;
+    background-color: #8a8d91;
+}
+.bigButton{
+    font-size:30px;
+    font-family: FuseV2;
+    padding: 20px;
+    position: relative;
+    border: 1px solid #ad9790;
+    border-radius: 25px;
+    background-color: #f5d3c8;
+    color: #565857;
+    transition: background-color .2s, color .2s, border .2s;
+}
+.bigButton:hover{
+    background-color: #f7e7e2;
+    color: black;
+    cursor: pointer;
+}
+                                                                                    /*    C     */
+#contentBackground{
+    background-color: #BCBDC0;
+    min-height: 200px;
+    height: fit-content;
+
+}
+.categoryGrid{
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+}
+.categoryBox{
+    border: 2px solid #565857;
+    width: 200px;
+    color: white;
+    background-color: #8A8D91;
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 20px;
+    margin: 10px;
+}
+.categoryBox:hover{
+    cursor: pointer;
+    background-color:  #734B5E;
+    font-size: 25px;
+    padding: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transition: font-size 0.2s, background-color 0.2s, padding 0.2s, padding-left 0.2s, padding-right 0.2s;
+}
+.categoryName{
+    text-align: center;
+}
+#content{
+    margin-left: 22vw;
+    margin-right: 22vw;
+    padding-top: 150px;
+    padding-bottom: 50px;
+}
+#contentHeading{
+    margin-left: 22vw;
+    margin-right: 22vw;
+    padding-top: 100px;
+}
+.createAccountForm, .loginAccountForm{
+    display: grid;
+    grid-template-columns: auto auto ;
+    gap: 10px;
+    font-family: Corbel;
+    font-size: 20px;
+}
+.createAccountForm label, .loginAccountForm label{
+    font-family: Corbel;
+    font-size: 25px;
+    padding-right: 20px;
+}
+.createAccountForm input{
+    font-size: 25px;
+    font-family: FuseV2;
+    min-width: 20vw;
+    padding: 5px;
+    margin-right: 10px;
+}
+.createAccountForm button{
+    font-size: 25px;
+    font-family: FuseV2;
+    min-width: 20vw;
+    padding: 5px;
+}
+                                                                                    /*    D     */
+                                                                                    /*    E     */
+#end{
+    background-color: #8A8D91;
+    height: auto;
+    margin: 0;
+    color: black;
+    font-family: Corbel;
+}
+#end img{
+    padding: 50px;
+}
+#endContents{
+    display: grid;
+    width: fit-content;
+    height: fit-content;
+    grid-template-columns: auto auto ;
+    padding-left: 5vw;
+    padding-right: 10vw;
+
+}
+                                                                                    /*    F     */
+                                                                                    /*    G     */
+                                                                                    /*    H     */
+h1{
+    font-family: FuseV2Bold;
+    font-size: 40px;
+}
+h3{
+    font-family: FuseV2;
+    font-size: 25px;
+}
+#headerElements{
+    margin-right: 10%;
+    margin-left: 10%;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+}
+#headerSection{
+    background-color: #8A8D91;
+    padding-top: 15px;
+    height: 90px;
+    position: relative;
+}
+#headerImage img{
+    max-height: 312px;
+    margin: 0;
+    z-index: -1;
+}
+                                                                                    /*    I     */
+.itemButtons{
+    display: grid;
+    grid-template-columns: auto;
+}
+#itemImage{
+    grid-column: 1;
+    grid-row: 1 / span 4;
+    width: 600px;
+}
+.itemInformationGrid{
+    display: grid;
+    grid-template-columns: 600px 1fr;
+    grid-template-rows: auto auto auto auto;
+    column-gap: 40px;
+    align-items: start;
+}
+.itemInformationGrid h1{
+    grid-column: 2;
+    margin: 0 0 20px;
+    text-align: left;
+}
+#itemName{
+    grid-row: 1;
+}
+#itemPrice{
+    grid-row: 2;
+}
+#itemDescriptionDiv{
+    grid-row: 3;
+}
+.itemDescriptionBox{
+    width: 400px;
+    border: 5px solid #8A8D91;
+    border-radius: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.itemImageSmallGrid{
+    grid-column: 1;
+    -ms-grid-row-span: 3;
+    padding-top: 30px;
+}
+.itemImageSmall{
+    border: 2px solid rgba(255, 255, 255, 0);
+    height: 100px;
+    padding: 10px;
+}
+.itemImageSmall:hover{
+    border: 2px solid rgba(0, 0, 0, 0.5);
+}
+
+                                                                                    /*    M     */
+.marketplaceLogo {
+    position: relative;
+    top: 0%;
+    left: 0vw;
+    z-index: 10;
+}
+.mediumButton{
+    font-size:20px;
+    padding: 10px;
+    font-family: FuseV2;
+    margin-top: 10px;
+    margin-right: 10px;
+    position: relative;
+    border: 1px solid #734B5E;
+    border-radius: 25px;
+    color: #BCBDC0;
+    background-color: #734B5E;
+    transition: background-color .2s, color .2s, border .2s;
+}
+.mediumButton:hover{
+    background-color: #3d2832;
+    color: white;
+    cursor: pointer;
+}
+.messageButton{
+    height: fit-content;
+    width: fit-content;
+    cursor: pointer;
+}
+.messageFrame{
+    border: 2px solid #565857;
+    display: grid;
+    border-radius: 5px;
+    grid-template-columns: auto auto auto;
+}
+.messageUsers{
+    grid-column: 1;
+    max-width: 100%;
+}
+.messageComms{
+    border: 2px solid black;
+    grid-column: 2 / span 2;
+    max-width: 1000px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.messageTopBar{
+    grid-column: 1;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+.messageSearchBar{
+    border: 2px solid rgba(2, 2, 2, 0.5);
+    height: 20px;
+    width: max-content;
+    padding: 10px;
+    border-radius: 15px;
+    font-family: FuseV2;
+}
+.messageUserIcon{
+    height: 80px;
+    padding: 10px;
+    grid-column: 1;
+    grid-row: 1 / span 2;
+}
+.messageUsersPartition{
+    margin: 10px;
+    display: grid;
+    grid-template-columns: auto auto ;
+    grid-template-rows: auto auto;
+    border: 2px solid rgba(2, 2, 2, 0.5);
+    border-radius: 15px;
+}
+.messageUsersPartition:hover{
+    border: 2px solid rgba(2, 2, 2, 1);
+    transition: border 0.2s;
+    cursor:pointer;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+.messageUserName{
+    grid-column: 2;
+    grid-row: 1;
+    margin-bottom: 0;
+}
+.messageUserLastChat{
+    grid-column: 2;
+    grid-row: 2;
+    margin-top: 0;
+}
+
+.messageTextBox{
+    border: 2px solid rgba(2, 2, 2, 0.5);
+    height: 20px;
+    width: 400px;
+    padding: 10px;
+    margin-top: 20px;
+    border-radius: 15px;
+    align-items: center;
+    font-family: FuseV2;
+}
+.messageTextButton{
+    border: 3px solid #2e2026;
+    background-color: #734B5E;
+    color: black;
+    font-weight: 800;
+    height: 50px;
+    width: 200px;
+    padding: 10px;
+    margin-left: 50px;
+    border-radius: 15px;
+    font-family: FuseV2;
+}
+.messageTextButton:hover{
+    background-color: #A6778D;
+    color: black;
+    transition: background-color 0.2s, color 0.2s, border 0.2s;
+    cursor: pointer;
+}
+
+.receiverMessage{
+    border: 2px solid #474847;
+    width: fit-content;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 25px 25px 25px 0;
+    margin-bottom: 15px;
+    color: rgb(255, 255, 255);
+    background-color: #565857;
+}
+.senderMessage{
+    border: 2px solid #EFBAA9;
+    width: fit-content;
+    align-self: flex-end;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 25px 25px 0 25px;
+    margin-bottom: 15px;
+    color: black;
+    background-color: #F5D3C8;
+}
+                                                                                    /*    L     */
+.loadingIcon{
+  height: 50px;
+  padding-left:50px;
+  position: relative;
+  top: 10px;
+  display:none;
+}
+.loginAccountForm input{
+    font-size: 25px;
+    font-family: FuseV2;
+    max-width: 300px;
+    padding: 5px;
+    margin-right: 50px;
+}
+                                                                                    /*    O     */
+.optionsButton{
+    width: fit-content;
+    height: fit-content;
+    position: relative;
+}
+.optionsButtonImage{
+    cursor: pointer;
+}
+                                                                                    /*    P     */
+p{
+    font-family: FuseV2;
+}
+                                                                                    /*    P     */
+.recItemImage{
+    width: 200px;
+    cursor: pointer;
+}
+
+.recItem{
+    padding-bottom: 20px;
+}
+.recItemsFromItem{
+    display: grid;
+    padding-left: 10px;
+    padding-right: 10px;
+    grid-template-columns: auto auto auto auto auto;
+    grid-template-rows: auto auto auto;
+}
+.recItemsHomepage{
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    grid-template-rows: auto auto auto;
+    padding-left: 200px;
+    padding-right: 200px;
+}
+
+
+                                                                                    /*    S     */
+#searchBar input[type=text]{
+    min-width: 40vw;
+    min-height: 70px;
+    font-family: Corbel;
+    font-size: 28px;
+    border: 3px solid #5b5d5b;
+    border-radius: 25px;
+    font-family: Corbel;
+}
+#searchBarAutocompleteBox{
+    max-width: 775px;
+    background-color: white;
+}
+.sidebar {
+  /* positioning */
+  transition: height 1s;
+  overflow-x: hidden;
+  transition: 0.5s;
+  display: none;
+  z-index: 1;
+  text-align: right;
+  width: 20vw;
+  height: 470px;
+  position: absolute;
+  top: 90px;
+  right: 0;
+
+  /* decoration */
+  color: white;
+  font-family: Corbel;
+  background-color: #5b5d5b;
+
+}
+.sidebarTop p:hover{
+    font-size: 25px;
+    text-decoration: underline;
+}
+.sidebarTop{
+    background-color: ##474847;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    margin-right: -20px;
+    font-size:25px; 
+    color:white; 
+    text-decoration: none;
+}
+.sidebarContent{
+    margin-right: 20px;
+    font-size: 20px;
+}
+.sidebarContent p:hover{
+    font-size: 22px;
+    text-decoration: underline;
+    transition: font-size 0.2s;
+}
+.sidebarContent a{
+    color: white;
+    text-decoration: none;
+}
+                                                                                    /*    W     */
+.wideContent{
+    margin-left: 10vw;
+    margin-right: 10vw;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* google button */
+.gsi-material-button {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -webkit-appearance: none;
+  background-color: WHITE;
+  background-image: none;
+  border: 1px solid #747775;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  color: #1f1f1f;
+  cursor: pointer;
+  font-family: 'Roboto', arial, sans-serif;
+  font-size: 14px;
+  height: 40px;
+  letter-spacing: 0.25px;
+  outline: none;
+  overflow: hidden;
+  padding: 0 12px;
+  position: relative;
+  text-align: center;
+  -webkit-transition: background-color .218s, border-color .218s, box-shadow .218s;
+  transition: background-color .218s, border-color .218s, box-shadow .218s;
+  vertical-align: middle;
+  white-space: nowrap;
+  width: auto;
+  max-width: 400px;
+  min-width: min-content;
+}
+
+.gsi-material-button .gsi-material-button-icon {
+  height: 20px;
+  margin-right: 10px;
+  min-width: 20px;
+  width: 20px;
+}
+
+.gsi-material-button .gsi-material-button-content-wrapper {
+  -webkit-align-items: center;
+  align-items: center;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  height: 100%;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+}
+
+.gsi-material-button .gsi-material-button-contents {
+  -webkit-flex-grow: 1;
+  flex-grow: 1;
+  font-family: 'Roboto', arial, sans-serif;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: top;
+}
+
+.gsi-material-button .gsi-material-button-state {
+  -webkit-transition: opacity .218s;
+  transition: opacity .218s;
+  bottom: 0;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.gsi-material-button:disabled {
+  cursor: default;
+  background-color: #ffffff61;
+  border-color: #1f1f1f1f;
+}
+
+.gsi-material-button:disabled .gsi-material-button-contents {
+  opacity: 38%;
+}
+
+.gsi-material-button:disabled .gsi-material-button-icon {
+  opacity: 38%;
+}
+
+.gsi-material-button:not(:disabled):active .gsi-material-button-state, 
+.gsi-material-button:not(:disabled):focus .gsi-material-button-state {
+  background-color: #303030;
+  opacity: 12%;
+}
+
+.gsi-material-button:not(:disabled):hover {
+  -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, .30), 0 1px 3px 1px rgba(60, 64, 67, .15);
+}
+
+.gsi-material-button:not(:disabled):hover .gsi-material-button-state {
+  background-color: #303030;
+  opacity: 8%;
+}
