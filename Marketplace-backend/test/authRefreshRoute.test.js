@@ -192,3 +192,50 @@ test('POST /auth/login aborts provider requests at the configured timeout and re
   }, { timeoutMs: 1 });
   assert.equal(receivedSignal?.aborted, true);
 });
+
+test('POST /auth/login creates a marketplace user when Firebase has no MongoDB profile', async () => {
+  let upsertCall;
+
+  const UserModel = {
+    findOneAndUpdate: async (filter, update, options) => {
+      upsertCall = { filter, update, options };
+      return { uid: 'firebase-new', email: 'seller@example.test', username: 'seller' };
+    },
+  };
+
+  await withAuthApp(async () => ({
+    ok: true,
+    json: async () => ({
+      localId: 'firebase-new',
+      email: 'seller@example.test',
+      idToken: 'id-token',
+      refreshToken: 'refresh-token',
+      expiresIn: '3600',
+    }),
+  }), async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'seller@example.test', password: 'password' }),
+    });
+
+    assert.equal(response.status, 200);
+    assert.deepEqual((await response.json()).user, {
+      uid: 'firebase-new',
+      email: 'seller@example.test',
+      username: 'seller',
+    });
+  }, { UserModel });
+
+  assert.deepEqual(upsertCall, {
+    filter: { uid: 'firebase-new' },
+    update: {
+      $setOnInsert: {
+        uid: 'firebase-new',
+        email: 'seller@example.test',
+        username: 'seller',
+      },
+    },
+    options: { upsert: true, new: true, setDefaultsOnInsert: true },
+  });
+});

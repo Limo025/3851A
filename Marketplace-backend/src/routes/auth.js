@@ -9,6 +9,7 @@ async function defaultFirebaseAuthResolver() {
 
 export function createAuthRouter({
     firebaseAuth,
+    UserModel = User,
     fetchImpl = globalThis.fetch,
     resolveFirebaseAuth = defaultFirebaseAuthResolver,
     timeoutMs = 10_000,
@@ -34,7 +35,7 @@ export function createAuthRouter({
 
         try {
             const firebaseUser = await (await getFirebaseAuth()).createUser({ email, password, displayName: username });
-            const user = await User.create({ uid: firebaseUser.uid, email: firebaseUser.email, username });
+            const user = await UserModel.create({ uid: firebaseUser.uid, email: firebaseUser.email, username });
             res.status(201).json({
                 message: 'User registered successfully',
                 user: { uid: user.uid, email: user.email, username: user.username },
@@ -72,14 +73,22 @@ export function createAuthRouter({
                 return res.status(status).json({ error: 'Invalid email or password' });
             }
 
-            const user = await User.findOne({ uid: data.localId });
+            const user = await UserModel.findOneAndUpdate(
+                { uid: data.localId },
+                {
+                    $setOnInsert: {
+                        uid: data.localId,
+                        email: data.email,
+                        username: data.email.split('@')[0],
+                    },
+                },
+                { upsert: true, new: true, setDefaultsOnInsert: true },
+            );
             res.json({
                 idToken: data.idToken,
                 refreshToken: data.refreshToken,
                 expiresIn: data.expiresIn,
-                user: user
-                    ? { uid: user.uid, email: user.email, username: user.username }
-                    : { uid: data.localId, email: data.email },
+                user: { uid: user.uid, email: user.email, username: user.username },
             });
         } catch (err) {
             if (isProviderTimeoutError(err)) {
@@ -139,9 +148,9 @@ export function createAuthRouter({
         try {
             const decoded = await (await getFirebaseAuth()).verifyIdToken(idToken);
             const { uid, email, name } = decoded;
-            let user = await User.findOne({ uid });
+            let user = await UserModel.findOne({ uid });
             if (!user) {
-                user = await User.create({ uid, email, username: name || email.split('@')[0] });
+                user = await UserModel.create({ uid, email, username: name || email.split('@')[0] });
             }
             res.json({ user: { uid: user.uid, email: user.email, username: user.username } });
         } catch (err) {
@@ -163,7 +172,7 @@ export function createAuthRouter({
         }
 
         try {
-            const user = await User.findOne({ uid: req.user.uid });
+            const user = await UserModel.findOne({ uid: req.user.uid });
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
