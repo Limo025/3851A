@@ -154,6 +154,10 @@ h3{
     z-index: -1;
 }
                                                                                     /*    I     */
+.itemButtons{
+    display: grid;
+    grid-template-columns: auto;
+}
 #itemImage{
     grid-column: 1;
     grid-row: 1 / span 4;
@@ -206,6 +210,24 @@ h3{
     top: 0%;
     left: 0vw;
     z-index: 10;
+}
+.mediumButton{
+    font-size:15px;
+    padding: 10px;
+    font-family: FuseV2;
+    margin-top: 10px;
+    margin-right: 10px;
+    position: relative;
+    border: 1px solid #ff5b7e;
+    border-radius: 25px;
+    background-color: #ffaec0;
+    transition: background-color .2s, color .2s, border .2s;
+}
+.mediumButton:hover{
+    background-color: #ff5b7e;
+    border: 1px solid #ff0037;
+    color: white;
+    cursor: pointer;
 }
 .messageButton{
     height: fit-content;
