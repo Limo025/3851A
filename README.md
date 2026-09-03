@@ -122,7 +122,7 @@ DP2-Marketplace/
 Create a `.env` file in `Marketplace-backend/` using `.env.example` as a template:
 
 ```
-MONGODB_URI=        # MongoDB Atlas connection string
+MONGODB_URI=        # MongoDB Atlas connection string; backend always selects database marketplace
 FIREBASE_API_KEY=   # Firebase Web API key
 ```
 

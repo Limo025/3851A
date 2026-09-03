@@ -1,43 +1,15 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
-
-//replace this whole thing with toggleNav()
-// let isOpen = false;
-
-// function openNav() {
-//   if (isOpen == true){
-//       document.getElementById("sidebar").style.display = "none";
-//       isOpen=false;
-//   } else{
-//       document.getElementById("sidebar").style.display = "block";
-//       isOpen=true;
-//   }
-// }
-// function closeNav() {
-//   document.getElementById("sidebar").style.display = "none";
-//   isOpen=false;
-// }
-
-function handleSearch(event) {
-    if (event.key === 'Enter') {
-        alert('hello world');
-        const query = event.target.value.trim();
-        if (query) {
-            window.location.href = '/search?=' + encodeURIComponent(query);
-        }
-    }
-}
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { session } from '../auth/session.js';
+import { getPostLoginPath } from '../auth/returnPath.js';
 
 function App() {
-  const [isNavOpen, setIsNavOpen] = useState(false);
-  const [count, setCount] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
-
-  const toggleNav = () => setIsNavOpen(!isNavOpen);
+  const location = useLocation();
 
   async function logIn() {
       document.getElementById("loadingIcon").style.display = "inline";
@@ -49,40 +21,47 @@ function App() {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error);
-            navigate('/');
+            session.saveLogin(data);
+            navigate(getPostLoginPath(location.state), { replace: true });
         } catch (e) {
             setError(e instanceof Error ? e.message : 'An error occurred');
             document.getElementById("loadingIcon").style.display = "none";
         }
     }
 
+  function handleSubmit(event) {
+    event.preventDefault();
+    logIn();
+  }
+
   return (
 <>
   {/* MAIN CONTENT*/}
   <div id="contentBackground">
     <div id="content">
-      <h1>Login page</h1>
+      <h1>Log in</h1>
       {error && <p>{error}</p>}
-      <form id="loginForm" class="loginAccountForm">
-        <label for="email">Email: </label>
+      <form id="loginForm" className="loginAccountForm" onSubmit={handleSubmit}>
+        <label htmlFor="email">Email: </label>
         <input
           placeholder="Your email address"
           id='email'
           value={email}
           onChange={e => setEmail(e.target.value)} />
-          <label for="password">Password: </label>
+          <label htmlFor="password">Password: </label>
         <input
           placeholder="Your password"
           id='password'
           type="password"
           value={password}
           onChange={e => setPassword(e.target.value)} />
+        <div className="login-actions">
+          <button className="bigButton login-submit" type="submit">Log In</button>
+          <Link className="login-forgot-link" to="/forgot-password">Forgot password?</Link>
+          <img id="loadingIcon" className="loadingIcon" src="/src/icon/loading.gif" alt="Signing in" />
+        </div>
       </form>
-      <button class="bigButton" onClick={logIn}>Log In</button>
-      <img id="loadingIcon" class="loadingIcon" src="src/icon/loading.gif" alt="loading" />
 
-      <br />
-      <br />
       {/* bear with me, google is strict with this stuff...*/}
       {/*<button className="gsi-material-button">
         <div className="gsi-material-button-state" />
@@ -120,10 +99,10 @@ function App() {
           <span style={{ display: "none" }}>Continue with Google</span>
         </div>
       </button>*/}
-      <br />
-      <h1> or, Create an Account</h1>
-      <button class="bigButton" onClick={()=> window.location.href='/createAccount'}>Create a Marketplace Account Here</button>
-      <br />
+      <div className="login-create-account">
+        <p>New to Marketplace?</p>
+        <button className="bigButton" onClick={()=> window.location.href='/createAccount'}>Create an account</button>
+      </div>
     </div>
   </div>
 </>

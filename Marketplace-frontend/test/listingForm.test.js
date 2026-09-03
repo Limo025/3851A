@@ -1,0 +1,171 @@
+import assert from 'node:assert/strict';
+import test from 'node:test';
+import { AuthenticationError } from '../src/auth/session.js';
+import { handleAuthenticationError } from '../src/auth/handleAuthenticationError.js';
+import { buildReturnPath, getLoginRedirect, getPostLoginPath } from '../src/auth/returnPath.js';
+import {
+  buildListingFormData,
+  createImagePreviews,
+  revokeImagePreviews,
+  runSingleSubmission,
+  validateImageSelection,
+  validateListingValues,
+} from '../src/utils/listingForm.js';
+
+function imageFile(name, { size = 1024, type = 'image/jpeg' } = {}) {
+  return new File([new Uint8Array(size)], name, { type });
+}
+
+test('protected routes preserve the complete requested return path', () => {
+  assert.equal(buildReturnPath({ pathname: '/sell', search: '?draft=1', hash: '#images' }), '/sell?draft=1#images');
+  assert.deepEqual(getLoginRedirect(false, { pathname: '/sell', search: '?draft=1', hash: '' }), {
+    to: '/login',
+    replace: true,
+    state: { from: '/sell?draft=1', message: 'Please log in to access seller tools.' },
+  });
+  assert.equal(getLoginRedirect(true, { pathname: '/sell' }), null);
+});
+
+test('post-login navigation returns to a validated internal app path', () => {
+  assert.equal(getPostLoginPath({ from: '/sell' }), '/sell');
+  assert.equal(getPostLoginPath({ from: '/sell?draft=1#images' }), '/sell?draft=1#images');
+});
+
+test('post-login navigation falls back home for malformed or external state', () => {
+  assert.equal(getPostLoginPath(), '/');
+  assert.equal(getPostLoginPath({ from: 42 }), '/');
+  assert.equal(getPostLoginPath({ from: 'https://attacker.test/steal' }), '/');
+  assert.equal(getPostLoginPath({ from: '//attacker.test/steal' }), '/');
+  assert.equal(getPostLoginPath({ from: '/\\attacker.test/steal' }), '/');
+});
+
+test('post-login navigation rejects paths that normalize to protocol-relative form', () => {
+  assert.equal(getPostLoginPath({ from: '/..//attacker.test' }), '/');
+  assert.equal(getPostLoginPath({ from: '/%2e%2e//attacker.test' }), '/');
+});
+
+test('image selection accepts only supported images within the count and size limits', () => {
+  const current = [imageFile('current.jpg')];
+  const valid = imageFile('valid.webp', { type: 'image/webp' });
+
+  assert.deepEqual(validateImageSelection({ retainedCount: 2, newFiles: current, selectedFiles: [valid] }), {
+    files: [current[0], valid],
+    error: '',
+  });
+
+  const wrongType = imageFile('notes.pdf', { type: 'application/pdf' });
+  assert.equal(validateImageSelection({ retainedCount: 0, newFiles: current, selectedFiles: [wrongType] }).error, 'Images must be JPEG, PNG, or WebP files.');
+
+  const tooLarge = imageFile('large.png', { type: 'image/png', size: 5 * 1024 * 1024 + 1 });
+  assert.equal(validateImageSelection({ retainedCount: 0, newFiles: [], selectedFiles: [tooLarge] }).error, 'Each image must be 5 MB or smaller.');
+
+  const tooMany = [1, 2, 3, 4].map((number) => imageFile(`${number}.jpg`));
+  assert.equal(validateImageSelection({ retainedCount: 2, newFiles: [], selectedFiles: tooMany }).error, 'A listing can have up to 5 images.');
+});
+
+test('image preview lifecycle revokes every generated object URL', () => {
+  const files = [imageFile('one.jpg'), imageFile('two.png', { type: 'image/png' })];
+  const generated = [];
+  const revoked = [];
+  const previews = createImagePreviews(files, (file) => {
+    const url = `blob:${file.name}`;
+    generated.push(url);
+    return url;
+  });
+
+  revokeImagePreviews(previews, (url) => revoked.push(url));
+
+  assert.deepEqual(generated, ['blob:one.jpg', 'blob:two.png']);
+  assert.deepEqual(revoked, generated);
+});
+
+test('listing form validation rejects backend-invalid fields and missing images', () => {
+  assert.deepEqual(validateListingValues({
+    title: 'a',
+    description: 'too short',
+    price: '0',
+    category: 'Vehicles',
+    condition: 'Broken',
+  }, 0), {
+    title: 'Title must be between 3 and 120 characters.',
+    description: 'Description must be between 10 and 5000 characters.',
+    price: 'Price must be greater than 0.',
+    category: 'Select a valid category.',
+    condition: 'Select a valid condition.',
+    images: 'Add at least one image.',
+  });
+});
+
+test('create multipart data contains listing fields and images but no client identity', () => {
+  const file = imageFile('desk.jpg');
+  const body = buildListingFormData({
+    title: 'Study desk',
+    description: 'Solid timber desk in good condition.',
+    price: '75.50',
+    category: 'Furniture and Home',
+    condition: 'Good',
+    seller: 'attacker-controlled',
+  }, [file]);
+
+  assert.equal(body.get('title'), 'Study desk');
+  assert.equal(body.get('description'), 'Solid timber desk in good condition.');
+  assert.equal(body.get('price'), '75.50');
+  assert.equal(body.get('category'), 'Furniture and Home');
+  assert.equal(body.get('condition'), 'Good');
+  assert.deepEqual(body.getAll('images').map((entry) => entry.name), ['desk.jpg']);
+  assert.equal(body.has('seller'), false);
+  assert.equal(body.has('sellerId'), false);
+});
+
+test('submission lock ignores a repeated submit until the active request settles', async () => {
+  const lock = { current: false };
+  let releaseRequest;
+  let calls = 0;
+  const request = () => {
+    calls += 1;
+    return new Promise((resolve) => { releaseRequest = resolve; });
+  };
+
+  const first = runSingleSubmission(lock, request);
+  const repeated = runSingleSubmission(lock, request);
+  assert.equal(calls, 1);
+  assert.equal(await repeated, false);
+
+  releaseRequest('created');
+  assert.equal(await first, 'created');
+  assert.equal(lock.current, false);
+});
+
+test('create authentication failure clears session and redirects back through login', () => {
+  let clearCalls = 0;
+  const navigations = [];
+  const handled = handleAuthenticationError(new AuthenticationError(), {
+    sessionManager: { clear: () => { clearCalls += 1; } },
+    navigate: (to, options) => navigations.push({ to, options }),
+    returnPath: '/sell',
+  });
+
+  assert.equal(handled, true);
+  assert.equal(clearCalls, 1);
+  assert.deepEqual(navigations, [{
+    to: '/login',
+    options: {
+      replace: true,
+      state: { from: '/sell', message: 'Please log in to access seller tools.' },
+    },
+  }]);
+});
+
+test('non-authentication create failures remain available to the listing form', () => {
+  let clearCalls = 0;
+  const navigations = [];
+  const handled = handleAuthenticationError(new Error('Upload failed'), {
+    sessionManager: { clear: () => { clearCalls += 1; } },
+    navigate: (to, options) => navigations.push({ to, options }),
+    returnPath: '/sell',
+  });
+
+  assert.equal(handled, false);
+  assert.equal(clearCalls, 0);
+  assert.deepEqual(navigations, []);
+});

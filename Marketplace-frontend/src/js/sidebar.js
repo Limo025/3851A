@@ -1,16 +1,56 @@
-let isOpen = false;
+export function createSidebarController({ sidebar, toggle, close }) {
+  let isOpen = !sidebar.hidden;
 
-function openNav() {
-  if (isOpen == true){
-      document.getElementById("sidebar").style.display = "none";
-      isOpen=false;
-  } else{
-      document.getElementById("sidebar").style.display = "block";
-      isOpen=true;
+  function setOpen(nextOpen, { restoreFocus = true } = {}) {
+    isOpen = nextOpen;
+    sidebar.hidden = !nextOpen;
+    toggle.setAttribute('aria-expanded', String(nextOpen));
+
+    if (nextOpen) {
+      close.focus();
+    } else if (restoreFocus) {
+      toggle.focus();
+    }
   }
+
+  function handleKeyDown(event) {
+    if (event.key !== 'Escape' || !isOpen) {
+      return;
+    }
+
+    event.preventDefault();
+    setOpen(false);
+  }
+
+  return {
+    open: () => setOpen(true),
+    close: (options) => setOpen(false, options),
+    toggle: () => setOpen(!isOpen),
+    handleKeyDown,
+  };
 }
 
-function closeNav() {
-  document.getElementById("sidebar").style.display = "none";
-  isOpen=false;
+export function initializeSidebar({ sidebar, toggle, close, documentRef = globalThis.document }) {
+  const controller = createSidebarController({ sidebar, toggle, close });
+  const handleToggle = () => controller.toggle();
+  const handleClose = () => controller.close();
+  const handlePointerDown = (event) => {
+    if (sidebar.hidden || sidebar.contains(event.target) || toggle.contains(event.target)) {
+      return;
+    }
+
+    controller.close({ restoreFocus: false });
+  };
+
+  toggle.addEventListener('click', handleToggle);
+  close.addEventListener('click', handleClose);
+  sidebar.addEventListener('keydown', controller.handleKeyDown);
+  documentRef.addEventListener('pointerdown', handlePointerDown);
+
+  return () => {
+    toggle.removeEventListener('click', handleToggle);
+    close.removeEventListener('click', handleClose);
+    sidebar.removeEventListener('keydown', controller.handleKeyDown);
+    documentRef.removeEventListener('pointerdown', handlePointerDown);
+  };
 }
