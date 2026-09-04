@@ -41,9 +41,12 @@ body{
     cursor: pointer;
 }
                                                                                     /*    C     */
-/* #contentBackground{
+#contentBackground{
+    background-color: white;
+    min-height: 200px;
+    height: fit-content;
 
-} */
+}
 #content {
     background-color: white;
     min-height: 200px;

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { session } from '../auth/session.js';
 import { getPostLoginPath } from '../auth/returnPath.js';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import backgroundImg from '../img/loginBackground.jpeg';
 import '../css/login.css'
 
