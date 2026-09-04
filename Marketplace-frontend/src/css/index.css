@@ -41,7 +41,9 @@ body{
     cursor: pointer;
 }
                                                                                     /*    C     */
-#contentBackground{
+/* #contentBackground{
+
+} */
 #content {
     background-color: white;
     min-height: 200px;
@@ -799,8 +801,9 @@ p{
     .password-reset-form button{
         justify-self: stretch;
         width: 100%;
+        cursor: pointer;
     }
-    cursor: pointer;
+    
 }
 .loginButton{
     font-size:1.5rem;
