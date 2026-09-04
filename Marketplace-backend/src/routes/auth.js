@@ -1,29 +1,52 @@
 import express from 'express';
-import { auth } from '../config/firebase.js';
 import User from '../models/User.js';
-import { verifyToken } from '../middleware/auth.js';
+import { fetchWithTimeout, isProviderTimeoutError } from '../services/providerRequest.js';
 
-const router = express.Router();
+async function defaultFirebaseAuthResolver() {
+    const { auth } = await import('../config/firebase.js');
+    return auth;
+}
 
-// POST /auth/register
-router.post('/register', async (req, res) => {
+export function createAuthRouter({
+    firebaseAuth,
+    UserModel = User,
+    fetchImpl = globalThis.fetch,
+    resolveFirebaseAuth = defaultFirebaseAuthResolver,
+    timeoutMs = 10_000,
+    setTimeoutImpl,
+    clearTimeoutImpl,
+    AbortControllerImpl,
+} = {}) {
+    const router = express.Router();
+    let resolvedFirebaseAuth = firebaseAuth;
+
+    async function getFirebaseAuth() {
+        if (!resolvedFirebaseAuth) {
+            resolvedFirebaseAuth = await resolveFirebaseAuth();
+        }
+        return resolvedFirebaseAuth;
+    }
+
+    function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+   router.post('/register', async (req, res) => {
     const { email, password, username = '' } = req.body;
-
     if (!email || !password) {
         return res.status(400).json({ error: 'Email and password are required' });
     }
+    if (!isValidEmail(email)) {
+        return res.status(400).json({ error: 'Invalid email format' });
+    }
+    if (password.length < 6) {
+        return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
 
+    let firebaseUser;
     try {
-        // Create user in Firebase Auth
-        const firebaseUser = await auth.createUser({ email, password, displayName: username });
-
-        // Store profile in MongoDB
-        const user = await User.create({
-            uid: firebaseUser.uid,
-            email: firebaseUser.email,
-            username,
-        });
-
+        firebaseUser = await (await getFirebaseAuth()).createUser({ email, password, displayName: username });
+        const user = await UserModel.create({ uid: firebaseUser.uid, email: firebaseUser.email, username });
         res.status(201).json({
             message: 'User registered successfully',
             user: { uid: user.uid, email: user.email, username: user.username },
@@ -32,31 +55,44 @@ router.post('/register', async (req, res) => {
         if (err.code === 'auth/email-already-exists') {
             return res.status(409).json({ error: 'Email already in use' });
         }
+
+        if (firebaseUser?.uid) {
+            const fbAuth = await getFirebaseAuth();
+            await fbAuth.deleteUser(firebaseUser.uid).catch((cleanupErr) => {
+                console.error('Failed to roll back Firebase user:', cleanupErr.message);
+            });
+        }
+
         console.error('Register error:', err);
         res.status(500).json({ error: 'Registration failed' });
     }
 });
 
-// POST /auth/login
-// Body: { email, password }
-router.post('/login', async (req, res) => {
-    const { email, password } = req.body;
+    router.post('/login', async (req, res) => {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required' });
+        }
 
-    if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required' });
-    }
+        try {
+            const response = await fetchWithTimeout(fetchImpl,
+                `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.FIREBASE_API_KEY}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, returnSecureToken: true }),
+                },
+                { provider: 'Firebase', timeoutMs, setTimeoutImpl, clearTimeoutImpl, AbortControllerImpl },
+            );
+            const data = await response.json();
 
-    try {
-        const apiKey = process.env.FIREBASE_API_KEY;
-        const response = await fetch(
-            `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${apiKey}`,
-            {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, returnSecureToken: true }),
+            if (!response.ok) {
+                const message = data.error?.message || 'Login failed';
+                const status = message === 'EMAIL_NOT_FOUND' || message === 'INVALID_PASSWORD' ? 401 : 400;
+                return res.status(status).json({ error: 'Invalid email or password' });
             }
-        );
 
+<<<<<<< HEAD
         const data = await response.json();
 
         if (!response.ok) {
@@ -81,6 +117,31 @@ router.post('/login', async (req, res) => {
         res.status(500).json({ error: 'Login failed' });
     }
 });
+            const user = await UserModel.findOneAndUpdate(
+                { uid: data.localId },
+                {
+                    $setOnInsert: {
+                        uid: data.localId,
+                        email: data.email,
+                        username: data.email.split('@')[0],
+                    },
+                },
+                { upsert: true, new: true, setDefaultsOnInsert: true },
+            );
+            res.json({
+                idToken: data.idToken,
+                refreshToken: data.refreshToken,
+                expiresIn: data.expiresIn,
+                user: { uid: user.uid, email: user.email, username: user.username },
+            });
+        } catch (err) {
+            if (isProviderTimeoutError(err)) {
+                return res.status(504).json({ error: 'Authentication provider timed out' });
+            }
+            console.error('Login error:', err);
+            res.status(500).json({ error: 'Login failed' });
+        }
+    });
 
 // POST /auth/google
 // Body: { idToken }  — idToken comes from Firebase Google sign-in on the frontend
@@ -104,31 +165,121 @@ router.post('/google', async (req, res) => {
                 uid,
                 email,
                 username: name || email.split('@')[0],
+=======
+            const user = await UserModel.findOneAndUpdate(
+                { uid: data.localId },
+                {
+                    $setOnInsert: {
+                        uid: data.localId,
+                        email: data.email,
+                        username: data.email.split('@')[0],
+                    },
+                },
+                { upsert: true, new: true, setDefaultsOnInsert: true },
+            );
+            res.json({
+                idToken: data.idToken,
+                refreshToken: data.refreshToken,
+                expiresIn: data.expiresIn,
+                user: { uid: user.uid, email: user.email, username: user.username },
+>>>>>>> main
             });
+        } catch (err) {
+            if (isProviderTimeoutError(err)) {
+                return res.status(504).json({ error: 'Authentication provider timed out' });
+            }
+            console.error('Login error:', err);
+            res.status(500).json({ error: 'Login failed' });
+        }
+    });
+
+    router.post('/refresh', async (req, res) => {
+        const refreshToken = req.body?.refreshToken;
+        if (typeof refreshToken !== 'string' || !refreshToken.trim()) {
+            return res.status(400).json({ error: 'Refresh token is required' });
         }
 
-        res.json({
-            user: { uid: user.uid, email: user.email, username: user.username },
-        });
-    } catch (err) {
-        console.error('Google auth error:', err);
-        res.status(401).json({ error: 'Invalid Google token' });
-    }
-});
+        try {
+            const response = await fetchWithTimeout(fetchImpl,
+                `https://securetoken.googleapis.com/v1/token?key=${process.env.FIREBASE_API_KEY}`,
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams({ grant_type: 'refresh_token', refresh_token: refreshToken.trim() }).toString(),
+                },
+                { provider: 'Firebase', timeoutMs, setTimeoutImpl, clearTimeoutImpl, AbortControllerImpl },
+            );
+            if (!response.ok) {
+                return res.status(401).json({ error: 'Unable to refresh session' });
+            }
 
-// GET /auth/me 
-// Header: Authorization: Bearer <idToken>
-router.get('/me', verifyToken, async (req, res) => {
-    try {
-        const user = await User.findOne({ uid: req.user.uid });
-        if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            const data = await response.json();
+            const idToken = typeof data.id_token === 'string' ? data.id_token.trim() : '';
+            const nextRefreshToken = typeof data.refresh_token === 'string' ? data.refresh_token.trim() : '';
+            const expiresIn = typeof data.expires_in === 'string' ? data.expires_in.trim() : '';
+            if (!idToken || !nextRefreshToken || !expiresIn || !Number.isFinite(Number(expiresIn)) || Number(expiresIn) <= 0) {
+                throw new Error('Malformed token refresh response');
+            }
+            res.json({
+                idToken,
+                refreshToken: nextRefreshToken,
+                expiresIn,
+            });
+        } catch (error) {
+            if (isProviderTimeoutError(error)) {
+                return res.status(504).json({ error: 'Authentication provider timed out' });
+            }
+            res.status(500).json({ error: 'Unable to refresh session' });
         }
-        res.json({ uid: user.uid, email: user.email, username: user.username });
-    } catch (err) {
-        console.error('Me error:', err);
-        res.status(500).json({ error: 'Failed to fetch user' });
-    }
-});
+    });
 
-export default router;
+    router.post('/google', async (req, res) => {
+        const { idToken } = req.body;
+        if (!idToken) {
+            return res.status(400).json({ error: 'idToken is required' });
+        }
+
+        try {
+            const decoded = await (await getFirebaseAuth()).verifyIdToken(idToken);
+            const { uid, email, name } = decoded;
+            let user = await UserModel.findOne({ uid });
+            if (!user) {
+                const fallbackUsername = name || (email ? email.split('@')[0] : `user_${uid.slice(0, 6)}`);
+                user = await UserModel.create({ uid, email, username: fallbackUsername });
+            }
+            res.json({ user: { uid: user.uid, email: user.email, username: user.username } });
+        } catch (err) {
+            console.error('Google auth error:', err);
+            res.status(401).json({ error: 'Invalid Google token' });
+        }
+    });
+
+    router.get('/me', async (req, res) => {
+        const authHeader = req.headers.authorization;
+        if (!authHeader?.startsWith('Bearer ')) {
+            return res.status(401).json({ error: 'Missing or invalid Authorization header' });
+        }
+
+        try {
+            req.user = await (await getFirebaseAuth()).verifyIdToken(authHeader.slice('Bearer '.length));
+        } catch (err) {
+            console.error('Token verification failed:', err.message);
+            return res.status(401).json({ error: 'Invalid or expired token' });
+        }
+
+        try {
+            const user = await UserModel.findOne({ uid: req.user.uid });
+            if (!user) {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            res.json({ uid: user.uid, email: user.email, username: user.username });
+        } catch (err) {
+            console.error('Me error:', err);
+            res.status(500).json({ error: 'Failed to fetch user' });
+        }
+    });
+
+    return router;
+}
+
+export default createAuthRouter();

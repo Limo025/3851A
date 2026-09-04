@@ -19,6 +19,7 @@ A full-stack marketplace web application with user authentication built using Re
 - Node.js + Express 5
 - Firebase Admin SDK (authentication & token verification)
 - MongoDB + Mongoose
+- Cloudinary
 
 ---
 
@@ -122,7 +123,7 @@ DP2-Marketplace/
 Create a `.env` file in `Marketplace-backend/` using `.env.example` as a template:
 
 ```
-MONGODB_URI=        # MongoDB Atlas connection string
+MONGODB_URI=        # MongoDB Atlas connection string; backend always selects database marketplace
 FIREBASE_API_KEY=   # Firebase Web API key
 ```
 

@@ -10,55 +10,69 @@
     font-family: Corbel;
     src: url(src/font/corbel.ttf)
 }
+                                                                                    /*    A     */
+.accountButton{
+    width: fit-content;
+    cursor: pointer;
+    height: fit-content;
+}                                                                                   
+                                                                                    /*    B     */
 body{
     margin: 0;
     background-color: #202020;
 }
-h1{
-    font-family: FuseV2Bold;
-    font-size: 40px;
-}
-h3{
+.bigButton{
+    font-size:30px;
     font-family: FuseV2;
-    font-size: 25px;
-}
-#headerElements{
-    margin-right: 10%;
-    margin-left: 10%;
-    display: grid;
-    grid-template-columns: auto auto auto auto auto;
-}
-#headerSection{
-    background-color: #000;
-    padding-top: 15px;
-    height: 90px;
+    padding: 20px;
     position: relative;
-}
-.marketplaceLogo {
-    position: relative;
-    top: 0%;
-    left: 0vw;
-    z-index: 10;
-}
-#searchBar input[type=text]{
-    min-width: 40vw;
-    min-height: 70px;
-    font-family: Corbel;
-    font-size: 28px;
     border: 3px solid #005bf9;
     border-radius: 25px;
+    background-color: white;
+    transition: background-color .2s, color .2s, border .2s;
     font-family: Corbel;
     padding-left: 15px;
     padding-bottom: 15px;
 }
-#headerImage img{
-    max-width: 100%;
-    height: auto;
-    margin: 0;
-    z-index: -1;
+.bigButton:hover{
+    background-color: #005bf9;
+    border: 3px solid #00225e;
+    color: white;
+    cursor: pointer;
 }
+                                                                                    /*    C     */
+#contentBackground{
 #content {
     background-color: white;
+    min-height: 200px;
+    height: fit-content;
+
+}
+.categoryGrid{
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+}
+.categoryBox{
+    border: 2px solid black;
+    width: 200px;
+    background-color: rgb(199, 199, 199);
+    font-size: 20px;
+    padding: 10px;
+    margin: 10px;
+}
+.categoryBox:hover{
+    cursor: pointer;
+    background-color:  rgb(125, 187, 189);
+    font-size: 25px;
+    padding: 2px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transition: font-size 0.2s, background-color 0.2s, padding 0.2s, padding-left 0.2s, padding-right 0.2s;
+}
+.categoryName{
+    text-align: center;
+}
+#content{
     margin-left: 22vw;
     margin-right: 22vw;
     border-color: black;
@@ -74,13 +88,38 @@ h3{
     padding-top: 150px;
     display: grid;
 }
-
-#wideContent{
-    margin-left: 10vw;
-    margin-right: 10vw;
-    padding-top: 150px;
-    padding-bottom: 50px;
+#contentHeading{
+    margin-left: 22vw;
+    margin-right: 22vw;
+    padding-top: 100px;
 }
+.createAccountForm, .loginAccountForm{
+    display: grid;
+    grid-template-columns: auto auto ;
+    gap: 10px;
+    font-family: Corbel;
+    font-size: 20px;
+}
+.createAccountForm label, .loginAccountForm label{
+    font-family: Corbel;
+    font-size: 25px;
+    padding-right: 20px;
+}
+.createAccountForm input{
+    font-size: 25px;
+    font-family: FuseV2;
+    min-width: 20vw;
+    padding: 5px;
+    margin-right: 10px;
+}
+.createAccountForm button{
+    font-size: 25px;
+    font-family: FuseV2;
+    min-width: 20vw;
+    padding: 5px;
+}
+                                                                                    /*    D     */
+                                                                                    /*    E     */
 #end{
     background-color: #202020;
     height: auto;
@@ -100,18 +139,480 @@ h3{
     padding-right: 10vw;
 
 }
+                                                                                    /*    F     */
+                                                                                    /*    G     */
+                                                                                    /*    H     */
+[hidden]{
+    display: none !important;
+}
+.visuallyHidden{
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+h1{
+    font-family: FuseV2Bold;
+    font-size: 40px;
+}
+h3{
+    font-family: FuseV2;
+    font-size: 25px;
+}
+#headerElements{
+    align-items: center;
+    display: grid;
+    gap: 12px;
+    grid-template-areas: "logo search messages account options";
+    grid-template-columns: minmax(150px, 200px) minmax(220px, 1fr) repeat(3, 64px);
+    margin: 0 auto;
+    max-width: 1200px;
+    padding: 0 24px;
+}
+#headerSection{
+    background-color: #000;
+    box-sizing: border-box;
+    min-height: 100px;
+    padding: 15px 0;
+    position: relative;
+}
+#headerImage img{
+    max-height: 312px;
+    margin: 0;
+    z-index: -1;
+}
+                                                                                    /*    I     */
+.itemButtons{
+    display: grid;
+    grid-template-columns: auto;
+}
+#itemImage{
+    grid-column: 1;
+    grid-row: 1 / span 4;
+    width: 600px;
+}
+.itemInformationGrid{
+    display: grid;
+    grid-template-columns: 600px 1fr;
+    grid-template-rows: auto auto auto auto;
+    column-gap: 40px;
+    align-items: start;
+}
+.itemInformationGrid h1{
+    grid-column: 2;
+    margin: 0 0 20px;
+    text-align: left;
+}
+#itemName{
+    grid-row: 1;
+}
+#itemPrice{
+    grid-row: 2;
+}
+#itemDescriptionDiv{
+    grid-row: 3;
+}
+.itemDescriptionBox{
+    width: 400px;
+    border: 5px solid black;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.itemImageSmallGrid{
+    grid-column: 1;
+    -ms-grid-row-span: 3;
+    padding-top: 30px;
+}
+.itemImageSmall{
+    border: 2px solid rgba(255, 255, 255, 0);
+    height: 100px;
+    padding: 10px;
+}
+.itemImageSmall:hover{
+    border: 2px solid rgba(0, 0, 0, 0.5);
+}
+
+                                                                                    /*    M     */
+.marketplaceLogo {
+    grid-area: logo;
+    min-width: 0;
+    z-index: 10;
+}
+.mediumButton{
+    font-size:15px;
+    padding: 10px;
+    font-family: FuseV2;
+    margin-top: 10px;
+    margin-right: 10px;
+    position: relative;
+    border: 1px solid #ff5b7e;
+    border-radius: 25px;
+    background-color: #ffaec0;
+    transition: background-color .2s, color .2s, border .2s;
+}
+.mediumButton:hover{
+    background-color: #ff5b7e;
+    border: 1px solid #ff0037;
+    color: white;
+    cursor: pointer;
+}
+.messageButton{
+    height: fit-content;
+    width: fit-content;
+    cursor: pointer;
+}
+.messageFrame{
+    border: 2px solid black;
+    display: grid;
+    grid-template-columns: auto auto auto;
+}
+.messageUsers{
+    grid-column: 1;
+    max-width: 100%;
+}
+.messageComms{
+    border: 2px solid black;
+    grid-column: 2 / span 2;
+    max-width: 1000px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.messageTopBar{
+    grid-column: 1;
+    padding-left: 10px;
+    padding-top: 10px;
+}
+.messageSearchBar{
+    border: 2px solid rgba(2, 2, 2, 0.5);
+    height: 20px;
+    width: max-content;
+    padding: 10px;
+    border-radius: 15px;
+    font-family: FuseV2;
+}
+.messageUserIcon{
+    height: 80px;
+    padding: 10px;
+    grid-column: 1;
+    grid-row: 1 / span 2;
+}
+.messageUsersPartition{
+    margin: 10px;
+    display: grid;
+    grid-template-columns: auto auto ;
+    grid-template-rows: auto auto;
+    border: 2px solid rgba(2, 2, 2, 0.5);
+    border-radius: 15px;
+}
+.messageUsersPartition:hover{
+    border: 2px solid rgba(2, 2, 2, 1);
+    transition: border 0.2s;
+    cursor:pointer;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+.messageUserName{
+    grid-column: 2;
+    grid-row: 1;
+    margin-bottom: 0;
+}
+.messageUserLastChat{
+    grid-column: 2;
+    grid-row: 2;
+    margin-top: 0;
+}
+
+.messageTextBox{
+    border: 2px solid rgba(2, 2, 2, 0.5);
+    height: 20px;
+    width: 400px;
+    padding: 10px;
+    border-radius: 15px;
+    align-items: center;
+    font-family: FuseV2;
+}
+.messageTextButton{
+    border: 5px solid rgb(1, 98, 163);
+    background-color: rgb(21, 161, 255);
+    color: white;
+    font-weight: 800;
+    height: 50px;
+    width: 200px;
+    padding: 10px;
+    margin-left: 50px;
+    border-radius: 15px;
+    font-family: FuseV2;
+}
+.messageTextButton:hover{
+    background-color: rgb(161, 217, 255);
+    color: black;
+    border: 5px solid rgb(43, 116, 165);
+    transition: background-color 0.2s, color 0.2s, border 0.2s;
+    cursor: pointer;
+}
+
+.receiverMessage{
+    border: 5px solid rgb(59, 59, 59);
+    width: fit-content;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 25px 25px 25px 0;
+    margin-bottom: 15px;
+
+    color: rgb(255, 255, 255);
+    text-shadow:rgb(0, 0, 0, 1) 1px 1px 1px;
+    background-color: rgb(59, 59, 59);
+}
+.senderMessage{
+    border: 5px solid rgb(21, 161, 255);
+    width: fit-content;
+    align-self: flex-end;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 25px 25px 0 25px;
+    margin-bottom: 15px;
+    color: rgb(255, 255, 255);
+    text-shadow:rgb(0, 0, 0, 1) 1px 1px 1px;
+    background-color: rgb(21, 161, 255);
+}
+                                                                                    /*    L     */
+.loadingIcon{
+  height: 50px;
+  padding-left:50px;
+  position: relative;
+  top: 10px;
+  display:none;
+}
+.loginAccountForm input{
+    font-size: 25px;
+    font-family: FuseV2;
+    max-width: 300px;
+    padding: 5px;
+    width: 100%;
+}
+.login-actions{
+    display: grid;
+    gap: 12px;
+    grid-column: 2;
+    margin-top: 14px;
+    max-width: 300px;
+}
+.login-submit{
+    box-sizing: border-box;
+    width: 100%;
+}
+.login-forgot-link{
+    color: #005bf9;
+    justify-self: start;
+    font-family: FuseV2, Arial, sans-serif;
+    margin: 0;
+}
+.login-forgot-link:hover{
+    color: #00225e;
+}
+.login-forgot-link:focus-visible{
+    outline: 3px solid #202020;
+    outline-offset: 3px;
+}
+.login-actions .loadingIcon{
+    justify-self: center;
+    padding-left: 0;
+}
+.login-create-account{
+    border-top: 1px solid #cbd6e8;
+    margin-top: 42px;
+    padding-top: 28px;
+}
+.login-create-account p{
+    color: #42526d;
+    font-family: FuseV2, Arial, sans-serif;
+    font-size: 1.15rem;
+    margin: 0 0 14px;
+}
+.login-create-account .bigButton{
+    font-size: 1.2rem;
+    padding: 14px 18px;
+}
+.password-reset-page{
+    box-sizing: border-box;
+    min-height: 70vh;
+    padding: 90px 24px;
+}
+.password-reset-card{
+    background: #fff;
+    border: 1px solid #cbd6e8;
+    border-top: 8px solid #005bf9;
+    box-shadow: 0 18px 50px rgba(0, 34, 94, 0.14);
+    box-sizing: border-box;
+    margin: 0 auto;
+    max-width: 620px;
+    padding: 42px;
+}
+.password-reset-card__eyebrow{
+    color: #005bf9;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+}
+.password-reset-card h1{
+    color: #202020;
+    margin: 0;
+}
+.password-reset-card__intro{
+    color: #42526d;
+    font-family: Corbel, Arial, sans-serif;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    margin: 14px 0 28px;
+}
+.password-reset-card__success,
+.password-reset-card__error{
+    border-left: 5px solid;
+    font-family: Corbel, Arial, sans-serif;
+    margin: 0 0 20px;
+    padding: 14px 16px;
+}
+.password-reset-card__success{
+    background: #effaf2;
+    border-color: #1e7a3b;
+    color: #135428;
+}
+.password-reset-card__error{
+    background: #fff0f0;
+    border-color: #b00020;
+    color: #7a0015;
+}
+.password-reset-form{
+    display: grid;
+    gap: 10px;
+}
+.password-reset-form label{
+    color: #00225e;
+    font-family: FuseV2, Arial, sans-serif;
+    font-size: 1.05rem;
+}
+.password-reset-form input{
+    border: 1px solid #aebbd1;
+    border-radius: 8px;
+    box-sizing: border-box;
+    font: 1.05rem Corbel, Arial, sans-serif;
+    min-height: 48px;
+    padding: 10px 12px;
+    width: 100%;
+}
+.password-reset-form button{
+    background: #005bf9;
+    border: 2px solid #005bf9;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    font: 1rem FuseV2, Arial, sans-serif;
+    justify-self: start;
+    margin-top: 8px;
+    min-height: 46px;
+    padding: 10px 20px;
+}
+.password-reset-form button:hover:not(:disabled){
+    background: #00225e;
+    border-color: #00225e;
+}
+.password-reset-form button:disabled{
+    background: #77839a;
+    border-color: #77839a;
+    cursor: wait;
+}
+.password-reset-form input:focus-visible,
+.password-reset-form button:focus-visible,
+.password-reset-card__back:focus-visible{
+    outline: 3px solid #202020;
+    outline-offset: 3px;
+}
+.password-reset-card__back{
+    color: #005bf9;
+    display: inline-block;
+    font-family: FuseV2, Arial, sans-serif;
+    margin-top: 26px;
+}
+.password-reset-card__back:hover{
+    color: #00225e;
+}
+                                                                                    /*    O     */
+.optionsButton{
+    width: fit-content;
+    height: fit-content;
+    position: relative;
+}
+.optionsButtonImage{
+    cursor: pointer;
+}
+                                                                                    /*    P     */
+p{
+    font-family: FuseV2;
+}
+                                                                                    /*    P     */
+.recItemImage{
+    width: 200px;
+    cursor: pointer;
+}
+
+.recItem{
+    padding-bottom: 20px;
+}
+.recItemsFromItem{
+    display: grid;
+    padding-left: 10px;
+    padding-right: 10px;
+    grid-template-columns: auto auto auto auto auto;
+    grid-template-rows: auto auto auto;
+}
+.recItemsHomepage{
+    display: grid;
+    grid-template-columns: auto auto auto auto auto;
+    grid-template-rows: auto auto auto;
+    padding-left: 200px;
+    padding-right: 200px;
+}
+
+
+                                                                                    /*    S     */
+#logo{
+    display: block;
+    height: auto;
+    max-width: 100%;
+}
+#headerSearch{
+    grid-area: search;
+    min-width: 0;
+}
+#headerSearch input[type=search]{
+    box-sizing: border-box;
+    font-family: Corbel;
+    font-size: 28px;
+    min-height: 70px;
+    border: 3px solid #005bf9;
+    border-radius: 25px;
+    padding: 6px 16px;
+    width: 100%;
+}
+#searchBarAutocompleteBox{
+    max-width: 775px;
+    background-color: white;
+}
 .sidebar {
-  /* positioning */
-  transition: height 1s;
+  box-sizing: border-box;
+  display: block;
+  max-height: calc(100vh - 110px);
   overflow-x: hidden;
-  transition: 0.5s;
-  display: none;
-  z-index: 1;
+  overflow-y: auto;
+  z-index: 100;
   text-align: right;
-  width: 20vw;
-  height: 470px;
+  width: min(320px, calc(100vw - 24px));
   position: absolute;
-  top: 90px;
+  top: calc(100% + 10px);
   right: 0;
 
   /* decoration */
@@ -127,7 +628,8 @@ h3{
 .sidebarTop{
     background-color: #003fac;
     display: grid;
-    grid-template-columns: auto auto auto auto;
+    grid-template-columns: 1fr 1fr auto;
+    align-items: center;
     margin-right: -20px;
     font-size:25px; 
     color:white; 
@@ -146,22 +648,158 @@ h3{
     color: white;
     text-decoration: none;
 }
+                                                                                    /*    W     */
+.wideContent{
+    margin-left: 10vw;
+    margin-right: 10vw;
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+.sidebarLinkButton,
+.closebtn{
+    background: transparent;
+    border: 0;
+    color: white;
+    cursor: pointer;
+    font: inherit;
+}
+.sidebarLinkButton{
+    display: block;
+    margin: 1em 0 1em auto;
+    padding: 0;
+}
+.closebtn{
+    font-size: 60px;
+    line-height: 1;
+    padding: 0 12px;
+}
 .accountButton{
+    grid-area: account;
     width: fit-content;
     cursor: pointer;
     height: fit-content;
 }
 .optionsButton{
+    grid-area: options;
     width: fit-content;
     height: fit-content;
     position: relative;
 }
 .optionsButtonImage{
+    background: transparent;
+    border: 0;
     cursor: pointer;
+    padding: 0;
 }
 .messageButton{
+    grid-area: messages;
     height: fit-content;
     width: fit-content;
+}
+.accountButton img,
+.messageButton img,
+.optionsButtonImage img{
+    display: block;
+    height: auto;
+    max-width: 64px;
+    width: 100%;
+}
+#headerSearch input:focus-visible,
+.marketplaceLogo a:focus-visible,
+.accountButton:focus-visible,
+.optionsButtonImage:focus-visible,
+.sidebar a:focus-visible,
+.sidebar button:focus-visible{
+    outline: 3px solid white;
+    outline-offset: 3px;
+}
+.bigButton:focus-visible{
+    outline: 3px solid #202020;
+    outline-offset: 3px;
+}
+
+@media (max-width: 768px){
+    #headerElements{
+        grid-template-columns: minmax(120px, 1fr) repeat(3, 48px);
+        grid-template-areas:
+            "logo messages account options"
+            "search search search search";
+        padding: 0 16px;
+    }
+    #headerSearch input[type=search]{
+        font-size: 22px;
+        min-height: 52px;
+    }
+    #headerSection{
+        min-height: 148px;
+    }
+    .accountButton img,
+    .messageButton img,
+    .optionsButtonImage img{
+        max-width: 48px;
+    }
+    #content,
+    #wideContent{
+        margin-left: 8vw;
+        margin-right: 8vw;
+        padding-top: 72px;
+    }
+    #endContents{
+        box-sizing: border-box;
+        grid-template-columns: 1fr;
+        padding: 24px;
+        width: 100%;
+    }
+    #end img{
+        max-width: 100%;
+        padding: 20px 0;
+    }
+    .createAccountForm,
+    .loginAccountForm{
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .createAccountForm input,
+    .loginAccountForm input{
+        box-sizing: border-box;
+        margin-right: 0;
+        max-width: 100%;
+        width: 100%;
+    }
+    .login-actions{
+        grid-column: auto;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px){
+    #headerElements{
+        gap: 8px;
+        grid-template-columns: minmax(100px, 1fr) repeat(2, 44px);
+        grid-template-areas:
+            "logo account options"
+            "search search search";
+        padding: 0 12px;
+    }
+    .messageButton{
+        display: none;
+    }
+    .accountButton img,
+    .optionsButtonImage img{
+        max-width: 44px;
+    }
+    h1{
+        font-size: 34px;
+    }
+    .password-reset-page{
+        padding: 48px 14px;
+    }
+    .password-reset-card{
+        padding: 28px 20px;
+    }
+    .password-reset-form button{
+        justify-self: stretch;
+        width: 100%;
+    }
     cursor: pointer;
 }
 .loginButton{

@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { session } from '../auth/session.js';
+import { getPostLoginPath } from '../auth/returnPath.js';
 import { useNavigate } from 'react-router-dom';
 import backgroundImg from '../img/loginBackground.jpeg';
 import '../css/login.css'
@@ -31,13 +34,12 @@ function handleSearch(event) {
 }
 
 function App() {
-  const [isNavOpen, setIsNavOpen] = useState(false);
-  const [count, setCount] = useState(0);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
+  const location = useLocation();
   const loadingIcon = document.getElementById('loadingIcon');
 
   const toggleNav = () => setIsNavOpen(!isNavOpen);
@@ -63,18 +65,46 @@ function App() {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error);
-            navigate('/');
+            session.saveLogin(data);
+            navigate(getPostLoginPath(location.state), { replace: true });
         } catch (e) {
             setError(e instanceof Error ? e.message : 'An error occurred');
             document.getElementById("loadingIcon").style.display = "none";
         }
     }
 
+  function handleSubmit(event) {
+    event.preventDefault();
+    logIn();
+  }
+
   return (
 <>
   {/* MAIN CONTENT*/}
   <div id="contentBackground" style={backgroundStyle}>
     <div id="content">
+      <h1>Log in</h1>
+      {error && <p>{error}</p>}
+      <form id="loginForm" className="loginAccountForm" onSubmit={handleSubmit}>
+        <label htmlFor="email">Email: </label>
+        <input
+          placeholder="Your email address"
+          id='email'
+          value={email}
+          onChange={e => setEmail(e.target.value)} />
+          <label htmlFor="password">Password: </label>
+        <input
+          placeholder="Your password"
+          id='password'
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)} />
+        <div className="login-actions">
+          <button className="bigButton login-submit" type="submit">Log In</button>
+          <Link className="login-forgot-link" to="/forgot-password">Forgot password?</Link>
+          <img id="loadingIcon" className="loadingIcon" src="/src/icon/loading.gif" alt="Signing in" />
+        </div>
+      </form>
       <div>
         <h1>
           <img src='https://ok2static2.oktacdn.com/fs/bco/1/fs01bgsfcgbz8rdD10x8' alt='University of Newcastle logo'></img>
