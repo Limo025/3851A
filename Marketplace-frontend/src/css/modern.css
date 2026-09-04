@@ -155,6 +155,17 @@ h3{
     margin: 0;
     z-index: -1;
 }
+#headerSearch input[type=search]{
+    box-sizing: border-box;
+    font-family: Corbel;
+    font-size: 28px;
+    min-height: 70px;
+    border: 3px solid #464646;
+    border-radius: 25px;
+    padding: 6px 16px;
+    margin-right: 200px;
+    width: 100%;
+}
                                                                                     /*    I     */
 
 .ItemForm{
@@ -426,15 +437,6 @@ p{
 
 
                                                                                     /*    S     */
-#searchBar input[type=text]{
-    min-width: 40vw;
-    min-height: 70px;
-    font-family: Corbel;
-    font-size: 28px;
-    border: 3px solid #5b5d5b;
-    border-radius: 25px;
-    font-family: Corbel;
-}
 #searchBarAutocompleteBox{
     max-width: 775px;
     background-color: white;
@@ -460,15 +462,12 @@ p{
 
 }
 .sidebarTop p:hover{
-    font-size: 25px;
     text-decoration: underline;
 }
 .sidebarTop{
     background-color: #474847;
     display: grid;
     grid-template-columns: auto auto auto auto;
-    margin-right: -20px;
-    font-size:25px; 
     color:white; 
     text-decoration: none;
 }

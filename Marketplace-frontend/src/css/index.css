@@ -175,6 +175,7 @@ h3{
     display: grid;
     grid-template-columns: auto;
 }
+
 #itemImage{
     grid-column: 1;
     grid-row: 1 / span 4;
@@ -583,6 +584,7 @@ p{
     border-radius: 25px;
     padding: 6px 16px;
     width: 100%;
+    
 }
 #searchBarAutocompleteBox{
     max-width: 775px;
