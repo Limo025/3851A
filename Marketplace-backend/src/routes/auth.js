@@ -27,27 +27,46 @@ export function createAuthRouter({
         return resolvedFirebaseAuth;
     }
 
-    router.post('/register', async (req, res) => {
-        const { email, password, username = '' } = req.body;
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Email and password are required' });
+    function isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+   router.post('/register', async (req, res) => {
+    const { email, password, username = '' } = req.body;
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+    }
+    if (!isValidEmail(email)) {
+        return res.status(400).json({ error: 'Invalid email format' });
+    }
+    if (password.length < 6) {
+        return res.status(400).json({ error: 'Password must be at least 6 characters' });
+    }
+
+    let firebaseUser;
+    try {
+        firebaseUser = await (await getFirebaseAuth()).createUser({ email, password, displayName: username });
+        const user = await UserModel.create({ uid: firebaseUser.uid, email: firebaseUser.email, username });
+        res.status(201).json({
+            message: 'User registered successfully',
+            user: { uid: user.uid, email: user.email, username: user.username },
+        });
+    } catch (err) {
+        if (err.code === 'auth/email-already-exists') {
+            return res.status(409).json({ error: 'Email already in use' });
         }
 
-        try {
-            const firebaseUser = await (await getFirebaseAuth()).createUser({ email, password, displayName: username });
-            const user = await UserModel.create({ uid: firebaseUser.uid, email: firebaseUser.email, username });
-            res.status(201).json({
-                message: 'User registered successfully',
-                user: { uid: user.uid, email: user.email, username: user.username },
+        if (firebaseUser?.uid) {
+            const fbAuth = await getFirebaseAuth();
+            await fbAuth.deleteUser(firebaseUser.uid).catch((cleanupErr) => {
+                console.error('Failed to roll back Firebase user:', cleanupErr.message);
             });
-        } catch (err) {
-            if (err.code === 'auth/email-already-exists') {
-                return res.status(409).json({ error: 'Email already in use' });
-            }
-            console.error('Register error:', err);
-            res.status(500).json({ error: 'Registration failed' });
         }
-    });
+
+        console.error('Register error:', err);
+        res.status(500).json({ error: 'Registration failed' });
+    }
+});
 
     router.post('/login', async (req, res) => {
         const { email, password } = req.body;
@@ -167,7 +186,8 @@ export function createAuthRouter({
 
         try {
             req.user = await (await getFirebaseAuth()).verifyIdToken(authHeader.slice('Bearer '.length));
-        } catch {
+        } catch (err) {
+            console.error('Token verification failed:', err.message);
             return res.status(401).json({ error: 'Invalid or expired token' });
         }
 
