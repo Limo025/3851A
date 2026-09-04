@@ -169,7 +169,8 @@ export function createAuthRouter({
             const { uid, email, name } = decoded;
             let user = await UserModel.findOne({ uid });
             if (!user) {
-                user = await UserModel.create({ uid, email, username: name || email.split('@')[0] });
+                const fallbackUsername = name || (email ? email.split('@')[0] : `user_${uid.slice(0, 6)}`);
+                user = await UserModel.create({ uid, email, username: fallbackUsername });
             }
             res.json({ user: { uid: user.uid, email: user.email, username: user.username } });
         } catch (err) {
