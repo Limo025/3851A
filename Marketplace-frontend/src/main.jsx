@@ -9,7 +9,6 @@ import ForgotPassword from './pages/ForgotPassword.jsx'
 import Item from './pages/Item.jsx'
 import NotFound from './pages/NotFound.jsx'
 import CreateAccount from './pages/CreateAccount.jsx'
-import About from './pages/About.jsx'
 import Categories from './pages/Categories.jsx'
 import Search from './pages/Search.jsx'
 import Messages from './pages/Messages.jsx'
@@ -23,7 +22,6 @@ import RequireAuth from './components/RequireAuth.jsx'
 import About from './pages/About.jsx'
 import Sell from './pages/Sell.jsx'
 import Watchlist from './pages/Watchlist.jsx'
-import Categories from './pages/Categories.jsx'
 import { initializeApp } from "firebase/app"
 
 const firebaseConfig = {
