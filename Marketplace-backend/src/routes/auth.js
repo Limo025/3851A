@@ -31,42 +31,42 @@ export function createAuthRouter({
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-   router.post('/register', async (req, res) => {
-    const { email, password, username = '' } = req.body;
-    if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required' });
-    }
-    if (!isValidEmail(email)) {
-        return res.status(400).json({ error: 'Invalid email format' });
-    }
-    if (password.length < 6) {
-        return res.status(400).json({ error: 'Password must be at least 6 characters' });
-    }
-
-    let firebaseUser;
-    try {
-        firebaseUser = await (await getFirebaseAuth()).createUser({ email, password, displayName: username });
-        const user = await UserModel.create({ uid: firebaseUser.uid, email: firebaseUser.email, username });
-        res.status(201).json({
-            message: 'User registered successfully',
-            user: { uid: user.uid, email: user.email, username: user.username },
-        });
-    } catch (err) {
-        if (err.code === 'auth/email-already-exists') {
-            return res.status(409).json({ error: 'Email already in use' });
+    router.post('/register', async (req, res) => {
+        const { email, password, username = '' } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required' });
+        }
+        if (!isValidEmail(email)) {
+            return res.status(400).json({ error: 'Invalid email format' });
+        }
+        if (password.length < 6) {
+            return res.status(400).json({ error: 'Password must be at least 6 characters' });
         }
 
-        if (firebaseUser?.uid) {
-            const fbAuth = await getFirebaseAuth();
-            await fbAuth.deleteUser(firebaseUser.uid).catch((cleanupErr) => {
-                console.error('Failed to roll back Firebase user:', cleanupErr.message);
+        let firebaseUser;
+        try {
+            firebaseUser = await (await getFirebaseAuth()).createUser({ email, password, displayName: username });
+            const user = await UserModel.create({ uid: firebaseUser.uid, email: firebaseUser.email, username });
+            res.status(201).json({
+                message: 'User registered successfully',
+                user: { uid: user.uid, email: user.email, username: user.username },
             });
-        }
+        } catch (err) {
+            if (err.code === 'auth/email-already-exists') {
+                return res.status(409).json({ error: 'Email already in use' });
+            }
 
-        console.error('Register error:', err);
-        res.status(500).json({ error: 'Registration failed' });
-    }
-});
+            if (firebaseUser?.uid) {
+                const fbAuth = await getFirebaseAuth();
+                await fbAuth.deleteUser(firebaseUser.uid).catch((cleanupErr) => {
+                    console.error('Failed to roll back Firebase user:', cleanupErr.message);
+                });
+            }
+
+            console.error('Register error:', err);
+            res.status(500).json({ error: 'Registration failed' });
+        }
+    });
 
     router.post('/login', async (req, res) => {
         const { email, password } = req.body;
@@ -92,6 +92,7 @@ export function createAuthRouter({
                 return res.status(status).json({ error: 'Invalid email or password' });
             }
 
+            // Fetch profile from MongoDB
             const user = await UserModel.findOneAndUpdate(
                 { uid: data.localId },
                 {
@@ -103,16 +104,16 @@ export function createAuthRouter({
                 },
                 { upsert: true, new: true, setDefaultsOnInsert: true },
             );
+
             res.json({
                 idToken: data.idToken,
                 refreshToken: data.refreshToken,
                 expiresIn: data.expiresIn,
-                user: { uid: user.uid, email: user.email, username: user.username },
-            });
+                user: user
+                    ? { uid: user.uid, email: user.email, username: user.username }
+                    : { uid: data.localId, email: data.email },
+            });         //  not storing this anywhere
         } catch (err) {
-            if (isProviderTimeoutError(err)) {
-                return res.status(504).json({ error: 'Authentication provider timed out' });
-            }
             console.error('Login error:', err);
             res.status(500).json({ error: 'Login failed' });
         }

@@ -30,6 +30,9 @@ body{
     border-radius: 25px;
     background-color: white;
     transition: background-color .2s, color .2s, border .2s;
+    font-family: Corbel;
+    padding-left: 15px;
+    padding-bottom: 15px;
 }
 .bigButton:hover{
     background-color: #005bf9;
@@ -38,7 +41,10 @@ body{
     cursor: pointer;
 }
                                                                                     /*    C     */
-#contentBackground{
+/* #contentBackground{
+
+} */
+#content {
     background-color: white;
     min-height: 200px;
     height: fit-content;
@@ -71,8 +77,18 @@ body{
 #content{
     margin-left: 22vw;
     margin-right: 22vw;
+    border-color: black;
+    border-radius: 1%;
+    padding: 20px;
+    width: fit-content;
+    grid-column: 8 /span 6;
+    height: fit-content;
+
+}
+
+#contentBackground {
     padding-top: 150px;
-    padding-bottom: 50px;
+    display: grid;
 }
 #contentHeading{
     margin-left: 22vw;
@@ -787,7 +803,85 @@ p{
     .password-reset-form button{
         justify-self: stretch;
         width: 100%;
+        cursor: pointer;
     }
+    
+}
+.loginButton{
+    font-size:1.5rem;
+    font-family: FuseV2;
+    padding: 20px;
+    position: relative;
+    border: 3px solid #005bf9;
+    border-radius: 20px;
+    background-color: white;
+    transition: background-color .2s, color .2s, border .2s;
+}
+.loginButton:hover{
+    background-color: #005bf9;
+    border: 3px solid #00225e;
+    color: white;
+    cursor: pointer;
+}
+.bigButton{
+    font-size:30px;
+    font-family: FuseV2;
+    padding: 20px;
+    position: relative;
+    border: 3px solid #005bf9;
+    border-radius: 25px;
+    background-color: white;
+    transition: background-color .2s, color .2s, border .2s;
+}
+.bigButton:hover{
+    background-color: #005bf9;
+    border: 3px solid #00225e;
+    color: white;
+    cursor: pointer;
+}
+
+.createAccountForm, .loginAccountForm{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-family: Corbel;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.createAccountForm label, .loginAccountForm label{
+    font-family: Corbel;
+    font-size: 25px;
+    padding-right: 20px;
+}
+.createAccountForm input{
+    font-size: 25px;
+    font-family: FuseV2;
+    min-width: 20vw;
+    padding: 5px;
+    margin-right: 10px;
+}
+.loginAccountForm input{
+    font-size: 25px;
+    font-family: FuseV2;
+    max-width: 300px;
+    padding: 5px;
+    margin-right: 50px;
+}
+
+.createAccountForm button{
+    font-size: 25px;
+    font-family: FuseV2;
+    min-width: 20vw;
+    padding: 5px;
+}
+
+.loadingIcon{
+  height: 50px;
+  padding-left:50px;
+  position: relative;
+  top: 10px;
+  display:none;
 }
 /* google button */
 .gsi-material-button {
