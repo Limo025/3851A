@@ -19,27 +19,27 @@
                                                                                     /*    B     */
 body{
     margin: 0;
-    background-color: #202020;
+    background-color: #8a8d91;
 }
 .bigButton{
     font-size:30px;
     font-family: FuseV2;
     padding: 20px;
     position: relative;
-    border: 3px solid #005bf9;
+    border: 1px solid #ad9790;
     border-radius: 25px;
-    background-color: white;
+    background-color: #f5d3c8;
+    color: black;
     transition: background-color .2s, color .2s, border .2s;
 }
 .bigButton:hover{
-    background-color: #005bf9;
-    border: 3px solid #00225e;
-    color: white;
+    background-color: #f7e7e2;
+    color: rgb(58, 58, 58);
     cursor: pointer;
 }
                                                                                     /*    C     */
 #contentBackground{
-    background-color: white;
+    background-color: #BCBDC0;
     min-height: 200px;
     height: fit-content;
 
@@ -49,16 +49,18 @@ body{
     grid-template-columns: auto auto auto auto auto;
 }
 .categoryBox{
-    border: 2px solid black;
+    border: 2px solid #565857;
     width: 200px;
-    background-color: rgb(199, 199, 199);
+    color: white;
+    background-color: #8A8D91;
     font-size: 20px;
     padding: 10px;
+    border-radius: 20px;
     margin: 10px;
 }
 .categoryBox:hover{
     cursor: pointer;
-    background-color:  rgb(125, 187, 189);
+    background-color:  #734B5E;
     font-size: 25px;
     padding: 2px;
     padding-left: 10px;
@@ -107,10 +109,10 @@ body{
                                                                                     /*    D     */
                                                                                     /*    E     */
 #end{
-    background-color: #202020;
+    background-color: #8A8D91;
     height: auto;
     margin: 0;
-    color: white;
+    color: black;
     font-family: Corbel;
 }
 #end img{
@@ -128,18 +130,6 @@ body{
                                                                                     /*    F     */
                                                                                     /*    G     */
                                                                                     /*    H     */
-[hidden]{
-    display: none !important;
-}
-.visuallyHidden{
-    clip: rect(0 0 0 0);
-    clip-path: inset(50%);
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    width: 1px;
-}
 h1{
     font-family: FuseV2Bold;
     font-size: 40px;
@@ -149,20 +139,15 @@ h3{
     font-size: 25px;
 }
 #headerElements{
-    align-items: center;
+    margin-right: 10%;
+    margin-left: 10%;
     display: grid;
-    gap: 12px;
-    grid-template-areas: "logo search messages account options";
-    grid-template-columns: minmax(150px, 200px) minmax(220px, 1fr) repeat(3, 64px);
-    margin: 0 auto;
-    max-width: 1200px;
-    padding: 0 24px;
+    grid-template-columns: auto auto auto auto auto;
 }
 #headerSection{
-    background-color: #000;
-    box-sizing: border-box;
-    min-height: 100px;
-    padding: 15px 0;
+    background-color: #8A8D91;
+    padding-top: 15px;
+    height: 90px;
     position: relative;
 }
 #headerImage img{
@@ -171,6 +156,28 @@ h3{
     z-index: -1;
 }
                                                                                     /*    I     */
+
+.ItemForm{
+    display: grid;
+    grid-template-columns: auto auto;
+    row-gap: 10px;
+    font-size: 25px;
+    font-family: Corbel;
+    max-width: 800px;
+    padding: 5px;
+    margin-right: 50px;
+}
+.itemDescription{
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 200px;
+    padding: 8px;
+    font-family: Corbel;
+    font-size: 15px;
+    text-align: left;
+    vertical-align: top;
+    resize: vertical;
+}
 .itemButtons{
     display: grid;
     grid-template-columns: auto;
@@ -203,7 +210,8 @@ h3{
 }
 .itemDescriptionBox{
     width: 400px;
-    border: 5px solid black;
+    border: 5px solid #8A8D91;
+    border-radius: 20px;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -223,25 +231,26 @@ h3{
 
                                                                                     /*    M     */
 .marketplaceLogo {
-    grid-area: logo;
-    min-width: 0;
+    position: relative;
+    top: 0%;
+    left: 0vw;
     z-index: 10;
 }
 .mediumButton{
-    font-size:15px;
+    font-size:20px;
     padding: 10px;
     font-family: FuseV2;
     margin-top: 10px;
     margin-right: 10px;
     position: relative;
-    border: 1px solid #ff5b7e;
+    border: 1px solid #734B5E;
     border-radius: 25px;
-    background-color: #ffaec0;
+    color: #BCBDC0;
+    background-color: #734B5E;
     transition: background-color .2s, color .2s, border .2s;
 }
 .mediumButton:hover{
-    background-color: #ff5b7e;
-    border: 1px solid #ff0037;
+    background-color: #3d2832;
     color: white;
     cursor: pointer;
 }
@@ -251,8 +260,9 @@ h3{
     cursor: pointer;
 }
 .messageFrame{
-    border: 2px solid black;
+    border: 2px solid #565857;
     display: grid;
+    border-radius: 5px;
     grid-template-columns: auto auto auto;
 }
 .messageUsers{
@@ -316,14 +326,15 @@ h3{
     height: 20px;
     width: 400px;
     padding: 10px;
+    margin-top: 20px;
     border-radius: 15px;
     align-items: center;
     font-family: FuseV2;
 }
 .messageTextButton{
-    border: 5px solid rgb(1, 98, 163);
-    background-color: rgb(21, 161, 255);
-    color: white;
+    border: 3px solid #2e2026;
+    background-color: #734B5E;
+    color: black;
     font-weight: 800;
     height: 50px;
     width: 200px;
@@ -333,36 +344,32 @@ h3{
     font-family: FuseV2;
 }
 .messageTextButton:hover{
-    background-color: rgb(161, 217, 255);
+    background-color: #A6778D;
     color: black;
-    border: 5px solid rgb(43, 116, 165);
     transition: background-color 0.2s, color 0.2s, border 0.2s;
     cursor: pointer;
 }
 
 .receiverMessage{
-    border: 5px solid rgb(59, 59, 59);
+    border: 2px solid #474847;
     width: fit-content;
     padding-left: 10px;
     padding-right: 10px;
     border-radius: 25px 25px 25px 0;
     margin-bottom: 15px;
-
     color: rgb(255, 255, 255);
-    text-shadow:rgb(0, 0, 0, 1) 1px 1px 1px;
-    background-color: rgb(59, 59, 59);
+    background-color: #565857;
 }
 .senderMessage{
-    border: 5px solid rgb(21, 161, 255);
+    border: 2px solid #EFBAA9;
     width: fit-content;
     align-self: flex-end;
     padding-left: 10px;
     padding-right: 10px;
     border-radius: 25px 25px 0 25px;
     margin-bottom: 15px;
-    color: rgb(255, 255, 255);
-    text-shadow:rgb(0, 0, 0, 1) 1px 1px 1px;
-    background-color: rgb(21, 161, 255);
+    color: black;
+    background-color: #F5D3C8;
 }
                                                                                     /*    L     */
 .loadingIcon{
@@ -374,157 +381,10 @@ h3{
 }
 .loginAccountForm input{
     font-size: 25px;
-    font-family: FuseV2;
+    font-family: Corbel;
     max-width: 300px;
     padding: 5px;
-    width: 100%;
-}
-.login-actions{
-    display: grid;
-    gap: 12px;
-    grid-column: 2;
-    margin-top: 14px;
-    max-width: 300px;
-}
-.login-submit{
-    box-sizing: border-box;
-    width: 100%;
-}
-.login-forgot-link{
-    color: #005bf9;
-    justify-self: start;
-    font-family: FuseV2, Arial, sans-serif;
-    margin: 0;
-}
-.login-forgot-link:hover{
-    color: #00225e;
-}
-.login-forgot-link:focus-visible{
-    outline: 3px solid #202020;
-    outline-offset: 3px;
-}
-.login-actions .loadingIcon{
-    justify-self: center;
-    padding-left: 0;
-}
-.login-create-account{
-    border-top: 1px solid #cbd6e8;
-    margin-top: 42px;
-    padding-top: 28px;
-}
-.login-create-account p{
-    color: #42526d;
-    font-family: FuseV2, Arial, sans-serif;
-    font-size: 1.15rem;
-    margin: 0 0 14px;
-}
-.login-create-account .bigButton{
-    font-size: 1.2rem;
-    padding: 14px 18px;
-}
-.password-reset-page{
-    box-sizing: border-box;
-    min-height: 70vh;
-    padding: 90px 24px;
-}
-.password-reset-card{
-    background: #fff;
-    border: 1px solid #cbd6e8;
-    border-top: 8px solid #005bf9;
-    box-shadow: 0 18px 50px rgba(0, 34, 94, 0.14);
-    box-sizing: border-box;
-    margin: 0 auto;
-    max-width: 620px;
-    padding: 42px;
-}
-.password-reset-card__eyebrow{
-    color: #005bf9;
-    font-size: 0.9rem;
-    letter-spacing: 0.1em;
-    margin: 0 0 8px;
-    text-transform: uppercase;
-}
-.password-reset-card h1{
-    color: #202020;
-    margin: 0;
-}
-.password-reset-card__intro{
-    color: #42526d;
-    font-family: Corbel, Arial, sans-serif;
-    font-size: 1.15rem;
-    line-height: 1.5;
-    margin: 14px 0 28px;
-}
-.password-reset-card__success,
-.password-reset-card__error{
-    border-left: 5px solid;
-    font-family: Corbel, Arial, sans-serif;
-    margin: 0 0 20px;
-    padding: 14px 16px;
-}
-.password-reset-card__success{
-    background: #effaf2;
-    border-color: #1e7a3b;
-    color: #135428;
-}
-.password-reset-card__error{
-    background: #fff0f0;
-    border-color: #b00020;
-    color: #7a0015;
-}
-.password-reset-form{
-    display: grid;
-    gap: 10px;
-}
-.password-reset-form label{
-    color: #00225e;
-    font-family: FuseV2, Arial, sans-serif;
-    font-size: 1.05rem;
-}
-.password-reset-form input{
-    border: 1px solid #aebbd1;
-    border-radius: 8px;
-    box-sizing: border-box;
-    font: 1.05rem Corbel, Arial, sans-serif;
-    min-height: 48px;
-    padding: 10px 12px;
-    width: 100%;
-}
-.password-reset-form button{
-    background: #005bf9;
-    border: 2px solid #005bf9;
-    border-radius: 8px;
-    color: #fff;
-    cursor: pointer;
-    font: 1rem FuseV2, Arial, sans-serif;
-    justify-self: start;
-    margin-top: 8px;
-    min-height: 46px;
-    padding: 10px 20px;
-}
-.password-reset-form button:hover:not(:disabled){
-    background: #00225e;
-    border-color: #00225e;
-}
-.password-reset-form button:disabled{
-    background: #77839a;
-    border-color: #77839a;
-    cursor: wait;
-}
-.password-reset-form input:focus-visible,
-.password-reset-form button:focus-visible,
-.password-reset-card__back:focus-visible{
-    outline: 3px solid #202020;
-    outline-offset: 3px;
-}
-.password-reset-card__back{
-    color: #005bf9;
-    display: inline-block;
-    font-family: FuseV2, Arial, sans-serif;
-    margin-top: 26px;
-}
-.password-reset-card__back:hover{
-    color: #00225e;
+    margin-right: 50px;
 }
                                                                                     /*    O     */
 .optionsButton{
@@ -537,7 +397,8 @@ h3{
 }
                                                                                     /*    P     */
 p{
-    font-family: FuseV2;
+    font-family: Corbel;
+    font-size: larger;
 }
                                                                                     /*    P     */
 .recItemImage{
@@ -565,46 +426,37 @@ p{
 
 
                                                                                     /*    S     */
-#logo{
-    display: block;
-    height: auto;
-    max-width: 100%;
-}
-#headerSearch{
-    grid-area: search;
-    min-width: 0;
-}
-#headerSearch input[type=search]{
-    box-sizing: border-box;
+#searchBar input[type=text]{
+    min-width: 40vw;
+    min-height: 70px;
     font-family: Corbel;
     font-size: 28px;
-    min-height: 70px;
-    border: 3px solid #005bf9;
+    border: 3px solid #5b5d5b;
     border-radius: 25px;
-    padding: 6px 16px;
-    width: 100%;
+    font-family: Corbel;
 }
 #searchBarAutocompleteBox{
     max-width: 775px;
     background-color: white;
 }
 .sidebar {
-  box-sizing: border-box;
-  display: block;
-  max-height: calc(100vh - 110px);
+  /* positioning */
+  transition: height 1s;
   overflow-x: hidden;
-  overflow-y: auto;
-  z-index: 100;
+  transition: 0.5s;
+  display: none;
+  z-index: 1;
   text-align: right;
-  width: min(320px, calc(100vw - 24px));
+  width: 20vw;
+  height: 470px;
   position: absolute;
-  top: calc(100% + 10px);
+  top: 90px;
   right: 0;
 
   /* decoration */
   color: white;
   font-family: Corbel;
-  background-color: #005bf9;
+  background-color: #5b5d5b;
 
 }
 .sidebarTop p:hover{
@@ -612,10 +464,9 @@ p{
     text-decoration: underline;
 }
 .sidebarTop{
-    background-color: #003fac;
+    background-color: #474847;
     display: grid;
-    grid-template-columns: 1fr 1fr auto;
-    align-items: center;
+    grid-template-columns: auto auto auto auto;
     margin-right: -20px;
     font-size:25px; 
     color:white; 
@@ -641,152 +492,27 @@ p{
     padding-top: 30px;
     padding-bottom: 30px;
 }
-.sidebarLinkButton,
-.closebtn{
-    background: transparent;
-    border: 0;
-    color: white;
-    cursor: pointer;
-    font: inherit;
-}
-.sidebarLinkButton{
-    display: block;
-    margin: 1em 0 1em auto;
-    padding: 0;
-}
-.closebtn{
-    font-size: 60px;
-    line-height: 1;
-    padding: 0 12px;
-}
-.accountButton{
-    grid-area: account;
-    width: fit-content;
-    cursor: pointer;
-    height: fit-content;
-}
-.optionsButton{
-    grid-area: options;
-    width: fit-content;
-    height: fit-content;
-    position: relative;
-}
-.optionsButtonImage{
-    background: transparent;
-    border: 0;
-    cursor: pointer;
-    padding: 0;
-}
-.messageButton{
-    grid-area: messages;
-    height: fit-content;
-    width: fit-content;
-}
-.accountButton img,
-.messageButton img,
-.optionsButtonImage img{
-    display: block;
-    height: auto;
-    max-width: 64px;
-    width: 100%;
-}
-#headerSearch input:focus-visible,
-.marketplaceLogo a:focus-visible,
-.accountButton:focus-visible,
-.optionsButtonImage:focus-visible,
-.sidebar a:focus-visible,
-.sidebar button:focus-visible{
-    outline: 3px solid white;
-    outline-offset: 3px;
-}
-.bigButton:focus-visible{
-    outline: 3px solid #202020;
-    outline-offset: 3px;
+
+                                                                                        /*   U  */
+
+input#itemImageFile{
+    font-family: Corbel;
+    font-size: 20px;
 }
 
-@media (max-width: 768px){
-    #headerElements{
-        grid-template-columns: minmax(120px, 1fr) repeat(3, 48px);
-        grid-template-areas:
-            "logo messages account options"
-            "search search search search";
-        padding: 0 16px;
-    }
-    #headerSearch input[type=search]{
-        font-size: 22px;
-        min-height: 52px;
-    }
-    #headerSection{
-        min-height: 148px;
-    }
-    .accountButton img,
-    .messageButton img,
-    .optionsButtonImage img{
-        max-width: 48px;
-    }
-    #content,
-    #wideContent{
-        margin-left: 8vw;
-        margin-right: 8vw;
-        padding-top: 72px;
-    }
-    #endContents{
-        box-sizing: border-box;
-        grid-template-columns: 1fr;
-        padding: 24px;
-        width: 100%;
-    }
-    #end img{
-        max-width: 100%;
-        padding: 20px 0;
-    }
-    .createAccountForm,
-    .loginAccountForm{
-        grid-template-columns: minmax(0, 1fr);
-    }
-    .createAccountForm input,
-    .loginAccountForm input{
-        box-sizing: border-box;
-        margin-right: 0;
-        max-width: 100%;
-        width: 100%;
-    }
-    .login-actions{
-        grid-column: auto;
-        max-width: 100%;
-    }
-}
 
-@media (max-width: 480px){
-    #headerElements{
-        gap: 8px;
-        grid-template-columns: minmax(100px, 1fr) repeat(2, 44px);
-        grid-template-areas:
-            "logo account options"
-            "search search search";
-        padding: 0 12px;
-    }
-    .messageButton{
-        display: none;
-    }
-    .accountButton img,
-    .optionsButtonImage img{
-        max-width: 44px;
-    }
-    h1{
-        font-size: 34px;
-    }
-    .password-reset-page{
-        padding: 48px 14px;
-    }
-    .password-reset-card{
-        padding: 28px 20px;
-    }
-    .password-reset-form button{
-        justify-self: stretch;
-        width: 100%;
-    }
-}
+
+
+
+
+
+
+
+
+
+
+
+
 /* google button */
 .gsi-material-button {
   -moz-user-select: none;

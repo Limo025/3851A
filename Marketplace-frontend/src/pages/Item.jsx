@@ -122,10 +122,10 @@ function App() {
               <div id='itemPrice'>
                   <h1>$price</h1>
                   {/* Price on offer   */}
-
-                  <div id='itemSellerButton'>
+                  <div class='itemButtons'>
                     <button class="bigButton">Contact Seller</button>
                     {/* Contact seller button  */}
+                    <button class="mediumButton">Add to Watchlist</button>
                   </div>
               </div>
               <div id='itemDescriptionDiv'>
