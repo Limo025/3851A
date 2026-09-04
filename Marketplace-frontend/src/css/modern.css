@@ -29,12 +29,12 @@ body{
     border: 1px solid #ad9790;
     border-radius: 25px;
     background-color: #f5d3c8;
-    color: #565857;
+    color: black;
     transition: background-color .2s, color .2s, border .2s;
 }
 .bigButton:hover{
     background-color: #f7e7e2;
-    color: black;
+    color: rgb(58, 58, 58);
     cursor: pointer;
 }
                                                                                     /*    C     */
@@ -156,6 +156,28 @@ h3{
     z-index: -1;
 }
                                                                                     /*    I     */
+
+.ItemForm{
+    display: grid;
+    grid-template-columns: auto auto;
+    row-gap: 10px;
+    font-size: 25px;
+    font-family: Corbel;
+    max-width: 800px;
+    padding: 5px;
+    margin-right: 50px;
+}
+.itemDescription{
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 200px;
+    padding: 8px;
+    font-family: Corbel;
+    font-size: 15px;
+    text-align: left;
+    vertical-align: top;
+    resize: vertical;
+}
 .itemButtons{
     display: grid;
     grid-template-columns: auto;
@@ -359,7 +381,7 @@ h3{
 }
 .loginAccountForm input{
     font-size: 25px;
-    font-family: FuseV2;
+    font-family: Corbel;
     max-width: 300px;
     padding: 5px;
     margin-right: 50px;
@@ -375,7 +397,8 @@ h3{
 }
                                                                                     /*    P     */
 p{
-    font-family: FuseV2;
+    font-family: Corbel;
+    font-size: larger;
 }
                                                                                     /*    P     */
 .recItemImage{
@@ -470,9 +493,12 @@ p{
     padding-bottom: 30px;
 }
 
+                                                                                        /*   U  */
 
-
-
+input#itemImageFile{
+    font-family: Corbel;
+    font-size: 20px;
+}
 
 
 
