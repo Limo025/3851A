@@ -464,7 +464,7 @@ p{
     text-decoration: underline;
 }
 .sidebarTop{
-    background-color: ##474847;
+    background-color: #474847;
     display: grid;
     grid-template-columns: auto auto auto auto;
     margin-right: -20px;
