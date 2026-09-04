@@ -13,10 +13,10 @@ app.use(express.json());
 
 app.use('/auth', authRoutes);
 
-app.post('/hello', (req, res) => {
-    console.log(req.body);
-    res.send(`hello ${req.body.name}`);
-});
+// app.post('/hello', (req, res) => {
+//     console.log(req.body);
+//     res.send(`hello ${req.body.name}`);
+// });
 
 connectDB().then(() => {
     app.listen(PORT, () => {
