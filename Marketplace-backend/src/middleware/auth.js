@@ -11,7 +11,8 @@ export async function verifyToken(req, res, next) {
         const decoded = await auth.verifyIdToken(idToken);
         req.user = decoded;
         next();
-    } catch {
-        res.status(401).json({ error: 'Invalid or expired token' });
+    } catch (err) {
+    console.error('Token verification failed:', err.message);
+    res.status(401).json({ error: 'Invalid or expired token' });
     }
 }
