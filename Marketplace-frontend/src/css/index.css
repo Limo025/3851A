@@ -158,7 +158,8 @@ h3{
     padding: 0 24px;
 }
 #headerSection{
-    background-color: #122C34;
+    background: #3ACFCF;
+    background: linear-gradient(180deg,rgba(58, 207, 207, 1) 1%, rgba(44, 181, 181, 1) 47%, rgba(36, 148, 148, 1) 90%);
     box-sizing: border-box;
     padding: 15px 0;
     position: relative;
@@ -604,7 +605,7 @@ p{
   /* decoration */
   color: white;
   font-family: Corbel;
-  background-color: #2CB5B5;
+  background-color: #1a6e6e;
 
 }
 .sidebarTop p:hover{
@@ -612,7 +613,7 @@ p{
     text-decoration: underline;
 }
 .sidebarTop{
-    background-color: #186363;
+    background-color: #093636;
     display: grid;
     grid-template-columns: 1fr 1fr auto;
     align-items: center;
