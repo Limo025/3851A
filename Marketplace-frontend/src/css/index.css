@@ -19,22 +19,22 @@
                                                                                     /*    B     */
 body{
     margin: 0;
-    background-color: #202020;
+    background-color: #050D0F;
 }
 .bigButton{
     font-size:30px;
     font-family: FuseV2;
     padding: 20px;
     position: relative;
-    border: 3px solid #005bf9;
+    border: 3px solid #44CFCB;
     border-radius: 25px;
     background-color: white;
     transition: background-color .2s, color .2s, border .2s;
 }
 .bigButton:hover{
-    background-color: #005bf9;
-    border: 3px solid #00225e;
-    color: white;
+    background-color: #44CFCB;
+    border: 3px solid #186262;
+    color: #041010;
     cursor: pointer;
 }
                                                                                     /*    C     */
@@ -51,14 +51,14 @@ body{
 .categoryBox{
     border: 2px solid black;
     width: 200px;
-    background-color: rgb(199, 199, 199);
+    background-color: #C1D5EC;
     font-size: 20px;
     padding: 10px;
     margin: 10px;
 }
 .categoryBox:hover{
     cursor: pointer;
-    background-color:  rgb(125, 187, 189);
+    background-color:  #EFF4FA;
     font-size: 25px;
     padding: 2px;
     padding-left: 10px;
@@ -107,11 +107,10 @@ body{
                                                                                     /*    D     */
                                                                                     /*    E     */
 #end{
-    background-color: #202020;
+    background-color: #0F282E;
     height: auto;
     margin: 0;
     color: white;
-    font-family: Corbel;
 }
 #end img{
     padding: 50px;
@@ -159,9 +158,8 @@ h3{
     padding: 0 24px;
 }
 #headerSection{
-    background-color: #000;
+    background-color: #122C34;
     box-sizing: border-box;
-    min-height: 100px;
     padding: 15px 0;
     position: relative;
 }
@@ -204,7 +202,9 @@ h3{
 }
 .itemDescriptionBox{
     width: 400px;
-    border: 5px solid black;
+    border: 5px solid #186262;
+    border-radius: 20px;
+    font-family: Corbel;
     padding-left: 10px;
     padding-right: 10px;
 }
@@ -231,18 +231,19 @@ h3{
 .mediumButton{
     font-size:15px;
     padding: 10px;
-    font-family: FuseV2;
+    font-family: Corbel;
     margin-top: 10px;
     margin-right: 10px;
     position: relative;
-    border: 1px solid #ff5b7e;
+    border: 1px solid #162550;
     border-radius: 25px;
-    background-color: #ffaec0;
+    color: white;
+    background-color: #2A4494;
     transition: background-color .2s, color .2s, border .2s;
 }
 .mediumButton:hover{
-    background-color: #ff5b7e;
-    border: 1px solid #ff0037;
+    background-color: #4EA5D9;
+    border: 1px solid #162550;
     color: white;
     cursor: pointer;
 }
@@ -319,11 +320,11 @@ h3{
     padding: 10px;
     border-radius: 15px;
     align-items: center;
-    font-family: FuseV2;
+    font-family: Corbel;
 }
 .messageTextButton{
-    border: 5px solid rgb(1, 98, 163);
-    background-color: rgb(21, 161, 255);
+    border: 3px solid #0F282E;
+    background-color: #3CA0B9;
     color: white;
     font-weight: 800;
     height: 50px;
@@ -334,9 +335,8 @@ h3{
     font-family: FuseV2;
 }
 .messageTextButton:hover{
-    background-color: rgb(161, 217, 255);
-    color: black;
-    border: 5px solid rgb(43, 116, 165);
+    background-color: #84C6D7;
+    border: 3px solid #3CA0B9;
     transition: background-color 0.2s, color 0.2s, border 0.2s;
     cursor: pointer;
 }
@@ -354,7 +354,7 @@ h3{
     background-color: rgb(59, 59, 59);
 }
 .senderMessage{
-    border: 5px solid rgb(21, 161, 255);
+    border: 3px solid #104242;
     width: fit-content;
     align-self: flex-end;
     padding-left: 10px;
@@ -363,7 +363,7 @@ h3{
     margin-bottom: 15px;
     color: rgb(255, 255, 255);
     text-shadow:rgb(0, 0, 0, 1) 1px 1px 1px;
-    background-color: rgb(21, 161, 255);
+    background-color: #186262;
 }
                                                                                     /*    L     */
 .loadingIcon{
@@ -392,7 +392,7 @@ h3{
     width: 100%;
 }
 .login-forgot-link{
-    color: #005bf9;
+    color: #104242;
     justify-self: start;
     font-family: FuseV2, Arial, sans-serif;
     margin: 0;
@@ -430,16 +430,13 @@ h3{
 }
 .password-reset-card{
     background: #fff;
-    border: 1px solid #cbd6e8;
-    border-top: 8px solid #005bf9;
-    box-shadow: 0 18px 50px rgba(0, 34, 94, 0.14);
     box-sizing: border-box;
     margin: 0 auto;
     max-width: 620px;
     padding: 42px;
 }
 .password-reset-card__eyebrow{
-    color: #005bf9;
+    color: #082121;
     font-size: 0.9rem;
     letter-spacing: 0.1em;
     margin: 0 0 8px;
@@ -492,8 +489,8 @@ h3{
     width: 100%;
 }
 .password-reset-form button{
-    background: #005bf9;
-    border: 2px solid #005bf9;
+    background: #104242;
+    border: 2px solid #082121;
     border-radius: 8px;
     color: #fff;
     cursor: pointer;
@@ -538,7 +535,7 @@ h3{
 }
                                                                                     /*    P     */
 p{
-    font-family: FuseV2;
+    font-family: Corbel;
 }
                                                                                     /*    P     */
 .recItemImage{
@@ -568,8 +565,9 @@ p{
                                                                                     /*    S     */
 #logo{
     display: block;
-    height: auto;
-    max-width: 100%;
+    max-height: 60%;
+    max-width: 60%;
+    
 }
 #headerSearch{
     grid-area: search;
@@ -580,7 +578,7 @@ p{
     font-family: Corbel;
     font-size: 28px;
     min-height: 70px;
-    border: 3px solid #005bf9;
+    border: 3px solid #082121;
     border-radius: 25px;
     padding: 6px 16px;
     width: 100%;
@@ -606,7 +604,7 @@ p{
   /* decoration */
   color: white;
   font-family: Corbel;
-  background-color: #005bf9;
+  background-color: #2CB5B5;
 
 }
 .sidebarTop p:hover{
@@ -614,7 +612,7 @@ p{
     text-decoration: underline;
 }
 .sidebarTop{
-    background-color: #003fac;
+    background-color: #186363;
     display: grid;
     grid-template-columns: 1fr 1fr auto;
     align-items: center;

@@ -32,7 +32,7 @@ function App() {
    const clickOnCategory = (e) => {
     const categoryName = e.currentTarget.querySelector('.categoryName')?.textContent?.trim();
     setSelectedCategory(categoryName);
-    window.location = "search?query=" + categoryName;
+    window.location = "marketplace?search=" + categoryName;
   };
 
   return (
