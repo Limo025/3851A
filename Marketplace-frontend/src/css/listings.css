@@ -1,7 +1,7 @@
 .marketplace-page {
   background: #fff;
   box-sizing: border-box;
-  color: #202020;
+  color: black;
   font-family: Corbel, Arial, sans-serif;
   min-height: 100vh;
   padding: 48px 24px 64px;
@@ -30,8 +30,8 @@
 
 .marketplace-page__query {
   background: #eaf1ff;
-  border-left: 4px solid #005bf9;
-  color: #00225e;
+  border-left: 4px solid #154865;
+  color: #1C7373;
   flex: 0 1 auto;
   max-width: 420px;
   overflow-wrap: anywhere;
@@ -44,14 +44,11 @@
 
 .listing-filters {
   align-items: end;
-  background: #f7f9fc;
-  border: 1px solid #cbd6e8;
+  background: white;
   border-radius: 12px;
-  box-shadow: 0 10px 30px rgb(0 34 94 / 8%);
   display: grid;
   gap: 18px 14px;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  padding: 22px;
 }
 
 .listing-filters__heading {
@@ -82,7 +79,7 @@
 .listing-filters label {
   color: #24344f;
   display: grid;
-  font-family: FuseV2, Arial, sans-serif;
+  font-family: Corbel, Arial, sans-serif;
   font-size: 0.95rem;
   gap: 7px;
 }
@@ -112,16 +109,16 @@
 
 .listing-filters .listing-filters__clear {
   background: transparent;
-  border-color: #005bf9;
+  border-color: #1C7373;
   border-radius: 999px;
-  color: #005bf9;
+  color: black;
   min-height: 40px;
 }
 
 .listing-filters button:hover,
 .listing-pagination button:hover:not(:disabled) {
-  background: #00225e;
-  border-color: #00225e;
+  background: #1C7373;
+  border-color: #145252;
 }
 
 .listing-filters .listing-filters__clear:hover {
@@ -152,8 +149,8 @@
 
 .listing-state--error {
   background: #fff0f0;
-  border-color: #b00020;
-  color: #7a0015;
+  border-color: #162550;
+  color: #1F3470;
 }
 
 .listing-grid {
@@ -198,7 +195,7 @@
 }
 
 .listing-card__category {
-  color: #005bf9;
+  color: #154865;
   font-family: FuseV2, Arial, sans-serif;
   font-size: 0.9rem;
   margin: 0 0 8px;
@@ -217,12 +214,12 @@
 }
 
 .listing-card__title a:hover {
-  color: #005bf9;
+  color: #154865;
   text-decoration: underline;
 }
 
 .listing-card__price {
-  color: #00225e;
+  color: #0A2433;
   font-family: FuseV2Bold, Arial, sans-serif;
   font-size: 1.35rem;
   margin: 14px 0;
@@ -264,7 +261,7 @@
 
 .seller-listing-actions a,
 .seller-listing-actions button {
-  border: 2px solid #005bf9;
+  border: 2px solid #145252;
   border-radius: 4px;
   box-sizing: border-box;
   font-family: FuseV2, Arial, sans-serif;
@@ -273,7 +270,7 @@
 }
 
 .seller-listing-actions a {
-  color: #005bf9;
+  color: #145252;
   text-decoration: none;
 }
 
@@ -379,7 +376,7 @@
 }
 
 .listing-detail__thumbnail--selected {
-  border-color: #005bf9;
+  border-color: #145252;
 }
 
 .listing-detail__thumbnail:focus-visible,
@@ -396,7 +393,7 @@
 }
 
 .listing-detail__price {
-  color: #00225e;
+  color: #0A2433;
   font-family: FuseV2Bold, Arial, sans-serif;
   font-size: 1.8rem;
   margin: 16px 0;
@@ -450,7 +447,7 @@
 
 .listing-form {
   background: #f5f8ff;
-  border: 2px solid #005bf9;
+  border: 2px solid #145252;
   display: grid;
   gap: 8px;
   padding: 24px;
@@ -466,7 +463,7 @@
 .listing-form > input,
 .listing-form > textarea,
 .listing-form > select {
-  border: 1px solid #005bf9;
+  border: 1px solid #145252;
   border-radius: 4px;
   box-sizing: border-box;
   font: inherit;
@@ -483,13 +480,13 @@
 
 .listing-form__error,
 .listing-form__submit-error {
-  color: #7a0015;
+  color: #121E40;
   margin: 0 0 10px;
 }
 
 .listing-form__submit-error {
   background: #fff0f0;
-  border-left: 5px solid #b00020;
+  border-left: 5px solid #457EC4;
   padding: 14px 16px;
 }
 
@@ -507,8 +504,8 @@
 .image-uploader__picker,
 .image-uploader__item button,
 .listing-form__submit {
-  background: #005bf9;
-  border: 2px solid #005bf9;
+  background: #145252;
+  border: 2px solid #145252;
   border-radius: 4px;
   color: #fff;
   cursor: pointer;
