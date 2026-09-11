@@ -101,8 +101,8 @@ export default function Marketplace() {
       <div className="marketplace-page__content">
         <header className="marketplace-page__header">
           <div>
-            <h1>Marketplace</h1>
-            <p>Browse items listed by the university community.</p>
+            <h1>Marketplace</h1>-
+            <br/><br />
           </div>
           {filters.search ? <p className="marketplace-page__query">Results for <strong>{filters.search}</strong></p> : null}
         </header>
