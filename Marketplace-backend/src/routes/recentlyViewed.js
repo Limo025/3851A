@@ -53,7 +53,7 @@ export function createRecentlyViewedRouter({
     }
   });
 
-  // GET /api/recently-viewed
+
   router.get('/', authenticate, async (req, res) => {
     if (!req.user?.uid) {
       return res.status(401).json({ error: 'Authentication is required' });
