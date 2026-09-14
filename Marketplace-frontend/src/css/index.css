@@ -1,3 +1,4 @@
+@import "tailwindcss";
 @font-face{ /*   FuseV2Bold, used for headings.   */
     font-family: FuseV2Bold;
     src: url(src/font/fuseV2bold.otf)
@@ -10,6 +11,7 @@
     font-family: Corbel;
     src: url(src/font/corbel.ttf)
 }
+
                                                                                     /*    A     */
 .accountButton{
     width: fit-content;
