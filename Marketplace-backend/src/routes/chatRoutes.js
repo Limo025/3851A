@@ -6,16 +6,16 @@ const router = express.Router();
 
 //consider using rate limiting
 
+router.get('/', verifyToken, getAllConversations)
+
 // One API to load the convo from the all contacts bar
 router.get('/getorcreate/:userId', verifyToken, getOrCreateConversation)
 
-router.get('/allContacts', verifyToken, getAllConversations)
-
 // One API to find the convo with username of recipient
-router.get('/getconvo/:username', verifyToken, getConversationWithName)
+router.get('/getconvo/recipient/:username', verifyToken, getConversationWithName)
 
-// One API to find the convo with item name
-router.get('/getconvo/:listingname', verifyToken, getConversationWithItem)
+// One API to find the convo with item title    then i realise its more like finding it in the list of convos, the real one thats being sent is prolly the one with id
+router.get('/getconvo/item/:listingname', verifyToken, getConversationWithItem)
 
 // POST 
 router.post('/send/:userId', verifyToken, sendMessage)

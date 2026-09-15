@@ -1,4 +1,8 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+@plugin "daisyui" {
+  themes: light ;
+}
 @plugin "daisyui";
 @font-face{ /*   FuseV2Bold, used for headings.   */
     font-family: FuseV2Bold;
