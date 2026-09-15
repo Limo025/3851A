@@ -3,20 +3,14 @@ import { apiFetch } from '../api/client';
 export const useChatStore = create((set, get) => ({
     conversations: [],
     messages: [],
-    currentMode: localStorage.getItem("currentMode") || "buyer",
+    currentMode: "buyer",
     selectedUser: null,
     isUserLoading: false,
     isMessagesLoading: false,
-
-    setMode: (mode) => {
-        localStorage.setItem("currentMode", mode);
-        set({ currentMode: mode });
-    },
     
-    toggleMode: () => {
-        const nextMode = get().currentMode === "buyer" ? "seller": "buyer";
-        localStorage.setItem("currentMode", nextMode);
-        set({ currentMode: nextMode, selectedUser: null});
+    toggleMode: (mode) => {
+        localStorage.setItem("currentMode", mode);
+        set({ currentMode: mode, selectedUser: null});
     },
 
     setSelectedUser: (user) => set({ selectedUser: user}),

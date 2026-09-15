@@ -1,3 +1,5 @@
+@import "tailwindcss";
+@plugin "daisyui";
 @font-face{ /*   FuseV2Bold, used for headings.   */
     font-family: FuseV2Bold;
     src: url(src/font/fuseV2bold.otf)
@@ -45,7 +47,8 @@ body{
     background-color: white;
     min-height: 200px;
     height: fit-content;
-
+    padding-top: 150px;
+    display: grid;
 }
 #content {
     background-color: white;
@@ -89,10 +92,6 @@ body{
 
 }
 
-#contentBackground {
-    padding-top: 150px;
-    display: grid;
-}
 #contentHeading{
     margin-left: 22vw;
     margin-right: 22vw;
