@@ -2,36 +2,9 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { session } from '../auth/session.js';
 import { getPostLoginPath } from '../auth/returnPath.js';
-// import { useNavigate } from 'react-router-dom';
 import backgroundImg from '../img/loginBackground.jpeg';
 import '../css/login.css'
-
-//replace this whole thing with toggleNav()
-// let isOpen = false;
-
-// function openNav() {
-//   if (isOpen == true){
-//       document.getElementById("sidebar").style.display = "none";
-//       isOpen=false;
-//   } else{
-//       document.getElementById("sidebar").style.display = "block";
-//       isOpen=true;
-//   }
-// }
-// function closeNav() {
-//   document.getElementById("sidebar").style.display = "none";
-//   isOpen=false;
-// }
-
-function handleSearch(event) {
-    if (event.key === 'Enter') {
-        alert('hello world');
-        const query = event.target.value.trim();
-        if (query) {
-            window.location.href = '/search?=' + encodeURIComponent(query);
-        }
-    }
-}
+import toast from 'react-hot-toast'
 
 function App() {
   const [email, setEmail] = useState('');
@@ -53,6 +26,11 @@ function App() {
     height: '100vh',
   };
 
+  const UONLogoh1 = {
+    "margin-block-start": '0px',
+    "margin-block-end": '0px',
+  };
+
   async function logIn() {
       if (loadingIcon) {
         loadingIcon.style.display = 'inline';
@@ -66,6 +44,7 @@ function App() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.error);
             session.saveLogin(data);
+            toast.success("Login success")
             navigate(getPostLoginPath(location.state), { replace: true });
         } catch (e) {
             setError(e instanceof Error ? e.message : 'An error occurred');
@@ -83,30 +62,8 @@ function App() {
   {/* MAIN CONTENT*/}
   <div id="contentBackground" style={backgroundStyle}>
     <div id="content">
-      <h1>Log in</h1>
-      {error && <p>{error}</p>}
-      <form id="loginForm" className="loginAccountForm" onSubmit={handleSubmit}>
-        <label htmlFor="email">Email: </label>
-        <input
-          placeholder="Your email address"
-          id='email'
-          value={email}
-          onChange={e => setEmail(e.target.value)} />
-          <label htmlFor="password">Password: </label>
-        <input
-          placeholder="Your password"
-          id='password'
-          type="password"
-          value={password}
-          onChange={e => setPassword(e.target.value)} />
-        <div className="login-actions">
-          <button className="bigButton login-submit" type="submit">Log In</button>
-          <Link className="login-forgot-link" to="/forgot-password">Forgot password?</Link>
-          <img id="loadingIcon" className="loadingIcon" src="/src/icon/loading.gif" alt="Signing in" />
-        </div>
-      </form>
       <div>
-        <h1>
+        <h1 style={UONLogoh1}>
           <img src='https://ok2static2.oktacdn.com/fs/bco/1/fs01bgsfcgbz8rdD10x8' alt='University of Newcastle logo'></img>
         </h1>
         <h2>Login page</h2>

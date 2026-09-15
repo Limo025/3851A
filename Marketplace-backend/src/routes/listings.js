@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import Listing from '../models/Listing.js';
 import User from '../models/User.js';
-import { listingImagesUpload } from '../middleware/upload.js';
+import { uploadMessageImages } from '../middleware/upload.js';
 import imageStorage from '../services/imageStorage.js';
 import { isProviderTimeoutError } from '../services/providerRequest.js';
 import { MAX_LISTING_IMAGES } from '../constants/listings.js';
@@ -12,19 +12,15 @@ import {
   validateListingFields,
   ValidationError,
 } from '../validation/listings.js';
+import { verifyToken } from '../middleware/auth.js';
 
 const SAFE_SELLER_FIELDS = '_id username';
-
-async function verifyToken(req, res, next) {
-  const { verifyToken: firebaseVerifyToken } = await import('../middleware/auth.js');
-  return firebaseVerifyToken(req, res, next);
-}
 
 export function createListingRouter({
   ListingModel = Listing,
   UserModel = User,
   authenticate = verifyToken,
-  uploadMiddleware = listingImagesUpload,
+  uploadMiddleware = uploadMessageImages,
   imageStore = imageStorage,
 } = {}) {
   const router = express.Router();
@@ -77,7 +73,6 @@ export function createListingRouter({
       if (!seller) {
         return res.status(401).json({ error: 'Authenticated user was not found' });
       }
-
       uploadedImages = await imageStore.uploadImages(req.files);
       const listing = await ListingModel.create({
         ...value,

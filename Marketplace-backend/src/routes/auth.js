@@ -102,7 +102,7 @@ export function createAuthRouter({
                         username: data.email.split('@')[0],
                     },
                 },
-                { upsert: true, new: true, setDefaultsOnInsert: true },
+                { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true },       // fix bcs new here is deprecated
             );
 
             res.json({

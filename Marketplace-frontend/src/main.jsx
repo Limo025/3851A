@@ -23,6 +23,7 @@ import About from './pages/About.jsx'
 import Sell from './pages/Sell.jsx'
 import Watchlist from './pages/Watchlist.jsx'
 import { initializeApp } from "firebase/app"
+import { Toaster } from 'react-hot-toast'
 
 const firebaseConfig = {
   apiKey: "AIzaSyBgVJj8-z3-qsMxXY5EfrRDIC_cxizJ130",
@@ -38,6 +39,10 @@ initializeApp(firebaseConfig);
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+      />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -45,10 +50,9 @@ createRoot(document.getElementById('root')).render(
         <Route path="/item" element={<Item />} />
         <Route path="/createAccount" element={<CreateAccount />} />
         <Route path="/search" element={<Search />} />
-        <Route path="/messages" element={<Messages />} />
+        <Route path="/messages" element={<RequireAuth><Messages /></RequireAuth>} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/about" element={<About />} />
-        <Route path="/sell" element={<Sell />} />
         <Route path="/watchlist" element={<Watchlist />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/marketplace" element={<Marketplace />} />

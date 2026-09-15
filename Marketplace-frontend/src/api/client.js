@@ -27,12 +27,12 @@ export function createApiClient({ fetchImpl = globalThis.fetch, sessionManager =
         requestHeaders.Authorization = `Bearer ${accessToken}`;
       }
     }
-
     const response = await fetchImpl(`${baseUrl}${path}`, {
       ...options,
       headers: requestHeaders,
       body: body === undefined || isFormData ? body : JSON.stringify(body),
     });
+    console.log("reached here in client.js");
     if (auth && response.status === 401) {
       throw new AuthenticationError();
     }

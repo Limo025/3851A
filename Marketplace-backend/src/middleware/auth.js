@@ -1,4 +1,4 @@
-import { auth } from '../config/firebase.js';
+import { verifyFirebaseToken } from '../utils/verifyToken.js';
 
 export async function verifyToken(req, res, next) {
     const authHeader = req.headers.authorization;
@@ -8,11 +8,11 @@ export async function verifyToken(req, res, next) {
 
     const idToken = authHeader.split('Bearer ')[1];
     try {
-        const decoded = await auth.verifyIdToken(idToken);
+        const decoded = await verifyFirebaseToken(idToken);
         req.user = decoded;
         next();
     } catch (err) {
-    console.error('Token verification failed:', err.message);
-    res.status(401).json({ error: 'Invalid or expired token' });
+        console.error('Token verification failed:', err.message);
+        res.status(401).json({ error: 'Invalid or expired token' });
     }
 }
