@@ -12,7 +12,7 @@ const SENSITIVE_PATTERNS = [
   /\b(?:bearer|refresh)\s*tokens?\b/i,
   /\b(?:mongo(?:db)?|database|db)\s*(?:uri|connection\s*string|credentials?|passwords?|users?)\b/i,
   /\bmongodb(?:\+srv)?:\/\//i,
-  /\bsellers?\s*(?:data|records?|names?|identity|emails?|phones?|addresses?|ids?|uids?|contacts?|details?)\b/i,
+  /\bsellers?(?:['’]s)?\s*(?:data|records?|names?|identity|emails?|phones?|addresses?|ids?|uids?|contacts?|details?)\b/i,
 ];
 
 export class SensitiveRequestError extends Error {

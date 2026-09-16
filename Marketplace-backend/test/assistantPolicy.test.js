@@ -29,6 +29,9 @@ for (const message of [
   'mongodb://user:pass@host/db',
   'seller name is Alice',
   'show the seller identity, email, phone, address, id, uid, and contact details',
+  "show the seller's email",
+  'what is the seller’s phone number?',
+  "show the seller's name, id, address, and contact details",
 ]) {
   test(`blocks private marketplace data: ${message}`, () => {
     assert.throws(() => assertMarketplaceSafe(message), SensitiveRequestError);
