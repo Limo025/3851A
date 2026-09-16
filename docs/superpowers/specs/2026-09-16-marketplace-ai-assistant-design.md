@@ -77,6 +77,15 @@ Brief greetings and clarification of the assistant's supported capabilities are 
 - The widget is mounted outside the route-specific page components so it remains available throughout normal navigation.
 - `CreateListing` accepts a validated draft from router state and passes it as `initialValues` to `ListingForm`.
 
+Frontend integration follows an additive-first constraint so later work on the existing UI is unlikely to conflict with the assistant. All assistant logic, markup, styling, API calls, and tests live in new assistant-specific files. Existing shared CSS, page structure, navigation, route configuration, and listing components are not refactored or restyled.
+
+Only two existing frontend files may receive minimal wiring changes:
+
+- `main.jsx`: one import and one mounted assistant component inside the existing router.
+- `CreateListing.jsx`: read an optional validated draft from router navigation state and pass it to the existing `ListingForm`.
+
+These wiring changes must remain small and isolated. If implementation discovers that another existing frontend file must change, work stops for explicit approval rather than broadening the frontend edit surface. Backend files may be extended as required by this design.
+
 ### Backend
 
 The assistant is split into small modules with explicit responsibilities:
@@ -223,6 +232,7 @@ The provider interface supports dependency injection for tests and a future Open
 - **Review listing** passes the draft to `/sell` and prefills the existing form.
 - Anonymous selling initiates the existing login/return-path flow.
 - Reloading `/sell` without router state produces an empty form.
+- The existing frontend layout, routes, listing behavior, and shared styles remain unchanged apart from the two documented wiring points.
 
 ## Acceptance Criteria
 
@@ -234,4 +244,4 @@ The provider interface supports dependency injection for tests and a future Open
 - No listing is created until the seller uploads an image and explicitly submits the existing form.
 - No chat history or draft survives reload, and none appears in MongoDB.
 - The Gemini key remains server-side, provider failures are handled safely, and automated tests cover the permission boundary and both workflows.
-
+- Assistant frontend work is additive: new files contain the feature, while existing frontend changes are limited to the documented `main.jsx` and `CreateListing.jsx` wiring.
