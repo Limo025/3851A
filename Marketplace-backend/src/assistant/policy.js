@@ -7,10 +7,12 @@ const SENSITIVE_PATTERNS = [
   /\b(account|login)\s*(data|details?|credentials?)\b/i,
   /\b(firebase\s*)?(?:id\s*)?tokens?\b/i,
   /\bauthorization\s*headers?\b/i,
+  /\bauthorization\s*[:=]?\s*bearer\s+\S+/i,
   /\b(?:session|auth(?:entication)?)\s*(data|details?|metadata|headers?|tokens?|credentials?)\b/i,
   /\b(?:bearer|refresh)\s*tokens?\b/i,
   /\b(?:mongo(?:db)?|database|db)\s*(?:uri|connection\s*string|credentials?|passwords?|users?)\b/i,
-  /\bsellers?\s*(?:data|records?|emails?|phones?|contacts?|identity|details?)\b/i,
+  /\bmongodb(?:\+srv)?:\/\//i,
+  /\bsellers?\s*(?:data|records?|names?|identity|emails?|phones?|addresses?|ids?|uids?|contacts?|details?)\b/i,
 ];
 
 export class SensitiveRequestError extends Error {
