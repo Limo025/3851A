@@ -8,7 +8,6 @@ const RESULT_PROJECTION = Object.freeze({
   category: 1,
   condition: 1,
   'images.url': 1,
-  seller: 0,
 });
 
 function searchMatch(query) {
@@ -35,6 +34,10 @@ function mapSummary({ totals = [], conditions = [] }) {
     maxPrice: totalsRow?.maxPrice ?? null,
     byCondition,
   };
+}
+
+function safeLimit(limit) {
+  return Number.isInteger(limit) && limit > 0 ? Math.min(limit, 5) : 5;
 }
 
 export function createAssistantListingSearch({ ListingModel = Listing } = {}) {
@@ -71,7 +74,7 @@ export function createAssistantListingSearch({ ListingModel = Listing } = {}) {
       const rows = await ListingModel
         .find(filter, RESULT_PROJECTION)
         .sort({ price: 1 })
-        .limit(Math.min(limit, 5))
+        .limit(safeLimit(limit))
         .lean();
 
       return rows.map(({ _id, title, price, category, condition, images }) => ({

@@ -25,7 +25,7 @@ test('summarize uses one aggregation and returns condition counts', async () => 
   assert.match(pipelines[0][0].$match.$or[0].title.$regex.source, /PS5\\\.\\\*/);
 });
 
-test('final matches exclude every seller field and limit to five', async () => {
+test('final matches use an inclusion-only allowlist and limit to five', async () => {
   const calls = {};
   const ListingModel = {
     find: (filter, projection) => {
@@ -56,8 +56,13 @@ test('final matches exclude every seller field and limit to five', async () => {
   });
 
   assert.equal(calls.limit, 5);
-  assert.equal(calls.projection.seller, 0);
-  assert.equal(Object.hasOwn(calls.projection, 'description'), false);
+  assert.deepEqual(calls.projection, {
+    title: 1,
+    price: 1,
+    category: 1,
+    condition: 1,
+    'images.url': 1,
+  });
   assert.deepEqual(results[0], {
     id: 'a',
     title: 'PS5',
@@ -66,6 +71,30 @@ test('final matches exclude every seller field and limit to five', async () => {
     condition: 'Good',
     imageUrl: 'https://img/a',
   });
+});
+
+test('final matches normalizes invalid limits to the safe maximum', async () => {
+  const requestedLimits = [0, -1, 'three', 3.5, 50];
+  const appliedLimits = [];
+  const ListingModel = {
+    find: () => ({
+      sort() { return this; },
+      limit(value) { appliedLimits.push(value); return this; },
+      lean: async () => [],
+    }),
+  };
+  const search = createAssistantListingSearch({ ListingModel });
+
+  for (const limit of requestedLimits) {
+    await search.findMatches({
+      query: 'PS5',
+      maxPrice: 500,
+      conditions: ['Good'],
+      limit,
+    });
+  }
+
+  assert.deepEqual(appliedLimits, [5, 5, 5, 5, 5]);
 });
 
 test('summarize ignores unknown condition buckets and returns zeroes for no matches', async () => {
