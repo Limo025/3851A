@@ -8,8 +8,17 @@ import {
 import { initialAssistantState } from '../src/assistant/contracts.js';
 import { ProviderTimeoutError } from '../src/services/providerRequest.js';
 
-function jsonResponse(body, { ok = true, status = 200 } = {}) {
-  return { ok, status, json: async () => body };
+function jsonResponse(body, { ok = true, status = 200, contentType = 'application/json' } = {}) {
+  return {
+    ok,
+    status,
+    headers: {
+      get(name) {
+        return name.toLowerCase() === 'content-type' ? contentType : null;
+      },
+    },
+    json: async () => body,
+  };
 }
 
 function geminiText(body) {
@@ -59,6 +68,29 @@ test('rejects malformed provider JSON with a controlled error', async () => {
     client.extractTurn({ message: 'PS5', history: [], state: initialAssistantState() }),
     GeminiResponseError,
   );
+});
+
+test('accepts JSON content type parameters and rejects missing or non-JSON Gemini responses', async (t) => {
+  const responseBody = { candidates: [{ content: { parts: [{ text: JSON.stringify(extractedTurn()) }] } }] };
+  const request = { message: 'PS5', history: [], state: initialAssistantState() };
+
+  await t.test('accepts a case-insensitive JSON type with a charset', async () => {
+    const client = createGeminiAssistant({
+      apiKey: 'secret',
+      fetchImpl: async () => jsonResponse(responseBody, { contentType: 'Application/JSON; Charset=UTF-8' }),
+    });
+    assert.equal((await client.extractTurn(request)).intent, 'buy');
+  });
+
+  for (const [name, contentType] of [['missing', null], ['text', 'text/plain; charset=utf-8']]) {
+    await t.test(`rejects a ${name} content type`, async () => {
+      const client = createGeminiAssistant({
+        apiKey: 'secret',
+        fetchImpl: async () => jsonResponse(responseBody, { contentType }),
+      });
+      await assert.rejects(client.extractTurn(request), GeminiResponseError);
+    });
+  }
 });
 
 test('maps a Gemini quota response to GeminiQuotaError without exposing the key', async () => {

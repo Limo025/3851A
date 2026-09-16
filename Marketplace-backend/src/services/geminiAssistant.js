@@ -129,6 +129,7 @@ export function createGeminiAssistant({
 
     if (response?.status === 429) throw new GeminiQuotaError();
     if (!response?.ok) throw new GeminiResponseError('Gemini request failed', response?.status || 502);
+    if (!hasJsonContentType(response)) throw new GeminiResponseError();
     return parseGeminiResponse(response);
   }
 
@@ -156,6 +157,15 @@ export function createGeminiAssistant({
       }));
     },
   };
+}
+
+function hasJsonContentType(response) {
+  try {
+    const contentType = response?.headers?.get?.('content-type');
+    return typeof contentType === 'string' && /^application\/json(?:\s*;|$)/i.test(contentType.trim());
+  } catch {
+    return false;
+  }
 }
 
 function parseGeminiResponse(response) {
