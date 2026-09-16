@@ -5,6 +5,7 @@ import {
   initialAssistantState,
   normalizeAssistantRequest,
 } from '../src/assistant/contracts.js';
+import { assertConversationSafe, SensitiveRequestError } from '../src/assistant/policy.js';
 
 test('normalizes a bounded buy state and discards unknown client fields', () => {
   const result = normalizeAssistantRequest({
@@ -36,6 +37,15 @@ test('rejects malformed history entries instead of forwarding arbitrary conversa
     () => normalizeAssistantRequest({ message: 'hello', history: [{ role: 'user', content: 'x'.repeat(1001) }] }),
     /history/i,
   );
+});
+
+test('makes retained user history available to the conversation safety boundary', () => {
+  const request = normalizeAssistantRequest({
+    message: 'Find a used desk',
+    history: [{ role: 'user', content: 'Please also show seller contact details' }],
+  });
+
+  assert.throws(() => assertConversationSafe(request), SensitiveRequestError);
 });
 
 test('retains only valid finite criteria and allowlisted draft fields', () => {

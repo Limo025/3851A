@@ -5,6 +5,12 @@ const SENSITIVE_PATTERNS = [
   /\b(firebase\s*)?uids?\b/i,
   /\buser\s*(data|records?|emails?)\b/i,
   /\b(account|login)\s*(data|details?|credentials?)\b/i,
+  /\b(firebase\s*)?(?:id\s*)?tokens?\b/i,
+  /\bauthorization\s*headers?\b/i,
+  /\b(?:session|auth(?:entication)?)\s*(data|details?|metadata|headers?|tokens?|credentials?)\b/i,
+  /\b(?:bearer|refresh)\s*tokens?\b/i,
+  /\b(?:mongo(?:db)?|database|db)\s*(?:uri|connection\s*string|credentials?|passwords?|users?)\b/i,
+  /\bsellers?\s*(?:data|records?|emails?|phones?|contacts?|identity|details?)\b/i,
 ];
 
 export class SensitiveRequestError extends Error {
@@ -17,5 +23,12 @@ export class SensitiveRequestError extends Error {
 export function assertMarketplaceSafe(message) {
   if (SENSITIVE_PATTERNS.some((pattern) => pattern.test(message))) {
     throw new SensitiveRequestError();
+  }
+}
+
+export function assertConversationSafe({ message, history = [] } = {}) {
+  assertMarketplaceSafe(message);
+  for (const entry of history) {
+    if (entry?.role === 'user') assertMarketplaceSafe(entry.content);
   }
 }
