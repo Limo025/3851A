@@ -1,15 +1,5 @@
 /* Login / create-account forms.*/
 
-.createAccountForm,
-.loginAccountForm {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    font-family: Corbel;
-    font-size: 20px;
-    margin-bottom: 20px;
-}
-
 .createAccountForm, 
 .loginAccountForm label {
     font-size: 20px;

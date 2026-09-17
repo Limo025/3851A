@@ -31,7 +31,7 @@ function App() {
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
       width: '100vw',
-      minheight: '100vh',
+      minHeight: '100vh',
     };
 
   async function createAccount() {
@@ -74,7 +74,7 @@ function App() {
           <FieldSet id="registerForm" className='createAccountForm w-full'>
             <FieldGroup className="gap-3">
               <Field>
-                <FieldLabel htmlFor="username">Username</FieldLabel>
+                <FieldLabel htmlFor="username" className="text-20">Username</FieldLabel>
                 <Input
                   id="username"
                   type="text"
