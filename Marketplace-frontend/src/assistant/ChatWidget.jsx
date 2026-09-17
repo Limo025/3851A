@@ -1,7 +1,7 @@
 import { useReducer, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AuthenticationError } from '../auth/session.js';
 import { sendAssistantMessage } from './assistantApi.js';
+import { handleAssistantAuthenticationError } from './assistantAuthentication.js';
 import { assistantReducer, buildAssistantPayload, initialChatState } from './assistantState.js';
 import ChatPanel from './ChatPanel.jsx';
 import './assistant.css';
@@ -30,13 +30,11 @@ export default function ChatWidget() {
       });
       dispatch({ type: 'assistant-received', payload: response });
     } catch (error) {
-      if (error instanceof AuthenticationError) {
-        navigate('/login', {
-          state: {
-            from: location.pathname,
-            message: 'Please log in to prepare a listing draft.',
-          },
-        });
+      if (handleAssistantAuthenticationError(error, {
+        dispatch,
+        navigate,
+        returnPath: location.pathname,
+      })) {
         return;
       }
 

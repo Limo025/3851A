@@ -6,6 +6,8 @@ import React from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { MemoryRouter } from 'react-router-dom';
 import { createServer } from 'vite';
+import { AuthenticationError } from '../src/auth/session.js';
+import { handleAssistantAuthenticationError } from '../src/assistant/assistantAuthentication.js';
 
 const frontendRoot = fileURLToPath(new URL('..', import.meta.url));
 
@@ -14,8 +16,43 @@ test('mounts one assistant outside the route definitions', async () => {
 
   assert.equal((mainSource.match(/<ChatWidget\s*\/>/g) || []).length, 1);
   assert.match(mainSource, /<BrowserRouter>\s*<ChatWidget\s*\/>\s*<Routes>/);
-  const routeContents = mainSource.match(/<Routes>([\s\S]*?)<\/Routes>/)?.[1] ?? '';
-  assert.doesNotMatch(routeContents, /ChatWidget/);
+  assert.match(mainSource, /<Routes>\s*{APP_ROUTES\.map\(renderRoute\)}\s*<\/Routes>/);
+});
+
+test('widget authentication handling unlocks before login navigation', async () => {
+  const widgetSource = await readFile(new URL('../src/assistant/ChatWidget.jsx', import.meta.url), 'utf8');
+  const effects = [];
+
+  const handled = handleAssistantAuthenticationError(new AuthenticationError(), {
+    dispatch: (action) => effects.push({ type: 'dispatch', action }),
+    navigate: (path, options) => effects.push({ type: 'navigate', path, options }),
+    returnPath: '/marketplace?page=2',
+  });
+
+  assert.equal(handled, true);
+  assert.deepEqual(effects, [
+    {
+      type: 'dispatch',
+      action: {
+        type: 'authentication-required',
+        payload: { error: 'Please log in to prepare a listing draft.' },
+      },
+    },
+    {
+      type: 'navigate',
+      path: '/login',
+      options: {
+        state: {
+          from: '/marketplace?page=2',
+          message: 'Please log in to prepare a listing draft.',
+        },
+      },
+    },
+  ]);
+  assert.match(
+    widgetSource,
+    /handleAssistantAuthenticationError\(error, {\s*dispatch,\s*navigate,\s*returnPath: location\.pathname,\s*}\)/,
+  );
 });
 
 test('renders an accessible English assistant panel with safe, bounded marketplace results', async (t) => {

@@ -31,6 +31,8 @@ export function assistantReducer(state, action) {
       };
     case 'assistant-failed':
       return { ...state, loading: false, error: action.payload.error };
+    case 'authentication-required':
+      return { ...state, loading: false, error: action.payload.error };
     case 'clear-error':
       return { ...state, error: '' };
     default:

@@ -53,3 +53,33 @@ test('keeps chat state in plain memory and bounds outbound history to ten messag
   assert.equal(payload.message, 'under 500');
   assert.equal(JSON.stringify(payload).includes('localStorage'), false);
 });
+
+test('authentication required unlocks the assistant without clearing its in-memory conversation', () => {
+  const workflow = {
+    mode: 'sell',
+    stage: 'authentication_required',
+    criteria: {},
+    draft: { itemName: 'Desk', price: 120 },
+  };
+  const submitted = {
+    open: true,
+    messages: [
+      { role: 'assistant', content: 'Tell me about the item.' },
+      { role: 'user', content: 'It is a desk.' },
+    ],
+    workflow,
+    loading: true,
+    error: '',
+  };
+
+  const state = assistantReducer(submitted, {
+    type: 'authentication-required',
+    payload: { error: 'Please log in to prepare a listing draft.' },
+  });
+
+  assert.equal(state.open, true);
+  assert.equal(state.loading, false);
+  assert.equal(state.error, 'Please log in to prepare a listing draft.');
+  assert.equal(state.messages, submitted.messages);
+  assert.equal(state.workflow, workflow);
+});
