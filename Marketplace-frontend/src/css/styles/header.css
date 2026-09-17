@@ -41,23 +41,55 @@
 #headerSearch {
     grid-area: search;
     min-width: 0;
+    position: relative;
 }
 #headerSearch input[type=search] {
     box-sizing: border-box;
+    width: 100%;
+    height: 48px;
+    padding: 0 60px 0 18px;
+    border: 1px solid #dce1e9;
+    border-radius: 12px;
+    background: #f4f6f9;
+    color: #202632;
+    color-scheme: light;
     font-family: Corbel;
     font-size: 18px;
-    min-height: 44px;
-    border: 2px solid #005bf9;
-    border-radius: 22px;
-    padding: 6px 16px;
-    width: 100%;
-    background-color: white;
-    color: #202020;
-    color-scheme: light;
+    transition: background-color 160ms, border-color 160ms;
+}
+#headerSearch input::placeholder {
+    color: #687385;
+    opacity: 1;
+}
+#headerSearch input:focus {
+    background: white;
+    border-color: #78a6ff;
 }
 #headerSearch input:focus-visible {
     outline: 3px solid white;
     outline-offset: 3px;
+}
+.headerSearchSubmit {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: #005bf9;
+    color: white;
+    cursor: pointer;
+}
+.headerSearchSubmit:hover {
+    background: #0048c7;
+}
+.headerSearchSubmit svg {
+    width: 20px;
+    height: 20px;
 }
 #searchBarAutocompleteBox {
     max-width: 775px;

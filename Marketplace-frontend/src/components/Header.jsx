@@ -87,7 +87,13 @@ export default function Header()  {
                 </div>
                 {/* <!-- Search Bar --> */}
                 <form id="headerSearch" role="search" onSubmit={handleSearchSubmit}>
-                    <input id="headerSearchInput" type="search" name="search" placeholder="Search" autoComplete="off" value={searchValue} onChange={(e) => setSearchValue(e.target.value)}/>
+                    <input id="headerSearchInput" type="search" name="search" aria-label="Search marketplace" placeholder="Search the marketplace..." autoComplete="off" value={searchValue} onChange={(e) => setSearchValue(e.target.value)}/>
+                    <button className="headerSearchSubmit" type="submit" aria-label="Search">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                            <circle cx="10.5" cy="10.5" r="6.5"/>
+                            <path d="m16 16 4 4"/>
+                        </svg>
+                    </button>
                 </form>
                 {/* <!-- Icon Buttons -->
                 <!-- Messages --> */}
