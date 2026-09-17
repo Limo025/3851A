@@ -10,7 +10,6 @@ export async function verifyToken(req, res, next) {
     try {
         const decoded = await verifyFirebaseToken(idToken);
         req.user = decoded;
-        console.log("reached here in auth")
         return next();
     } catch (err) {
         console.error('Token verification failed:', err.message);

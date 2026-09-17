@@ -1,0 +1,52 @@
+/* Base element resets and global utility classes */
+
+body {
+    margin: 0;
+    background-color: #202020;
+}
+
+h1 {
+    font-family: FuseV2Bold;
+    font-size: 40px;
+}
+h3 {
+    font-family: FuseV2;
+    font-size: 25px;
+}
+p {
+    font-family: FuseV2;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.visuallyHidden {
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+}
+
+a {
+    color: #005bf9;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+a:hover {
+    color: #00225e;
+    cursor: pointer;
+}
+a:visited {
+    color: #005bf9; /* keep visited same as default, or pick a distinct shade */
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 34px;
+    }
+}

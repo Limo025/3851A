@@ -1,0 +1,73 @@
+/* Slide-out sidebar / account drawer */
+
+.sidebar {
+    box-sizing: border-box;
+    display: block;
+    max-height: calc(100vh - 110px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 100;
+    text-align: right;
+    width: min(320px, calc(100vw - 24px));
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+
+    /* decoration */
+    color: white;
+    font-family: Corbel;
+    background-color: #005bf9;
+}
+.sidebar a:focus-visible,
+.sidebar button:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 3px;
+}
+
+.sidebarTop {
+    background-color: #003fac;
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    align-items: center;
+    margin-right: -20px;
+    font-size: 25px;
+    color: white;
+    text-decoration: none;
+}
+.sidebarTop p:hover {
+    font-size: 25px;
+    text-decoration: underline;
+}
+
+.sidebarContent {
+    margin-right: 20px;
+    font-size: 20px;
+}
+.sidebarContent p:hover {
+    font-size: 22px;
+    text-decoration: underline;
+    transition: font-size 0.2s;
+}
+.sidebarContent a {
+    color: white;
+    text-decoration: none;
+}
+
+.sidebarLinkButton,
+.closebtn {
+    background: transparent;
+    border: 0;
+    color: white;
+    cursor: pointer;
+    font: inherit;
+}
+.sidebarLinkButton {
+    display: block;
+    margin: 1em 0 1em auto;
+    padding: 0;
+}
+.closebtn {
+    font-size: 60px;
+    line-height: 1;
+    padding: 0 12px;
+}
