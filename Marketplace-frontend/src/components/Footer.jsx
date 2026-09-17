@@ -1,3 +1,4 @@
+import '../css/styles/footer.css';
 import React from 'react'
 
 

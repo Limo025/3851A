@@ -1,3 +1,4 @@
+import '../css/styles/category.css';
 import { useState } from 'react'
 
 function handleSearch(event) {

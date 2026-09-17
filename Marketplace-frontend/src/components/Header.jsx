@@ -1,3 +1,5 @@
+import '../css/styles/header.css';
+import '../css/styles/sidebar.css';
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useEffect, useState, useRef } from 'react';
 import { getHeaderAuthView, getMarketplaceSearchTerm, buildMarketplaceSearchUrl } from '@/js/script'

@@ -7,16 +7,8 @@
 @import "./styles/theme.css";
 @import "./styles/base.css";
 @import "./styles/buttons.css";
-@import "./styles/header.css";
-@import "./styles/sidebar.css";
 @import "./styles/layout.css";
 @import "./styles/forms.css";
-@import "./styles/password-reset.css";
-@import "./styles/category.css";
-@import "./styles/item-page.css";
-@import "./styles/messages.css";
-@import "./styles/footer.css";
-@import "./styles/google-button.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
