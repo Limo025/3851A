@@ -31,7 +31,7 @@ export default function CreateListing() {
           <h1>Create a listing</h1>
           <p>Share an item with the university community.</p>
         </header>
-        <ListingForm initialValues={initialValues} submitLabel="Create listing" onSubmit={createListing} />
+        <ListingForm key={location.key} initialValues={initialValues} submitLabel="Create listing" onSubmit={createListing} />
       </div>
     </main>
   );

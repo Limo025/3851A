@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { listingDraftFromLocationState } from '../src/assistant/listingDraft.js';
 
@@ -33,4 +34,13 @@ test('returns undefined for invalid or absent router state', () => {
       condition: 'Good',
     },
   }), undefined);
+});
+
+test('create listing remounts with each router location while passing normalized draft values', async () => {
+  const source = await readFile(new URL('../src/pages/CreateListing.jsx', import.meta.url), 'utf8');
+
+  assert.match(
+    source,
+    /<ListingForm\s+key=\{location\.key\}\s+initialValues=\{initialValues\}\s+submitLabel="Create listing"\s+onSubmit=\{createListing\}\s*\/>/,
+  );
 });
