@@ -32,6 +32,41 @@ const EXPLICIT_ROUTE_SIGNATURES = Object.freeze([
   '<Routepath="*"element={<NotFound/>}/>',
 ]);
 
+const CONFIGURED_MAIN_FIXTURE = `
+  <BrowserRouter>
+    <ChatWidget />
+    <Routes>
+      {APP_ROUTES.map(renderRoute)}
+    </Routes>
+  </BrowserRouter>
+`;
+
+const EXPLICIT_MAIN_FIXTURE = `
+  <BrowserRouter>
+    <ChatWidget />
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/item" element={<Item />} />
+      <Route path="/createAccount" element={<CreateAccount />} />
+      <Route path="/search" element={<Search />} />
+      <Route path="/messages" element={<Messages />} />
+      <Route path="/settings" element={<Settings />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/sell" element={<Sell />} />
+      <Route path="/watchlist" element={<Watchlist />} />
+      <Route path="/categories" element={<Categories />} />
+      <Route path="/marketplace" element={<Marketplace />} />
+      <Route path="/listings/:id" element={<ListingDetail />} />
+      <Route path="/sell" element={<RequireAuth><CreateListing /></RequireAuth>} />
+      <Route path="/my-listings" element={<RequireAuth><MyListings /></RequireAuth>} />
+      <Route path="/listings/:id/edit" element={<RequireAuth><EditListing /></RequireAuth>} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
+  </BrowserRouter>
+`;
+
 function assertAssistantMountPreservesRoutes(mainSource) {
   assert.equal((mainSource.match(/<ChatWidget\s*\/>/g) || []).length, 1);
   assert.match(mainSource, /<BrowserRouter>\s*<ChatWidget\s*\/>\s*<Routes>/);
@@ -55,34 +90,12 @@ test('mounts one assistant outside the route definitions', async () => {
   assertAssistantMountPreservesRoutes(mainSource);
 });
 
-test('accepts the complete committed explicit route representation', () => {
-  const explicitMainFixture = `
-    <BrowserRouter>
-      <ChatWidget />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/item" element={<Item />} />
-        <Route path="/createAccount" element={<CreateAccount />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/messages" element={<Messages />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/sell" element={<Sell />} />
-        <Route path="/watchlist" element={<Watchlist />} />
-        <Route path="/categories" element={<Categories />} />
-        <Route path="/marketplace" element={<Marketplace />} />
-        <Route path="/listings/:id" element={<ListingDetail />} />
-        <Route path="/sell" element={<RequireAuth><CreateListing /></RequireAuth>} />
-        <Route path="/my-listings" element={<RequireAuth><MyListings /></RequireAuth>} />
-        <Route path="/listings/:id/edit" element={<RequireAuth><EditListing /></RequireAuth>} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
-  `;
+test('accepts the configured route representation', () => {
+  assertAssistantMountPreservesRoutes(CONFIGURED_MAIN_FIXTURE);
+});
 
-  assertAssistantMountPreservesRoutes(explicitMainFixture);
+test('accepts the complete committed explicit route representation', () => {
+  assertAssistantMountPreservesRoutes(EXPLICIT_MAIN_FIXTURE);
 });
 
 test('widget authentication handling unlocks before login navigation', async () => {
