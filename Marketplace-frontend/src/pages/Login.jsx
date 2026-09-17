@@ -65,7 +65,7 @@ function App() {
 <>
   
   {/* MAIN CONTENT*/}
-  <div id="contentBackground" style={backgroundStyle}>
+  <div id="loginPageBackground" style={backgroundStyle}>
     <div className='flex flex-col items-center gap-4 p-8'>
       <div className="flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
         <h1 >

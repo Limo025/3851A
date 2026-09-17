@@ -9,6 +9,11 @@
     display: grid;
 }
 
+#loginPageBackground {
+    height: fit-content;
+    display: grid;
+}
+
 #content {
     background-color: white;
     min-height: 200px;
