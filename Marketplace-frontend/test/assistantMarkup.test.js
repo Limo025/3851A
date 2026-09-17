@@ -11,12 +11,78 @@ import { handleAssistantAuthenticationError } from '../src/assistant/assistantAu
 
 const frontendRoot = fileURLToPath(new URL('..', import.meta.url));
 
+const EXPLICIT_ROUTE_SIGNATURES = Object.freeze([
+  '<Routepath="/"element={<Home/>}/>',
+  '<Routepath="/login"element={<Login/>}/>',
+  '<Routepath="/forgot-password"element={<ForgotPassword/>}/>',
+  '<Routepath="/item"element={<Item/>}/>',
+  '<Routepath="/createAccount"element={<CreateAccount/>}/>',
+  '<Routepath="/search"element={<Search/>}/>',
+  '<Routepath="/messages"element={<Messages/>}/>',
+  '<Routepath="/settings"element={<Settings/>}/>',
+  '<Routepath="/about"element={<About/>}/>',
+  '<Routepath="/sell"element={<Sell/>}/>',
+  '<Routepath="/watchlist"element={<Watchlist/>}/>',
+  '<Routepath="/categories"element={<Categories/>}/>',
+  '<Routepath="/marketplace"element={<Marketplace/>}/>',
+  '<Routepath="/listings/:id"element={<ListingDetail/>}/>',
+  '<Routepath="/sell"element={<RequireAuth><CreateListing/></RequireAuth>}/>',
+  '<Routepath="/my-listings"element={<RequireAuth><MyListings/></RequireAuth>}/>',
+  '<Routepath="/listings/:id/edit"element={<RequireAuth><EditListing/></RequireAuth>}/>',
+  '<Routepath="*"element={<NotFound/>}/>',
+]);
+
+function assertAssistantMountPreservesRoutes(mainSource) {
+  assert.equal((mainSource.match(/<ChatWidget\s*\/>/g) || []).length, 1);
+  assert.match(mainSource, /<BrowserRouter>\s*<ChatWidget\s*\/>\s*<Routes>/);
+
+  const routeContents = mainSource.match(/<Routes>([\s\S]*?)<\/Routes>/)?.[1];
+  assert.notEqual(routeContents, undefined);
+  assert.doesNotMatch(routeContents, /ChatWidget/);
+
+  const normalizedRoutes = routeContents.replace(/\s+/g, '');
+  if (normalizedRoutes === '{APP_ROUTES.map(renderRoute)}') return;
+
+  assert.equal((routeContents.match(/<Route\s/g) || []).length, EXPLICIT_ROUTE_SIGNATURES.length);
+  for (const signature of EXPLICIT_ROUTE_SIGNATURES) {
+    assert.ok(normalizedRoutes.includes(signature), `Missing route signature: ${signature}`);
+  }
+}
+
 test('mounts one assistant outside the route definitions', async () => {
   const mainSource = await readFile(new URL('../src/main.jsx', import.meta.url), 'utf8');
 
-  assert.equal((mainSource.match(/<ChatWidget\s*\/>/g) || []).length, 1);
-  assert.match(mainSource, /<BrowserRouter>\s*<ChatWidget\s*\/>\s*<Routes>/);
-  assert.match(mainSource, /<Routes>\s*{APP_ROUTES\.map\(renderRoute\)}\s*<\/Routes>/);
+  assertAssistantMountPreservesRoutes(mainSource);
+});
+
+test('accepts the complete committed explicit route representation', () => {
+  const explicitMainFixture = `
+    <BrowserRouter>
+      <ChatWidget />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/item" element={<Item />} />
+        <Route path="/createAccount" element={<CreateAccount />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/messages" element={<Messages />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/sell" element={<Sell />} />
+        <Route path="/watchlist" element={<Watchlist />} />
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/marketplace" element={<Marketplace />} />
+        <Route path="/listings/:id" element={<ListingDetail />} />
+        <Route path="/sell" element={<RequireAuth><CreateListing /></RequireAuth>} />
+        <Route path="/my-listings" element={<RequireAuth><MyListings /></RequireAuth>} />
+        <Route path="/listings/:id/edit" element={<RequireAuth><EditListing /></RequireAuth>} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  `;
+
+  assertAssistantMountPreservesRoutes(explicitMainFixture);
 });
 
 test('widget authentication handling unlocks before login navigation', async () => {
