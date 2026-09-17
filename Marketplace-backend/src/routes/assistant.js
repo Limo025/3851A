@@ -7,7 +7,7 @@ import { createAssistantRateLimiter } from '../middleware/assistantRateLimit.js'
 import { createAssistantListingSearch } from '../services/assistantListingSearch.js';
 import { createGeminiAssistant } from '../services/geminiAssistant.js';
 
-const PRIVATE_RESPONSE_KEY = /(seller|uid|e-?mail|authorization|token)/i;
+const PRIVATE_RESPONSE_KEY = /^(?:auth|authentication)$|(?:seller|uid|e-?mail|authorization|token)/i;
 
 export function createAssistantRouter({
   optionalAuth = createOptionalAuth(),
@@ -51,13 +51,10 @@ function sendAssistantError(res, error) {
   if (error?.code === 'PROVIDER_TIMEOUT') {
     return res.status(504).json({ error: 'The assistant model timed out. Please try again.' });
   }
-  if (error?.code === 'GEMINI_QUOTA' || error?.code === 'GEMINI_CONFIGURATION') {
+  if (['GEMINI_QUOTA', 'GEMINI_CONFIGURATION', 'GEMINI_RESPONSE'].includes(error?.code)) {
     return res.status(503).json({
       error: 'The assistant is temporarily unavailable. Please try again shortly.',
     });
-  }
-  if (error?.code === 'GEMINI_RESPONSE') {
-    return res.status(502).json({ error: 'The assistant model returned an invalid response. Please try again.' });
   }
   return res.status(500).json({
     error: 'The assistant could not complete your request. Please try again.',
