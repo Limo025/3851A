@@ -1,9 +1,3 @@
-/* Generic buttons used across the site.
-   NOTE: .bigButton, .accountButton, .optionsButton, .optionsButtonImage
-   and .messageButton were each defined TWICE in the original file with
-   overlapping (non-conflicting) properties. Merged here into one rule
-   each - no visual change, just de-duplicated. */
-
 .bigButton {
     font-size: 30px;
     font-family: Corbel;

@@ -1,7 +1,3 @@
-/* Generic page-content wrappers used across multiple pages.
-   NOTE: #content was defined in two separate blocks in the original
-   file with non-conflicting properties - merged here into one rule. */
-
 #contentBackground {
     background-color: white;
     min-height: 200px;

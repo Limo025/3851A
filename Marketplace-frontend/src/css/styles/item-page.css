@@ -1,5 +1,3 @@
-/* Item detail page + "recommended items" grids */
-
 .itemButtons {
     display: grid;
     grid-template-columns: auto;

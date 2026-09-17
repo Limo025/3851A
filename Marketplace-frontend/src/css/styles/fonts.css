@@ -1,8 +1,3 @@
-/* Custom fonts used across the site.
-   NOTE: original paths were "src/font/...". These now live one level
-   deeper (src/styles/fonts.css), so each path gets an extra "../".
-   Double-check these resolve correctly for your actual folder layout. */
-
 @font-face {
     font-family: FuseV2Bold; /* used for headings */
     src: url(../../font/fuseV2bold.otf);
