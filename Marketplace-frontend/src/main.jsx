@@ -22,6 +22,7 @@ import RequireAuth from './components/RequireAuth.jsx'
 import About from './pages/About.jsx'
 import Sell from './pages/Sell.jsx'
 import Watchlist from './pages/Watchlist.jsx'
+import ChatWidget from './assistant/ChatWidget.jsx'
 import { initializeApp } from "firebase/app"
 
 const firebaseConfig = {
@@ -38,6 +39,7 @@ initializeApp(firebaseConfig);
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
+      <ChatWidget />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
