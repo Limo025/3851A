@@ -1,7 +1,3 @@
-/* Google "Sign in with Google" button.
-   This is Google's vendored button snippet - avoid hand-editing;
-   if you need updates, re-copy from Google's official button generator. */
-
 .gsi-material-button {
     -moz-user-select: none;
     -webkit-user-select: none;

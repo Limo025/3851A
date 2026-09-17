@@ -2,12 +2,10 @@ import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { session } from '../auth/session.js';
 import { getPostLoginPath } from '../auth/returnPath.js';
-import backgroundImg from '../img/loginBackground.jpeg';
-import '../css/login.css'
+import backgroundImg from '../img/well.jpg';
 import toast from 'react-hot-toast'
 import {
   Field,
-  FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldSet,
@@ -27,7 +25,7 @@ function App() {
   const toggleNav = () => setIsNavOpen(!isNavOpen);
 
   const backgroundStyle = {
-    backgroundImage: `url(${backgroundImg})`,
+    backgroundImage: ` url(${backgroundImg})`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
@@ -56,11 +54,6 @@ function App() {
         }
     }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    logIn();
-  }
-
   return (
 <>
   
@@ -72,7 +65,7 @@ function App() {
           <img src='https://ok2static2.oktacdn.com/fs/bco/1/fs01bgsfcgbz8rdD10x8' alt='University of Newcastle logo'></img>
         </h1>
         <h2 className="font-['FuseV2Bold'] text-3xl">Login page</h2>
-        {error && <p>{error}</p>}
+        {error && <p className="text-sm text-red-600">{error}</p>}
         <FieldSet id="loginForm" className="loginAccountForm w-full max-w-xs">
           <FieldGroup>
             <Field>
@@ -95,10 +88,15 @@ function App() {
             </Field>
           </FieldGroup>
         </FieldSet>
-        <a href='/forgot-password' className="font-['Corbel'] text-lg">Forgot your password?</a>
+        
         <Button className="p-6 text-xl font-['FuseV2']" onClick={logIn}>Log In</Button>
+        <p className=" text-lg font-normal">
+          <Link to='/forgot-password' className="w-full">Forgot your password?</Link>
+        </p>
         <img id="loadingIcon" className="loadingIcon" src="src/icon/loading.gif" alt="loading" />
-        <h2 className="font-['Corbel'] text-lg font-normal"> or, <a href='/createAccount'>Create an Account</a></h2>
+        <p className=" text-lg font-normal"> or, 
+          <Link to="/createAccount" className="w-full pl-1.5">Create an Account</Link>
+        </p>
         <br />
       </div>
     </div>

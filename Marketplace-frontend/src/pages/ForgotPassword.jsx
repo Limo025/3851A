@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { Link } from 'react-router-dom';
 import { PasswordResetError, requestPasswordReset } from '../auth/passwordReset.js';
+import backgroundImg from '../img/well.jpg';
 
 const successMessage = 'If an account exists for this email, a password reset link has been sent.';
 
@@ -10,6 +11,15 @@ export default function ForgotPassword() {
   const [error, setError] = useState('');
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  const backgroundStyle = {
+      backgroundImage: ` url(${backgroundImg})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      width: '100vw',
+      height: '100vh',
+    };
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -37,7 +47,7 @@ export default function ForgotPassword() {
   }
 
   return (
-    <main id="contentBackground" className="password-reset-page">
+    <main id="contentBackground" className="password-reset-page" style={backgroundStyle}>
       <section className="password-reset-card" aria-labelledby="password-reset-title">
         <p className="password-reset-card__eyebrow">Account recovery</p>
         <h1 id="password-reset-title">Reset your password</h1>

@@ -1,18 +1,18 @@
 /* Top navigation / header bar */
 
 #headerSection {
-    background-color: #000;
+     background-color: #000;
     box-sizing: border-box;
-    min-height: 100px;
-    padding: 15px 0;
+    min-height: 56px;
+    padding: 8px 0;
     position: relative;
 }
 #headerElements {
     align-items: center;
     display: grid;
-    gap: 12px;
+    gap: 16px;
     grid-template-areas: "logo search messages account options";
-    grid-template-columns: minmax(150px, 200px) minmax(220px, 1fr) repeat(3, 64px);
+    grid-template-columns: minmax(120px, 150px) minmax(220px, 1fr) repeat(3, 52px);
     margin: 0 auto;
     max-width: 1200px;
     padding: 0 24px;
@@ -34,8 +34,8 @@
 }
 #logo {
     display: block;
+    width: 130px;
     height: auto;
-    max-width: 100%;
 }
 
 #headerSearch {
@@ -45,12 +45,15 @@
 #headerSearch input[type=search] {
     box-sizing: border-box;
     font-family: Corbel;
-    font-size: 28px;
-    min-height: 70px;
-    border: 3px solid #005bf9;
-    border-radius: 25px;
+    font-size: 18px;
+    min-height: 44px;
+    border: 2px solid #005bf9;
+    border-radius: 22px;
     padding: 6px 16px;
     width: 100%;
+    background-color: white;
+    color: #202020;
+    color-scheme: light;
 }
 #headerSearch input:focus-visible {
     outline: 3px solid white;
@@ -60,7 +63,32 @@
     max-width: 775px;
     background-color: white;
 }
-
+.messageButton,
+.accountButton,
+.optionsButtonImage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    color: white;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    transition: background-color 0.15s;
+}
+.messageButton:hover,
+.accountButton:hover,
+.optionsButtonImage:hover {
+    background-color: rgba(255, 255, 255, 0.12);
+}
+.messageButton svg,
+.accountButton svg,
+.optionsButtonImage svg {
+    width: 26px;
+    height: 26px;
+}
 /* Responsive */
 @media (max-width: 768px) {
     #headerElements {

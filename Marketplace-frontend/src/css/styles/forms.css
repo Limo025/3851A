@@ -1,14 +1,4 @@
-/* Login / create-account forms.
-   NOTE - important: .createAccountForm/.loginAccountForm were defined
-   TWICE with CONFLICTING layouts:
-     1st definition: display: grid;  grid-template-columns: auto auto;
-     2nd definition: display: flex;  flex-direction: column;
-   Because the 2nd one appears later in the original file, it was the
-   one actually winning/rendering. Kept that (flex) version below and
-   dropped the earlier grid version so behavior is unchanged - but
-   worth double-checking this was the intended layout.
-   .createAccountForm input/button and .loadingIcon were also each
-   duplicated with identical or overlapping values - merged. */
+/* Login / create-account forms.*/
 
 .createAccountForm,
 .loginAccountForm {
@@ -19,21 +9,23 @@
     font-size: 20px;
     margin-bottom: 20px;
 }
-.createAccountForm label,
+
+.createAccountForm, 
 .loginAccountForm label {
-    font-family: Corbel;
-    font-size: 25px;
-    padding-right: 20px;
+    font-size: 20px;
+    font-family: FuseV2Bold;
 }
+
 .createAccountForm input {
-    font-size: 25px;
+    font-size: 15px;
     font-family: FuseV2;
-    min-width: 20vw;
+    max-width: 300px;
+    width: 100%;
     padding: 5px;
-    margin-right: 10px;
+    margin-right: 50px;
 }
 .loginAccountForm input {
-    font-size: 25px;
+    font-size: 15px;
     font-family: FuseV2;
     max-width: 300px;
     width: 100%;

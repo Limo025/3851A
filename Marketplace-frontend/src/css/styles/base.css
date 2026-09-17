@@ -7,13 +7,16 @@ body {
 
 h1 {
     font-family: FuseV2Bold;
-    font-size: 40px;
+    font-size: 1.875rem;
 }
 h3 {
     font-family: FuseV2;
     font-size: 25px;
 }
 p {
+    font-family: FuseV2;
+}
+span {
     font-family: FuseV2;
 }
 

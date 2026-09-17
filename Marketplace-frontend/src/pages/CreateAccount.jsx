@@ -1,5 +1,15 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
+import backgroundImg from '../img/well.jpg';
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldSet,
+  FieldDescription,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 function App() {
   const [username, setUsername] = useState('');
@@ -8,95 +18,188 @@ function App() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [terms, setTerms] = useState(false);
+  const [privacy, setPrivacy] = useState(false);
+  const [conduct, setConduct] = useState(false);
+  const [loading, setLoading] = useState(false);
   
   const navigate = useNavigate();
 
+  const backgroundStyle = {
+      backgroundImage: ` url(${backgroundImg})`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      width: '100vw',
+      minheight: '100vh',
+    };
+
   async function createAccount() {
-    document.getElementById("loadingIcon").style.display = "inline";
-    if (password !== confirmPassword) {
-        setError('Password and Confirm password do not match!');
-        document.getElementById("loadingIcon").style.display = "none";
-        return;
+    setError('');
+
+    if (!terms || !privacy || !conduct) {
+      setError('You must agree to all terms before creating an account.');
+      return;
     }
+    if (password !== confirmPassword) {
+      setError('Password and Confirm password do not match!');
+      return;
+    }
+
+    setLoading(true);
     try {
         const res = await fetch('http://localhost:8000/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password, username }),
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, username }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error);
         navigate('/login');
     } catch (e) {
         setError(e instanceof Error ? e.message : 'An error occurred');
-        document.getElementById("loadingIcon").style.display = "none";
+    } finally {
+      setLoading(false);
     }
   }
   
   return (
-<>
-  {/* MAIN CONTENT*/}
+    <div id="loginPageBackground" className="flex justify-center py-10 px-4" style={backgroundStyle}>
+      <div className='flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg h-fit'>
+        <div>
+          <h1 className="text-3xl font-semibold">Create Account</h1>
+          <p className="text-sm text-gray-500">All fields are required.</p>
+        </div>
+        {error && <p className="text-sm text-red-600">{error}</p>}
+          <FieldSet id="registerForm" className='createAccountForm w-full'>
+            <FieldGroup className="gap-3">
+              <Field>
+                <FieldLabel htmlFor="username">Username</FieldLabel>
+                <Input
+                  id="username"
+                  type="text"
+                  value={username}
+                  placeholder="Your username"
+                  required
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                <FieldDescription>
+                This will be your displayed name by default, unless changed otherwise.
+                </FieldDescription>
+              </Field>
 
-  <div id="contentBackground">
-    <div id="content">
-      <h1> Create Account</h1>
-      <h3>All fields are required. </h3><br />
-      {error && <p>{error}</p>}
-      <hr /><br />
-        <form className="createAccountForm">
+              <Field>
+                <FieldLabel htmlFor="dob">Date of birth</FieldLabel>
+                <Input
+                  id="dob"
+                  type="date"
+                  value={dob}
+                  required
+                  onChange={e => setDob(e.target.value)}
+                />
+                <FieldDescription>
+                  You must be at least 18 years of age to use the Marketplace.
+                </FieldDescription>
+              </Field>
+              <Field>
+                <FieldLabel htmlFor="email">Email Address</FieldLabel>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  required
+                  placeholder="Your email address"
+                  onChange={e => setEmail(e.target.value)}
+                />
+              </Field>
 
-          {/* Username */}
-          <label htmlFor="username">Username:</label>
-          <input type="text" value={username} id="username" name="username" required onChange={e => setUsername(e.target.value)} /><br />
-          <i>This will be your displayed name by default, unless changed otherwise.</i>
+              <Field>
+                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <Input
+                  id="password"
+                  type="password"
+                  value={password}
+                  minLength="8"
+                  placeholder="Your password"
+                  required
+                  onChange={e => setPassword(e.target.value)}
+                />
+                <FieldDescription>Minimum 8 characters.</FieldDescription>
+              </Field>
 
-          {/* Date of Birth */}
-          <label htmlFor="dob">Date of Birth</label>
-          <input type="date" value={dob} id="dob" name="dob" max="2009-01-01" required onChange={e => setDob(e.target.value)} /><br />
-          <i>You must be at least 18 years of age to use the Marketplace.</i>
+              <Field>
+                <FieldLabel htmlFor="passwordConfirm">Confirm Password</FieldLabel>
+                <Input
+                  id="passwordConfirm"
+                  type="password"
+                  value={confirmPassword}
+                  placeholder="Confirm password"
+                  required
+                  onChange={e => setConfirmPassword(e.target.value)}
+                />
+              </Field>
+            </FieldGroup>
+          </FieldSet>
 
-          {/* E-Mail Address */}
-          <label htmlFor="email">Email Address:</label>
-          <input type="email" value={email} id="email" name="email" required onChange={e => setEmail(e.target.value)} />
+          <div className="flex flex-col gap-2 w-full text-sm">
+            <label htmlFor="terms" className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                id="terms"
+                checked={terms}
+                required
+                onChange={e => setTerms(e.target.checked)}
+                className="mt-1"
+              />
+              <span>
+                I agree to the Community Marketplace{' '}
+                <a href="#" className="underline">Terms and Conditions</a>.
+              </span>
+            </label>
 
-          {/* Password */}
-          <label htmlFor="password">Password:</label>
-          <input type="password" value={password} id="password" name="password" minLength="8" required onChange={e => setPassword(e.target.value)} />
-          <br />
-          <i>Minimum 8 characters.</i>
+            <label htmlFor="privacy" className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                id="privacy"
+                checked={privacy}
+                required
+                onChange={e => setPrivacy(e.target.checked)}
+                className="mt-1"
+              />
+              <span>
+                I acknowledge the Community Marketplace{' '}
+                <a href="#" className="underline">Privacy Policy</a>.
+              </span>
+            </label>
 
-          {/* Confirm Password */}
-          <label htmlFor="passwordConfirm">Confirm Password:</label>
-          <input type="password" value={confirmPassword} id="passwordConfirm" name="passwordConfirm" required onChange={e => setConfirmPassword(e.target.value)} /><hr /><br></br>
+            <label htmlFor="conduct" className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                id="conduct"
+                checked={conduct}
+                required
+                onChange={e => setConduct(e.target.checked)}
+                className="mt-1"
+              />
+              <span>
+                I agree to the University of Marketplace{' '}
+                <a href="#" className="underline">Code of Conduct</a>.
+              </span>
+            </label>
+          </div>
+
+          <Button className="w-full p-6 text-xl font-['FuseV2']" onClick={createAccount} disabled={loading}>
+            {loading ? 'Creating account…' : 'Create Account'}
+          </Button>
+
+          <hr className="w-full" />
+
+          <p className="text-lg font-normal">Already have an account? 
+            <Link to="/login" className="w-full pl-1.5">Log In</Link>
+          </p>
           
-          {/* Terms and Conditions */}
-          <label htmlFor="terms">Community Marketplace Terms and Conditions Agreement:</label>
-          <input type="checkbox" id="terms" name="terms" value="termsTrue" required></input>
-          <br />
-          <i>T&C: (put link here)</i>
-
-          {/* Privacy Policy */}
-          <label htmlFor="privacy">Community Marketplace Privacy Policy Acknowledgement:</label>
-          <input type="checkbox" id="privacy" name="privacy" value="privacyTrue" required></input>
-          <br />
-          <i>Privacy Policy: (put link here)</i>
-
-          {/* University Code of Conduct */}
-          <label htmlFor="conduct">University of Marketplace Code of Conduct Agreement:</label>
-          <input type="checkbox" id="conduct" name="conduct" value="conductTrue" required></input>
-          <br />
-          <i>Code of Conduct: (put link here)</i>
-
-          
-
-        </form>
-        <button className="bigButton" onClick={createAccount}>Create Account</button>
-        <img id="loadingIcon" className="loadingIcon" src="src/icon/loading.gif" alt="loading" />
-        <hr />
-        <Link to='/login'><h3>Already have an account? Log In</h3></Link>
+      </div>
     </div>
-  </div>
-</>
 
 
   )

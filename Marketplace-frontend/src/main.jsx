@@ -1,7 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './css/index.css'
-import './js/script.js'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import Login from './pages/Login.jsx'
@@ -24,6 +23,8 @@ import Sell from './pages/Sell.jsx'
 import Watchlist from './pages/Watchlist.jsx'
 import { initializeApp } from "firebase/app"
 import { Toaster } from 'react-hot-toast'
+import Header from './components/Header'
+import Footer from './components/Footer'
 
 const firebaseConfig = {
   apiKey: "AIzaSyBgVJj8-z3-qsMxXY5EfrRDIC_cxizJ130",
@@ -43,6 +44,7 @@ createRoot(document.getElementById('root')).render(
         position="top-center"
         reverseOrder={false}
       />
+      <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
@@ -62,6 +64,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/listings/:id/edit" element={<RequireAuth><EditListing /></RequireAuth>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   </StrictMode>,
 )
