@@ -1,4 +1,3 @@
-import '../css/styles/item-page.css';
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 

@@ -1,4 +1,5 @@
-import '../css/styles/item-page.css';
+import '../css/styles/home.css';
+import '../css/styles/recommended-item.css';
 import bannerImg from '../img/panorama_background.webp';
 const bannerImgStyle = {
     objectFit: 'cover',

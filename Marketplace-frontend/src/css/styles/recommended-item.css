@@ -1,0 +1,9 @@
+/* Recommendation cards shared by Home and Item. */
+
+.recItemImage {
+    width: 200px;
+    cursor: pointer;
+}
+.recItem {
+    padding-bottom: 20px;
+}

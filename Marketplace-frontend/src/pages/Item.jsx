@@ -1,4 +1,5 @@
 import '../css/styles/item-page.css';
+import '../css/styles/recommended-item.css';
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 

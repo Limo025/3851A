@@ -50,24 +50,10 @@
     border: 2px solid rgba(0, 0, 0, 0.5);
 }
 
-.recItemImage {
-    width: 200px;
-    cursor: pointer;
-}
-.recItem {
-    padding-bottom: 20px;
-}
 .recItemsFromItem {
     display: grid;
     padding-left: 10px;
     padding-right: 10px;
     grid-template-columns: auto auto auto auto auto;
     grid-template-rows: auto auto auto;
-}
-.recItemsHomepage {
-    display: grid;
-    grid-template-columns: auto auto auto auto auto;
-    grid-template-rows: auto auto auto;
-    padding-left: 200px;
-    padding-right: 200px;
 }
