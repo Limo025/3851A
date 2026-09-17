@@ -4,7 +4,7 @@ import { once } from 'node:events';
 import express from 'express';
 import { createAssistantRouter } from '../src/routes/assistant.js';
 import { runAssistantTurn } from '../src/assistant/workflow.js';
-import { GeminiQuotaError } from '../src/services/geminiAssistant.js';
+import { GeminiQuotaError, GeminiResponseError } from '../src/services/geminiAssistant.js';
 import { ProviderTimeoutError } from '../src/services/providerRequest.js';
 
 async function withAssistantApp(dependencies, run) {
@@ -175,6 +175,21 @@ test('Gemini quota failures return a controlled 503 response', async () => {
   });
 });
 
+test('malformed Gemini responses return generic assistant-unavailable copy with 503', async () => {
+  await withAssistantApp({
+    workflow: async () => { throw new GeminiResponseError('provider body contained private details'); },
+  }, async (baseUrl) => {
+    const response = await post(baseUrl, { message: 'Find a desk' });
+    const body = await response.json();
+
+    assert.equal(response.status, 503);
+    assert.deepEqual(body, {
+      error: 'The assistant is temporarily unavailable. Please try again shortly.',
+    });
+    assert.doesNotMatch(JSON.stringify(body), /provider body|private details/i);
+  });
+});
+
 test('database failures return controlled English copy without leaking details', async () => {
   await withAssistantApp({
     workflow: async () => { throw new Error('mongodb://private-user:secret@internal-host'); },
@@ -197,11 +212,18 @@ test('responses remove private identity and authorization fields', async () => {
     workflow: async ({ request }) => ({
       message: 'I found one listing.',
       state: request.state,
+      AuTh: { uid: 'private-uid' },
+      metadata: {
+        safe: 'retained',
+        AUTHENTICATION: 'private-authentication-value',
+      },
       listings: [{
         id: 'listing-1',
         title: 'Desk',
         seller: { uid: 'private-uid', email: 'seller@example.test' },
         authorization: 'Bearer private-token',
+        auth: 'private-auth-value',
+        authentication: 'private-authentication-value',
       }],
       uid: 'private-uid',
       email: 'seller@example.test',
@@ -217,6 +239,10 @@ test('responses remove private identity and authorization fields', async () => {
 
     assert.equal(response.status, 200);
     assert.deepEqual(body.listings, [{ id: 'listing-1', title: 'Desk' }]);
-    assert.doesNotMatch(serialized, /seller|uid|email|private-token|authorization/i);
+    assert.deepEqual(body.metadata, { safe: 'retained' });
+    assert.doesNotMatch(
+      serialized,
+      /seller|uid|email|private-token|authorization|private-auth|authentication/i,
+    );
   });
 });
