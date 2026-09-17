@@ -582,7 +582,8 @@ p{
     font-family: Corbel;
     font-size: 28px;
     min-height: 70px;
-    border: 3px solid #082121;
+    border: 2px solid black;
+    color: black;
     border-radius: 25px;
     padding: 6px 16px;
     width: 100%;
@@ -630,9 +631,7 @@ p{
     font-size: 20px;
 }
 .sidebarContent p:hover{
-    font-size: 22px;
     text-decoration: underline;
-    transition: font-size 0.2s;
 }
 .sidebarContent a{
     color: white;
@@ -659,9 +658,14 @@ p{
     padding: 0;
 }
 .closebtn{
+    color: #777777;
     font-size: 60px;
     line-height: 1;
     padding: 0 12px;
+}
+.closebtn:hover{
+    color: #ffffff;
+    transition: color 0.2s;
 }
 .accountButton{
     grid-area: account;
@@ -700,12 +704,10 @@ p{
 .optionsButtonImage:focus-visible,
 .sidebar a:focus-visible,
 .sidebar button:focus-visible{
-    outline: 3px solid white;
-    outline-offset: 3px;
+    outline: 2px solid black;
 }
 .bigButton:focus-visible{
-    outline: 3px solid #202020;
-    outline-offset: 3px;
+    outline: 2px solid #202020;
 }
 
 @media (max-width: 768px){
