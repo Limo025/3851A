@@ -21,6 +21,8 @@ import RequireAuth from './components/RequireAuth.jsx'
 import About from './pages/About.jsx'
 import Sell from './pages/Sell.jsx'
 import Watchlist from './pages/Watchlist.jsx'
+import PurchaseHistory from './pages/PurchaseHistory.jsx'
+import Help from './pages/Help.jsx'
 import { initializeApp } from "firebase/app"
 import { Toaster } from 'react-hot-toast'
 import Header from './components/Header'
@@ -59,9 +61,11 @@ createRoot(document.getElementById('root')).render(
         <Route path="/categories" element={<Categories />} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/listings/:id" element={<ListingDetail />} />
+        <Route path="/help" element={<Help />} />
         <Route path="/sell" element={<RequireAuth><CreateListing /></RequireAuth>} />
         <Route path="/my-listings" element={<RequireAuth><MyListings /></RequireAuth>} />
         <Route path="/listings/:id/edit" element={<RequireAuth><EditListing /></RequireAuth>} />
+        <Route path="/purchase-history" element={<RequireAuth><PurchaseHistory /></RequireAuth>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
