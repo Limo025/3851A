@@ -15,7 +15,6 @@ const MAX_DESCRIPTION_LENGTH = 5000;
 
 const EXTRACTION_SCHEMA = Object.freeze({
   type: 'OBJECT',
-  additionalProperties: false,
   required: ['intent', 'itemQuery', 'maxPrice', 'conditions', 'sellFacts'],
   properties: {
     intent: { type: 'STRING', enum: EXTRACTION_INTENTS },
@@ -28,7 +27,6 @@ const EXTRACTION_SCHEMA = Object.freeze({
     },
     sellFacts: {
       type: 'OBJECT',
-      additionalProperties: false,
       properties: {
         itemName: { type: 'STRING', maxLength: MAX_ITEM_NAME_LENGTH },
         features: { type: 'STRING', maxLength: MAX_FEATURES_LENGTH },
@@ -42,7 +40,6 @@ const EXTRACTION_SCHEMA = Object.freeze({
 
 const COPY_SCHEMA = Object.freeze({
   type: 'OBJECT',
-  additionalProperties: false,
   required: ['title', 'description'],
   properties: {
     title: { type: 'STRING', minLength: 3, maxLength: MAX_TITLE_LENGTH },
@@ -101,9 +98,9 @@ export function createGeminiAssistant({
   async function generateJson({ systemInstruction, contents, responseSchema, maxOutputTokens }) {
     if (!apiKey || typeof apiKey !== 'string') throw new GeminiConfigurationError();
 
-    let response;
+    let result;
     try {
-      response = await fetchWithTimeout(
+      result = await fetchWithTimeout(
         fetchImpl,
         `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`,
         {
@@ -120,17 +117,22 @@ export function createGeminiAssistant({
             },
           }),
         },
-        { provider: 'Gemini', timeoutMs },
+        {
+          provider: 'Gemini',
+          timeoutMs,
+          readResponse: async (response) => ({ response, body: await response.json() }),
+        },
       );
     } catch (error) {
       if (error instanceof ProviderTimeoutError) throw error;
       throw new GeminiResponseError('Gemini request failed');
     }
 
+    const { response, body } = result;
     if (response?.status === 429) throw new GeminiQuotaError();
     if (!response?.ok) throw new GeminiResponseError('Gemini request failed', response?.status || 502);
     if (!hasJsonContentType(response)) throw new GeminiResponseError();
-    return parseGeminiResponse(response);
+    return parseGeminiBody(body);
   }
 
   return {
@@ -168,20 +170,14 @@ function hasJsonContentType(response) {
   }
 }
 
-function parseGeminiResponse(response) {
-  return response.json()
-    .catch(() => {
-      throw new GeminiResponseError();
-    })
-    .then((body) => {
-      const text = body?.candidates?.[0]?.content?.parts?.[0]?.text;
-      if (typeof text !== 'string') throw new GeminiResponseError();
-      try {
-        return JSON.parse(text);
-      } catch {
-        throw new GeminiResponseError();
-      }
-    });
+function parseGeminiBody(body) {
+  const text = body?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (typeof text !== 'string') throw new GeminiResponseError();
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new GeminiResponseError();
+  }
 }
 
 function validateExtractedTurn(value) {
@@ -248,7 +244,7 @@ function validateListingCopy(value) {
 function safeExtractionInput({ message, history, state }) {
   const safeHistory = Array.isArray(history)
     ? history
-      .filter((entry) => entry && (entry.role === 'user' || entry.role === 'assistant') && typeof entry.content === 'string')
+      .filter((entry) => entry?.role === 'user' && typeof entry.content === 'string')
       .slice(0, 10)
       .map(({ role, content }) => ({ role, content: content.slice(0, 1000) }))
     : [];

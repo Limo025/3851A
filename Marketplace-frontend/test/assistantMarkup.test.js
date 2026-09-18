@@ -148,6 +148,7 @@ test('renders an accessible English assistant panel with safe, bounded marketpla
     title: index === 0 ? '<script>alert("unsafe")</script>' : `Desk ${index + 1}`,
     price: 120 + index,
     condition: 'Good',
+    imageUrl: index === 0 ? 'https://images.test/desk.webp' : null,
   }));
 
   const html = renderToStaticMarkup(React.createElement(
@@ -168,6 +169,13 @@ test('renders an accessible English assistant panel with safe, bounded marketpla
       loading: false,
       error: '',
       draftReady: true,
+      draft: {
+        title: '<script>draft</script>',
+        description: 'A compact desk for study.',
+        price: 120,
+        category: 'Furniture and Home',
+        condition: 'Good',
+      },
       onSubmit() {},
       onReviewDraft() {},
       onClose() {},
@@ -190,5 +198,7 @@ test('renders an accessible English assistant panel with safe, bounded marketpla
   assert.doesNotMatch(html, /<script>/);
   assert.match(html, /&lt;script&gt;alert/);
   assert.match(html, /Review listing draft/);
+  assert.match(html, /src="https:\/\/images.test\/desk.webp"/);
+  assert.match(html, /&lt;script&gt;draft&lt;\/script&gt;/);
   assert.match(html, /Message the marketplace assistant/);
 });

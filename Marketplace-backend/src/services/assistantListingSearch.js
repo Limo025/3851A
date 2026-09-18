@@ -3,6 +3,7 @@ import { LISTING_CONDITIONS } from '../constants/listings.js';
 import { escapeRegex } from '../validation/listings.js';
 
 const RESULT_PROJECTION = Object.freeze({
+  _id: 1,
   title: 1,
   price: 1,
   category: 1,
@@ -18,6 +19,50 @@ function searchMatch(query) {
       { description: { $regex: regex } },
     ],
   };
+}
+
+function finalMatch(query, maxPrice, conditions) {
+  return {
+    $and: [
+      searchMatch(query),
+      { price: { $lte: maxPrice } },
+      { condition: { $in: conditions } },
+    ],
+  };
+}
+
+function relevancePipeline(query, maxPrice, conditions, limit) {
+  const escapedQuery = escapeRegex(query.slice(0, 100));
+  return [
+    { $match: finalMatch(query, maxPrice, conditions) },
+    {
+      $addFields: {
+        _assistantTitleMatch: {
+          $regexMatch: {
+            input: { $ifNull: ['$title', ''] },
+            regex: escapedQuery,
+            options: 'i',
+          },
+        },
+      },
+    },
+    { $sort: { _assistantTitleMatch: -1, price: 1, _id: 1 } },
+    { $limit: limit },
+    { $project: RESULT_PROJECTION },
+  ];
+}
+
+function relevanceScore(listing, query) {
+  const regex = new RegExp(escapeRegex(query.slice(0, 100)), 'i');
+  return regex.test(typeof listing.title === 'string' ? listing.title : '') ? 1 : 0;
+}
+
+function sortMatches(rows, query) {
+  return [...rows].sort((left, right) => (
+    relevanceScore(right, query) - relevanceScore(left, query)
+    || left.price - right.price
+    || String(left._id).localeCompare(String(right._id))
+  ));
 }
 
 function mapSummary({ totals = [], conditions = [] }) {
@@ -64,20 +109,15 @@ export function createAssistantListingSearch({ ListingModel = Listing } = {}) {
     },
 
     async findMatches({ query, maxPrice, conditions, limit = 5 }) {
-      const filter = {
-        $and: [
-          searchMatch(query),
-          { price: { $lte: maxPrice } },
-          { condition: { $in: conditions } },
-        ],
-      };
-      const rows = await ListingModel
-        .find(filter, RESULT_PROJECTION)
-        .sort({ price: 1 })
-        .limit(safeLimit(limit))
-        .lean();
+      const boundedLimit = safeLimit(limit);
+      const rows = typeof ListingModel.aggregate === 'function'
+        ? await ListingModel.aggregate(relevancePipeline(query, maxPrice, conditions, boundedLimit))
+        : sortMatches(
+          await ListingModel.find(finalMatch(query, maxPrice, conditions), RESULT_PROJECTION).lean(),
+          query,
+        ).slice(0, boundedLimit);
 
-      return rows.map(({ _id, title, price, category, condition, images }) => ({
+      return rows.slice(0, boundedLimit).map(({ _id, title, price, category, condition, images }) => ({
         id: String(_id),
         title,
         price,

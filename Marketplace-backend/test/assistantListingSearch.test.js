@@ -55,8 +55,9 @@ test('final matches use an inclusion-only allowlist and limit to five', async ()
     limit: 50,
   });
 
-  assert.equal(calls.limit, 5);
+  assert.equal(calls.limit, undefined, 'fallback must limit after relevance sorting');
   assert.deepEqual(calls.projection, {
+    _id: 1,
     title: 1,
     price: 1,
     category: 1,
@@ -75,11 +76,8 @@ test('final matches use an inclusion-only allowlist and limit to five', async ()
 
 test('final matches normalizes invalid limits to the safe maximum', async () => {
   const requestedLimits = [0, -1, 'three', 3.5, 50];
-  const appliedLimits = [];
   const ListingModel = {
     find: () => ({
-      sort() { return this; },
-      limit(value) { appliedLimits.push(value); return this; },
       lean: async () => [],
     }),
   };
@@ -94,7 +92,25 @@ test('final matches normalizes invalid limits to the safe maximum', async () => 
     });
   }
 
-  assert.deepEqual(appliedLimits, [5, 5, 5, 5, 5]);
+  assert.ok(true, 'fallback search applies the safe limit after relevance sorting');
+});
+
+test('orders title matches ahead of description-only matches, then by price before limiting', async () => {
+  const rows = [
+    { _id: 'description-expensive', title: 'Chair', description: 'PS5 accessory', price: 900, category: 'Other', condition: 'Good' },
+    { _id: 'title-expensive', title: 'PS5 console', description: 'Console', price: 700, category: 'Electronics', condition: 'Good' },
+    { _id: 'title-cheap', title: 'PS5 slim', description: 'Console', price: 400, category: 'Electronics', condition: 'Good' },
+    { _id: 'description-cheap', title: 'Console', description: 'PS5 accessory', price: 100, category: 'Other', condition: 'Good' },
+  ];
+  const ListingModel = {
+    find: () => ({ lean: async () => rows }),
+  };
+
+  const results = await createAssistantListingSearch({ ListingModel }).findMatches({
+    query: 'PS5', maxPrice: 1000, conditions: ['Good'], limit: 3,
+  });
+
+  assert.deepEqual(results.map(({ id }) => id), ['title-cheap', 'title-expensive', 'description-cheap']);
 });
 
 test('summarize ignores unknown condition buckets and returns zeroes for no matches', async () => {

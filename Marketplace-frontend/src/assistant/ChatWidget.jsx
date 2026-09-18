@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { sendAssistantMessage } from './assistantApi.js';
 import { handleAssistantAuthenticationError } from './assistantAuthentication.js';
 import { assistantReducer, buildAssistantPayload, initialChatState } from './assistantState.js';
+import { storeListingDraft } from './draftHandoff.js';
 import ChatPanel from './ChatPanel.jsx';
 import './assistant.css';
 
@@ -50,7 +51,8 @@ export default function ChatWidget() {
   }
 
   function reviewDraft() {
-    navigate('/sell', { state: { assistantDraft: state.workflow.draft } });
+    const assistantDraftId = storeListingDraft(state.workflow.draft);
+    navigate('/sell', { state: { assistantDraftId } });
   }
 
   return (
@@ -68,6 +70,7 @@ export default function ChatWidget() {
         <ChatPanel
           {...state}
           {...responseDetails}
+          draft={state.workflow.draft}
           onSubmit={submit}
           onClose={() => dispatch({ type: 'close' })}
           onReviewDraft={reviewDraft}

@@ -1,4 +1,4 @@
-import { assistantResponse } from './contracts.js';
+import { assistantResponse, initialAssistantState } from './contracts.js';
 import { assertConversationSafe, OUT_OF_SCOPE_MESSAGE } from './policy.js';
 import { LISTING_CATEGORIES, LISTING_CONDITIONS } from '../constants/listings.js';
 import { validateAssistantDraft } from '../services/listingDraft.js';
@@ -25,13 +25,20 @@ export async function runAssistantTurn({ request, user, model, listings }) {
 
   if (extracted.intent === 'other') return refusalResponse(request.state);
   if (extracted.intent === 'greeting') return greetingResponse(request.state);
-  if (extracted.intent === 'buy' || request.state.mode === 'buy') {
-    return runBuyTurn({ request, extracted, listings });
+  if (extracted.intent === 'buy') {
+    return runBuyTurn({ request: requestForMode(request, 'buy'), extracted, listings });
   }
-  if (extracted.intent === 'sell' || request.state.mode === 'sell') {
-    return runSellTurn({ request, extracted, user, model });
+  if (extracted.intent === 'sell') {
+    return runSellTurn({ request: requestForMode(request, 'sell'), extracted, user, model });
   }
+  if (request.state.mode === 'buy') return runBuyTurn({ request, extracted, listings });
+  if (request.state.mode === 'sell') return runSellTurn({ request, extracted, user, model });
   return refusalResponse(request.state);
+}
+
+function requestForMode(request, mode) {
+  if (request.state.mode === null || request.state.mode === mode) return request;
+  return { ...request, state: initialAssistantState() };
 }
 
 async function runBuyTurn({ request, extracted, listings }) {

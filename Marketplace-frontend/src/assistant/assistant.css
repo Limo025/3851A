@@ -166,6 +166,14 @@
   border-top: 1px solid #eaecf0;
 }
 
+.marketplace-assistant__results img {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  background: #f2f4f7;
+}
+
 .marketplace-assistant__results li:first-child {
   border-top: 0;
 }
@@ -191,6 +199,25 @@
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+}
+
+.marketplace-assistant__draft {
+  margin: 0 0 0.75rem;
+  border: 1px solid #e4e7ec;
+  border-radius: 0.75rem;
+  padding: 0.8rem;
+  background: #ffffff;
+}
+
+.marketplace-assistant__draft h3,
+.marketplace-assistant__draft p {
+  margin: 0 0 0.4rem;
+}
+
+.marketplace-assistant__draft p:last-child {
+  margin-bottom: 0;
+  color: var(--assistant-muted);
+  font-size: 0.82rem;
 }
 
 .marketplace-assistant__form {

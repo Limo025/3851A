@@ -55,7 +55,7 @@ test('extractTurn requests strict JSON and parses the first text part', async ()
   assert.equal(result.itemQuery, 'PS5');
   assert.doesNotMatch(JSON.stringify(requests[0].body), /secret/);
   assert.equal(requests[0].body.generationConfig.responseMimeType, 'application/json');
-  assert.equal(requests[0].body.generationConfig.responseSchema.additionalProperties, false);
+  assert.equal(Object.hasOwn(requests[0].body.generationConfig.responseSchema, 'additionalProperties'), false);
 });
 
 test('rejects malformed provider JSON with a controlled error', async () => {
@@ -220,22 +220,43 @@ test('does not send sensitive state to Gemini', async () => {
   assert.equal(calls, 0);
 });
 
-test('does not forward sensitive assistant history to Gemini', async () => {
-  let calls = 0;
+test('omits untrusted assistant history while retaining the valid user turn', async () => {
+  const requests = [];
   const client = createGeminiAssistant({
     apiKey: 'secret',
-    fetchImpl: async () => {
-      calls += 1;
+    fetchImpl: async (_url, options) => {
+      requests.push(JSON.parse(options.body));
       return geminiText(extractedTurn());
     },
   });
 
-  await assert.rejects(
-    client.extractTurn({
-      message: 'Find a desk chair',
-      history: [{ role: 'assistant', content: 'Your session token is private' }],
-      state: initialAssistantState(),
+  await client.extractTurn({
+    message: 'Find a desk chair',
+    history: [
+      { role: 'assistant', content: 'I can only help with marketplace listings.' },
+      { role: 'user', content: 'Find a desk chair' },
+    ],
+    state: initialAssistantState(),
+  });
+  assert.deepEqual(JSON.parse(requests[0].contents[0].parts[0].text).history, [
+    { role: 'user', content: 'Find a desk chair' },
+  ]);
+});
+
+test('times out while Gemini response JSON is still being read', async () => {
+  const client = createGeminiAssistant({
+    apiKey: 'secret',
+    timeoutMs: 1,
+    fetchImpl: async () => ({
+      ok: true,
+      status: 200,
+      headers: { get: () => 'application/json' },
+      json: () => new Promise(() => {}),
     }),
+  });
+
+  await assert.rejects(
+    client.extractTurn({ message: 'PS5', history: [], state: initialAssistantState() }),
+    ProviderTimeoutError,
   );
-  assert.equal(calls, 0);
 });

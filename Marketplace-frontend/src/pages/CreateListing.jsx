@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { apiFetch } from '../api/client.js';
 import { listingDraftFromLocationState } from '../assistant/listingDraft.js';
@@ -10,7 +11,10 @@ import '../css/listings.css';
 export default function CreateListing() {
   const navigate = useNavigate();
   const location = useLocation();
-  const initialValues = listingDraftFromLocationState(location.state);
+  const initialValues = useMemo(
+    () => listingDraftFromLocationState(location.state),
+    [location.state],
+  );
 
   async function createListing({ values, newFiles }) {
     const body = buildListingFormData(values, newFiles);

@@ -9,6 +9,16 @@ function formatPrice(value) {
     : '';
 }
 
+function safePublicThumbnail(value) {
+  if (typeof value !== 'string') return null;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' ? url.href : null;
+  } catch {
+    return null;
+  }
+}
+
 function InventorySummary({ summary }) {
   if (!summary) return null;
 
@@ -41,12 +51,37 @@ function ListingResults({ listings }) {
       <ul>
         {listings.slice(0, MAX_LISTINGS).map((listing) => (
           <li key={listing.id}>
+            {safePublicThumbnail(listing.imageUrl) ? (
+              <img
+                src={safePublicThumbnail(listing.imageUrl)}
+                alt=""
+                loading="lazy"
+                referrerPolicy="no-referrer"
+              />
+            ) : null}
             <strong>{listing.title}</strong>
             <span>{formatPrice(listing.price)}{listing.condition ? ` · ${listing.condition}` : ''}</span>
             <Link to={`/listings/${encodeURIComponent(listing.id)}`}>View listing</Link>
           </li>
         ))}
       </ul>
+    </section>
+  );
+}
+
+function DraftSummary({ draft }) {
+  if (!draft || typeof draft !== 'object') return null;
+
+  return (
+    <section className="marketplace-assistant__draft" aria-label="Listing draft summary">
+      <h3>Draft listing</h3>
+      <strong>{draft.title}</strong>
+      <p>{draft.description}</p>
+      <p>
+        {formatPrice(draft.price)}
+        {draft.condition ? ` · ${draft.condition}` : ''}
+        {draft.category ? ` · ${draft.category}` : ''}
+      </p>
     </section>
   );
 }
@@ -58,6 +93,7 @@ export default function ChatPanel({
   loading = false,
   error = '',
   draftReady = false,
+  draft,
   onSubmit,
   onReviewDraft,
   onClose,
@@ -107,9 +143,12 @@ export default function ChatPanel({
         <ListingResults listings={listings} />
 
         {draftReady ? (
-          <button className="marketplace-assistant__review" type="button" onClick={onReviewDraft}>
-            Review listing draft
-          </button>
+          <>
+            <DraftSummary draft={draft} />
+            <button className="marketplace-assistant__review" type="button" onClick={onReviewDraft}>
+              Review listing draft
+            </button>
+          </>
         ) : null}
         {loading ? <p className="marketplace-assistant__status" role="status">Assistant is thinking…</p> : null}
         {error ? <p className="marketplace-assistant__error" role="alert">{error}</p> : null}

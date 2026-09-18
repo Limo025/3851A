@@ -13,7 +13,10 @@ export function assistantReducer(state, action) {
     case 'open':
       return { ...state, open: true };
     case 'close':
-      return { ...state, open: false, loading: false };
+      // Keep the in-flight lock while the panel is closed. The original request
+      // may still resolve, and allowing a second request would permit stale data
+      // to overwrite the newer conversation state.
+      return { ...state, open: false };
     case 'assistant-submitted':
       return {
         ...state,

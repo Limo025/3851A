@@ -34,9 +34,11 @@ test('opens, submits, receives, fails, clears errors, and closes a conversation 
   assert.equal(state.error, 'Service unavailable');
   assert.equal(state.loading, false);
   state = assistantReducer(state, { type: 'clear-error' });
+  state = assistantReducer({ ...state, loading: true }, { type: 'close' });
   state = assistantReducer(state, { type: 'close' });
   assert.equal(state.error, '');
   assert.equal(state.open, false);
+  assert.equal(state.loading, true);
 });
 
 test('keeps chat state in plain memory and bounds outbound history to ten messages', () => {

@@ -1,9 +1,13 @@
 import { LISTING_CATEGORIES, LISTING_CONDITIONS } from '../utils/listingForm.js';
+import { consumeListingDraft } from './draftHandoff.js';
 
 export function listingDraftFromLocationState(state) {
-  if (!isPlainObject(state) || !isPlainObject(state.assistantDraft)) return undefined;
+  if (!isPlainObject(state)) return undefined;
 
-  const { title, description, price: rawPrice, category, condition } = state.assistantDraft;
+  const draft = consumeListingDraft(state.assistantDraftId);
+  if (!isPlainObject(draft)) return undefined;
+
+  const { title, description, price: rawPrice, category, condition } = draft;
   const price = typeof rawPrice === 'number' || typeof rawPrice === 'string'
     ? String(rawPrice)
     : undefined;
