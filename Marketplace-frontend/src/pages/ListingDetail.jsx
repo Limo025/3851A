@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { apiFetch } from '../api/client.js';
+import { session } from '../auth/session.js';
+import { useChatStore } from '../store/useChatStore.js';
 import { formatListingDate, formatListingPrice } from '../utils/listingFormat.js';
 import '../css/listings.css';
 
@@ -11,6 +13,8 @@ function displayValue(value, fallback = 'Not specified') {
 export default function ListingDetail() {
   const { id } = useParams();
   const location = useLocation();
+  const navigate = useNavigate();
+  const startConversationDraft = useChatStore((state) => state.startConversationDraft);
   const [listing, setListing] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -75,6 +79,39 @@ export default function ListingDetail() {
 
   const title = displayValue(listing.title, 'Listing');
   const images = listing.images || [];
+  const isOwnListing = session.getUser()?.uid === listing.seller?.uid;
+
+  function handleContactSeller() {
+    if (!session.hasSession()) {
+      navigate('/login', {
+        state: {
+          from: `${location.pathname}${location.search}${location.hash}`,
+          message: 'Please log in to contact the seller.',
+        },
+      });
+      return;
+    }
+
+    if (!listing.seller?.uid) {
+      setError('Seller contact information is unavailable.');
+      return;
+    }
+
+    startConversationDraft({
+      _id: `draft:${listing._id}`,
+      isDraft: true,
+      buyer: session.getUser()?.uid,
+      seller: listing.seller.uid,
+      sellerDetails: listing.seller,
+      listing: {
+        _id: listing._id,
+        title: listing.title,
+        price: listing.price,
+        images: listing.images,
+      },
+    });
+    navigate('/messages');
+  }
 
   return (
     <main className="marketplace-page">
@@ -116,7 +153,9 @@ export default function ListingDetail() {
             <div><dt>Seller</dt><dd>{displayValue(listing.seller?.username, 'Unknown seller')}</dd></div>
             <div><dt>Listed</dt><dd>{formatListingDate(listing.createdAt)}</dd></div>
           </dl>
-          <button className="listing-detail__contact" type="button" disabled>Contact Seller — messaging coming later</button>
+          <button className="listing-detail__contact" type="button" disabled={isOwnListing} onClick={handleContactSeller}>
+            {isOwnListing ? 'This is your listing' : 'Contact Seller'}
+          </button>
         </div>
       </div>
     </main>

@@ -14,7 +14,7 @@ import {
 } from '../validation/listings.js';
 import { verifyToken } from '../middleware/auth.js';
 
-const SAFE_SELLER_FIELDS = '_id username';
+const SAFE_SELLER_FIELDS = '_id uid username';
 
 export function createListingRouter({
   ListingModel = Listing,

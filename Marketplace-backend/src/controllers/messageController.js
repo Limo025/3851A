@@ -10,7 +10,7 @@ const populateConversation = (query) =>
   query
     .populate('buyerDetails', 'username uid')
     .populate('sellerDetails', 'username uid')
-    .populate('listing', 'title price image');
+    .populate('listing', 'title price images');
 // Fetch all user's conversation
 export const getAllConversations = async (req, res) => {
   try {

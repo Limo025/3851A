@@ -3,6 +3,8 @@ import { cloudinaryConfig, validateCloudinaryConfig } from '../config/cloudinary
 import { fetchWithTimeout, isProviderTimeoutError } from './providerRequest.js';
 
 const CLOUDINARY_FOLDER = 'marketplace/listings';
+const MESSAGE_IMAGE_FOLDER = 'marketplace/messages';
+const MESSAGE_IMAGE_PATTERN = /^data:image\/(jpeg|png|webp|gif);base64,([A-Za-z0-9+/=]+)$/i;
 
 function signParams(params, apiSecret) {
   const signedParams = Object.entries(params)
@@ -127,7 +129,32 @@ export function createImageStorage({
     return uploadedImages;
   }
 
-  return { uploadImages, deleteImages };
+  async function uploadMessageImage(dataUrl) {
+    const match = typeof dataUrl === 'string' ? dataUrl.match(MESSAGE_IMAGE_PATTERN) : null;
+    if (!match) {
+      throw new Error('Invalid message image');
+    }
+
+    const [, imageType, encodedImage] = match;
+    const buffer = Buffer.from(encodedImage, 'base64');
+    if (buffer.length === 0) {
+      throw new Error('Invalid message image');
+    }
+
+    const activeConfig = validateCloudinaryConfig(config);
+    const formData = signedFormData({ folder: MESSAGE_IMAGE_FOLDER }, activeConfig);
+    const extension = imageType.toLowerCase() === 'jpeg' ? 'jpg' : imageType.toLowerCase();
+    formData.set('file', new Blob([buffer], { type: `image/${imageType.toLowerCase()}` }), `message.${extension}`);
+
+    const response = await request(uploadUrl(activeConfig.cloudName), formData);
+    if (!response?.secure_url || !response.public_id) {
+      throw cloudinaryError();
+    }
+
+    return { url: response.secure_url, publicId: response.public_id };
+  }
+
+  return { uploadImages, uploadMessageImage, deleteImages };
 }
 
 const imageStorage = createImageStorage();

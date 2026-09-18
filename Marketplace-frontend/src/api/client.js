@@ -32,7 +32,6 @@ export function createApiClient({ fetchImpl = globalThis.fetch, sessionManager =
       headers: requestHeaders,
       body: body === undefined || isFormData ? body : JSON.stringify(body),
     });
-    console.log("reached here in client.js");
     if (auth && response.status === 401) {
       throw new AuthenticationError();
     }
