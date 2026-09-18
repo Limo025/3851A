@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllConversations, getConversationWithName, getOrCreateConversation, getConversationWithItem, sendMessage } from '../controllers/messageController.js';
+import { getAllConversations, getConversationWithName, getOrCreateConversation, getMessagesWithConvoId, getConversationWithItem, sendMessage } from '../controllers/messageController.js';
 import { verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -17,6 +17,7 @@ router.get('/getconvo/recipient/:username', verifyToken, getConversationWithName
 // One API to find the convo with item title    then i realise its more like finding it in the list of convos, the real one thats being sent is prolly the one with id
 router.get('/getconvo/item/:listingname', verifyToken, getConversationWithItem)
 
+router.get('/messages/:conversationId', verifyToken, getMessagesWithConvoId)
 // POST 
 router.post('/send/:userId', verifyToken, sendMessage)
 

@@ -8,7 +8,11 @@ const conversationSchema = new mongoose.Schema(
     lastMessage: { type: String, default: '' },
     lastMessageAt: { type: Date, default: Date.now }
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
 
 conversationSchema.virtual('buyerDetails', {

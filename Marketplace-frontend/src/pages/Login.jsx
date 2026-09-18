@@ -30,7 +30,7 @@ function App() {
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     width: '100vw',
-    height: '100vh',
+    minHeight: '100vh',
   };
 
   async function logIn() {
