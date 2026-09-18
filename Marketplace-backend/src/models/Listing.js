@@ -21,7 +21,7 @@ const imageSchema = new mongoose.Schema({
 
 const listingSchema = new mongoose.Schema({
   seller: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,   // if later involves mismatch firebase uid, change this to String
     ref: 'User',
     required: true,
   },

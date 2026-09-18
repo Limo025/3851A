@@ -82,7 +82,7 @@ test('GET / returns a filtered, paginated listing response with safe sellers', a
   };
   assert.deepEqual(calls.findFilter, expectedFilter);
   assert.deepEqual(calls.countFilter, expectedFilter);
-  assert.deepEqual(calls.populate, ['seller', '_id username']);
+  assert.deepEqual(calls.populate, ['seller', '_id uid username']);
   assert.deepEqual(calls.sort, { price: -1 });
   assert.equal(calls.skip, 3);
   assert.equal(calls.limit, 3);
@@ -102,7 +102,7 @@ test('GET / reports one page when no listings match', async () => {
     assert.deepEqual(await response.json(), { listings: [], page: 1, pages: 1, total: 0 });
   });
 
-  assert.deepEqual(calls.populate, ['seller', '_id username']);
+  assert.deepEqual(calls.populate, ['seller', '_id uid username']);
   assert.deepEqual(calls.sort, { createdAt: -1 });
   assert.equal(calls.skip, 0);
   assert.equal(calls.limit, 20);
@@ -150,7 +150,7 @@ test('GET /:id returns one populated listing with safe seller fields', async () 
   });
 
   assert.equal(calls.id, listingId);
-  assert.deepEqual(calls.populate, ['seller', '_id username']);
+  assert.deepEqual(calls.populate, ['seller', '_id uid username']);
 });
 
 test('GET /:id returns 404 when a valid listing id is absent', async () => {

@@ -37,7 +37,8 @@ function addField(body, name, value) {
   }
 }
 
-export function listingImagesUpload(req, res, next) {
+export function createUploadMiddleware({ fieldName = 'image', maxFiles = 5, maxSizeBytes = 5 * 1024 * 1024 }= {}) {
+  return function (req, res, next){
   let parser;
   let complete = false;
   let uploadError;
@@ -137,6 +138,7 @@ export function listingImagesUpload(req, res, next) {
 
   req.on('aborted', () => finish(new UploadError('Malformed multipart upload', 'INVALID_MULTIPART')));
   req.pipe(parser);
+  }
 }
 
 export function handleUploadError(error, req, res, next) {
@@ -157,4 +159,17 @@ export function handleUploadError(error, req, res, next) {
   }
 
   return next(error);
+  
 }
+
+export const uploadListingImages = createUploadMiddleware({
+  fieldName: 'images',
+  maxFiles: 5,
+  maxSizeBytes: 5 * 1024 * 1024,
+});
+
+export const uploadMessageImages = createUploadMiddleware({
+  fieldName: 'images',
+  maxFiles: 3,
+  maxSizeBytes: 5 * 1024 * 1024,
+});

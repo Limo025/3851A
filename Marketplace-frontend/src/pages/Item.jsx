@@ -1,22 +1,7 @@
+import '../css/styles/item-page.css';
+import '../css/styles/recommended-item.css';
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-
-//replace this whole thing with toggleNav()
-// let isOpen = false;
-
-// function openNav() {
-//   if (isOpen == true){
-//       document.getElementById("sidebar").style.display = "none";
-//       isOpen=false;
-//   } else{
-//       document.getElementById("sidebar").style.display = "block";
-//       isOpen=true;
-//   }
-// }
-// function closeNav() {
-//   document.getElementById("sidebar").style.display = "none";
-//   isOpen=false;
-// }
 
 var strictModeLoop = false;
 

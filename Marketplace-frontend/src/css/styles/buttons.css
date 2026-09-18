@@ -1,0 +1,115 @@
+.bigButton {
+    font-size: 30px;
+    font-family: Corbel;
+    padding: 20px;
+    padding-left: 15px;
+    padding-bottom: 15px;
+    position: relative;
+    border: 3px solid #005bf9;
+    border-radius: 25px;
+    background-color: white;
+    transition: background-color .2s, color .2s, border .2s;
+}
+.bigButton:hover {
+    background-color: #005bf9;
+    border: 3px solid #00225e;
+    color: white;
+    cursor: pointer;
+}
+.bigButton:focus-visible {
+    outline: 3px solid #202020;
+    outline-offset: 3px;
+}
+
+.mediumButton {
+    font-size: 15px;
+    padding: 10px;
+    font-family: FuseV2;
+    margin-top: 10px;
+    margin-right: 10px;
+    position: relative;
+    border: 1px solid #ff5b7e;
+    border-radius: 25px;
+    background-color: #ffaec0;
+    transition: background-color .2s, color .2s, border .2s;
+}
+.mediumButton:hover {
+    background-color: #ff5b7e;
+    border: 1px solid #ff0037;
+    color: white;
+    cursor: pointer;
+}
+
+.loginButton {
+    font-size: 1.5rem;
+    font-family: FuseV2;
+    padding: 20px;
+    position: relative;
+    border: 3px solid #005bf9;
+    border-radius: 20px;
+    background-color: white;
+    transition: background-color .2s, color .2s, border .2s;
+}
+.loginButton:hover {
+    background-color: #005bf9;
+    border: 3px solid #00225e;
+    color: white;
+    cursor: pointer;
+}
+
+/* Header icon buttons (account / options / messages) */
+.accountButton {
+    grid-area: account;
+    width: fit-content;
+    height: fit-content;
+    cursor: pointer;
+}
+.optionsButton {
+    grid-area: options;
+    width: fit-content;
+    height: fit-content;
+    position: relative;
+}
+.optionsButtonImage {
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+}
+.messageButton {
+    grid-area: messages;
+    height: fit-content;
+    width: fit-content;
+    cursor: pointer;
+}
+.accountButton img,
+.messageButton img,
+.optionsButtonImage img {
+    display: block;
+    height: auto;
+    max-width: 64px;
+    width: 100%;
+}
+.accountButton:focus-visible,
+.optionsButtonImage:focus-visible {
+    outline: 3px solid white;
+    outline-offset: 3px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .accountButton img,
+    .messageButton img,
+    .optionsButtonImage img {
+        max-width: 48px;
+    }
+}
+@media (max-width: 480px) {
+    .messageButton {
+        display: none;
+    }
+    .accountButton img,
+    .optionsButtonImage img {
+        max-width: 44px;
+    }
+}

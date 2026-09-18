@@ -1,3 +1,4 @@
+// currently not in use, migrated sidebar logic to header.jsx component
 export function createSidebarController({ sidebar, toggle, close }) {
   let isOpen = !sidebar.hidden;
 

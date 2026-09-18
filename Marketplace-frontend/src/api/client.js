@@ -27,7 +27,6 @@ export function createApiClient({ fetchImpl = globalThis.fetch, sessionManager =
         requestHeaders.Authorization = `Bearer ${accessToken}`;
       }
     }
-
     const response = await fetchImpl(`${baseUrl}${path}`, {
       ...options,
       headers: requestHeaders,
