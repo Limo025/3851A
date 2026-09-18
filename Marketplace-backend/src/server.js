@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import { connectDB } from './config/mongodb.js';
 import authRoutes from './routes/auth.js';
 import listingRoutes from './routes/listings.js';
+import recentlyViewedRoutes from './routes/recentlyViewed.js';
 import { handleUploadError } from './middleware/upload.js';
 
 const PORT = process.env.PORT || 8000;
@@ -16,6 +17,7 @@ app.use(express.json());
 
 app.use('/auth', authRoutes);
 app.use('/api/listings', listingRoutes);
+app.use('/api/recently-viewed', recentlyViewedRoutes);
 app.use(handleUploadError);
 
 app.post('/hello', (req, res) => {
