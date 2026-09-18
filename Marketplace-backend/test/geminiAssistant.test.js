@@ -58,6 +58,38 @@ test('extractTurn requests strict JSON and parses the first text part', async ()
   assert.equal(Object.hasOwn(requests[0].body.generationConfig.responseSchema, 'additionalProperties'), false);
 });
 
+test('discards model-produced sell facts for a buy intent', async () => {
+  const client = createGeminiAssistant({
+    apiKey: 'secret',
+    fetchImpl: async () => geminiText({
+      intent: 'buy',
+      itemQuery: 'PS5',
+      maxPrice: null,
+      conditions: [],
+      sellFacts: {
+        itemName: '',
+        features: '',
+        category: 'Electronics',
+        condition: 'New',
+      },
+    }),
+  });
+
+  const result = await client.extractTurn({
+    message: 'I need a PS5',
+    history: [],
+    state: initialAssistantState(),
+  });
+
+  assert.deepEqual(result, {
+    intent: 'buy',
+    itemQuery: 'PS5',
+    maxPrice: null,
+    conditions: [],
+    sellFacts: {},
+  });
+});
+
 test('rejects malformed provider JSON with a controlled error', async () => {
   const client = createGeminiAssistant({
     apiKey: 'secret',

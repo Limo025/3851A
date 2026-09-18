@@ -200,7 +200,7 @@ function validateExtractedTurn(value) {
     itemQuery: value.itemQuery.trim(),
     maxPrice: value.maxPrice,
     conditions: value.conditions,
-    sellFacts: validateSellFacts(value.sellFacts),
+    sellFacts: value.intent === 'sell' ? validateSellFacts(value.sellFacts) : {},
   };
 }
 
