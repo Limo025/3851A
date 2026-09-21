@@ -30,12 +30,12 @@ export default function ConversationList() {
   }
 
   if (isUserLoading) {
-    return <p className="px-2 py-4 text-sm text-slate-300">Loading conversations…</p>;
+    return <p className="px-2 py-4 text-sm text-blue-100">Loading conversations…</p>;
   }
 
   if (conversations.length === 0) {
     return (
-      <p className="px-2 py-4 text-sm text-slate-300">
+      <p className="px-2 py-4 text-sm text-blue-100">
         No {currentMode} conversations yet.
       </p>
     );
@@ -56,8 +56,8 @@ export default function ConversationList() {
               type="button"
               className={`w-full rounded-lg p-3 text-left transition-colors ${
                 isSelected
-                  ? 'bg-cyan-500/20 text-white'
-                  : 'text-slate-200 hover:bg-slate-700'
+                  ? 'bg-white/25 text-white'
+                  : 'text-white hover:bg-white/15'
               }`}
               aria-pressed={isSelected}
               onClick={() => handleSelect(conversation)}
@@ -65,15 +65,15 @@ export default function ConversationList() {
               <span className="flex items-start justify-between gap-2">
                 <span className="min-w-0">
                   <span className="block truncate font-semibold">{username}</span>
-                  <span className="block truncate text-xs text-slate-400">
+                  <span className="block truncate text-xs text-blue-100">
                     {conversation.listing?.title || 'Listing unavailable'}
                   </span>
                 </span>
-                <span className="shrink-0 text-[0.7rem] text-slate-400">
+                <span className="shrink-0 text-[0.7rem] text-blue-100">
                   {formatConversationTime(conversation.lastMessageAt)}
                 </span>
               </span>
-              <span className="mt-2 block truncate text-sm text-slate-300">
+              <span className="mt-2 block truncate text-sm text-blue-50">
                 {conversation.lastMessage || 'No messages yet'}
               </span>
             </button>

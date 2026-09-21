@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import { apiFetch } from '../api/client.js';
 
 const validModes = new Set(['buyer', 'seller']);
+let chatStateVersion = 0;
 
 function sortConversations(conversations) {
   return [...conversations].sort((first, second) => {
@@ -27,6 +28,18 @@ export const useChatStore = create((set, get) => ({
   isUserLoading: false,
   isMessagesLoading: false,
   isSendingMessage: false,
+
+  resetChatState: () => {
+    chatStateVersion += 1;
+    set({
+      conversations: [],
+      messages: [],
+      selectedUser: null,
+      isUserLoading: false,
+      isMessagesLoading: false,
+      isSendingMessage: false,
+    });
+  },
 
   toggleMode: (mode) => {
     if (!validModes.has(mode)) return;
@@ -54,6 +67,7 @@ export const useChatStore = create((set, get) => ({
   },
 
   getAllConversations: async (mode = get().currentMode) => {
+    const requestVersion = chatStateVersion;
     const role = validModes.has(mode) ? mode : 'buyer';
     set({ isUserLoading: true });
 
@@ -64,20 +78,25 @@ export const useChatStore = create((set, get) => ({
       const nextConversations = Array.isArray(conversations)
         ? sortConversations(conversations)
         : [];
+      if (requestVersion !== chatStateVersion) return [];
       set({ conversations: nextConversations });
       return nextConversations;
     } catch (error) {
+      if (requestVersion !== chatStateVersion) return [];
       set({ conversations: [] });
       toast.error(error.message || 'Could not load conversations');
       return [];
     } finally {
-      set({ isUserLoading: false });
+      if (requestVersion === chatStateVersion) {
+        set({ isUserLoading: false });
+      }
     }
   },
 
   getMessages: async (conversationId, mode = get().currentMode) => {
     if (!conversationId) return [];
 
+    const requestVersion = chatStateVersion;
     const role = validModes.has(mode) ? mode : 'buyer';
     set({ isMessagesLoading: true, messages: [] });
 
@@ -87,17 +106,21 @@ export const useChatStore = create((set, get) => ({
         { auth: true },
       );
       const nextMessages = Array.isArray(result?.messages) ? result.messages : [];
+      if (requestVersion !== chatStateVersion) return [];
       set({
         messages: nextMessages,
         selectedUser: result?.conversation ?? get().selectedUser,
       });
       return nextMessages;
     } catch (error) {
+      if (requestVersion !== chatStateVersion) return [];
       set({ messages: [] });
       toast.error(error.message || 'Could not load messages');
       return [];
     } finally {
-      set({ isMessagesLoading: false });
+      if (requestVersion === chatStateVersion) {
+        set({ isMessagesLoading: false });
+      }
     }
   },
 
@@ -108,6 +131,7 @@ export const useChatStore = create((set, get) => ({
       return null;
     }
 
+    const requestVersion = chatStateVersion;
     set({ isSendingMessage: true });
 
     try {
@@ -120,6 +144,7 @@ export const useChatStore = create((set, get) => ({
         },
       );
 
+      if (requestVersion !== chatStateVersion) return null;
       set((state) => {
         const preview = message.text || (message.image ? 'Image' : '');
         const selectedConversation = state.selectedUser;
@@ -153,10 +178,13 @@ export const useChatStore = create((set, get) => ({
       });
       return message;
     } catch (error) {
+      if (requestVersion !== chatStateVersion) return null;
       toast.error(error.message || 'Could not send message');
       return null;
     } finally {
-      set({ isSendingMessage: false });
+      if (requestVersion === chatStateVersion) {
+        set({ isSendingMessage: false });
+      }
     }
   },
 }));

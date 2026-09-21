@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { session } from '../auth/session.js';
+import { useChatStore } from '../store/useChatStore.js';
 import { getPostLoginPath } from '../auth/returnPath.js';
 import backgroundImg from '../img/well.jpg';
 import toast from 'react-hot-toast'
@@ -45,6 +46,7 @@ function App() {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error);
+            useChatStore.getState().resetChatState();
             session.saveLogin(data);
             toast.success("Login success")
             navigate(getPostLoginPath(location.state), { replace: true });

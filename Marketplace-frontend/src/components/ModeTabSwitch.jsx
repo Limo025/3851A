@@ -6,11 +6,11 @@ function ModeTabSwitch() {
     <div className="tabs tabs-box bg-transparent p-2 m-2 w-11/12 mx-aut flex">
       <button
         onClick={() => toggleMode("buyer")}
-        className={`tab flex-1 ${currentMode === "buyer" ? "bg-cyan-500/20 text-cyan-400" : "text-slate-400"}`}
+        className={`tab flex-1 rounded-md ${currentMode === "buyer" ? "bg-white/25 text-white" : "text-blue-100 hover:bg-white/15 hover:text-white"}`}
       >Buyer</button>
       <button
         onClick={() => toggleMode("seller")}
-        className={`tab flex-1 ${currentMode === "seller" ? "bg-cyan-500/20 text-cyan-400" : "text-slate-400"}`}
+        className={`tab flex-1 rounded-md ${currentMode === "seller" ? "bg-white/25 text-white" : "text-blue-100 hover:bg-white/15 hover:text-white"}`}
       >Seller</button>
     </div>
   )

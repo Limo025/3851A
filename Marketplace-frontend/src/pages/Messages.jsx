@@ -13,13 +13,13 @@ export default function Messages() {
   }, [currentMode, getAllConversations]);
 
   return (
-    <div className="p-4 md:p-8 min-h-[calc(100vh-4rem)] flex items-center justify-center">
+    <div className="min-h-[calc(100vh-4rem)] bg-white p-4 md:p-8 flex items-center justify-center">
       {/* Centered Chat Card Box (Fixed max width & height) */}
-      <div className="w-full max-w-6xl h-[80vh] bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200 grid grid-cols-4">
+      <div className="w-full max-w-6xl h-[80vh] bg-white rounded-2xl shadow-[0_18px_45px_rgba(15,23,42,0.18)] overflow-hidden border-2 border-slate-200 grid grid-cols-4">
         
         {/* Left Sidebar Box (1/4 Width) */}
-        <aside className="col-span-1 bg-slate-800 text-white p-4 flex flex-col border-r border-slate-700 p">
-          <div className="pb-4 border-b border-slate-700">
+        <aside className="col-span-1 bg-[#005bf9] text-white p-4 flex flex-col border-r border-blue-400">
+          <div className="pb-4 border-b border-blue-400">
             <ModeTabSwitch />
           </div>
           
@@ -29,7 +29,7 @@ export default function Messages() {
         </aside>
 
         {/* Right Main Chat Area Box (3/4 Width) */}
-        <main className="col-span-3 bg-gray-400 flex flex-col h-full overflow-hidden">
+        <main className="col-span-3 bg-white flex flex-col h-full overflow-hidden">
           {selectedUser ? (
             <ChatContainer key={selectedUser._id} user={selectedUser} />
           ) : (

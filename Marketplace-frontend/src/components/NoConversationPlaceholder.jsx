@@ -1,8 +1,8 @@
-import React from 'react'
-
 function NoConversationPlaceholder() {
   return (
-    <div>NoConversationPlaceholder</div>
+    <p className="flex h-full items-center justify-center text-sm text-slate-500">
+      Pick a conversation to start messaging.
+    </p>
   )
 }
 

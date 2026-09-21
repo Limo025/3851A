@@ -4,6 +4,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useEffect, useState, useRef } from 'react';
 import { getHeaderAuthView, getMarketplaceSearchTerm, buildMarketplaceSearchUrl } from '@/js/script'
 import { session } from '@/auth/session';
+import { useChatStore } from '@/store/useChatStore';
 
 export default function Header()  {
     const navigate = useNavigate();
@@ -67,6 +68,7 @@ export default function Header()  {
 
     function handleLogout(event) {
         event.preventDefault();
+        useChatStore.getState().resetChatState();
         session.clear();
         closeSidebarAndFocusToggle();
         navigate('/');

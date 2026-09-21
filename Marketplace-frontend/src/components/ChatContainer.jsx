@@ -34,7 +34,7 @@ export default function ChatContainer({ user: conversation }) {
   const [text, setText] = useState('');
   const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
-  const messageEndRef = useRef(null);
+  const messageListRef = useRef(null);
   const { messages, currentMode, isMessagesLoading, isSendingMessage, sendMessage } = useChatStore();
 
   const currentUserId = currentMode === 'buyer' ? conversation.buyer : conversation.seller;
@@ -44,7 +44,8 @@ export default function ChatContainer({ user: conversation }) {
   const listingId = conversation.listing?._id || conversation.listing;
 
   useEffect(() => {
-    messageEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const messageList = messageListRef.current;
+    messageList?.scrollTo({ top: messageList.scrollHeight, behavior: 'smooth' });
   }, [messages]);
 
   async function handleImageChange(event) {
@@ -86,13 +87,13 @@ export default function ChatContainer({ user: conversation }) {
   }
 
   return (
-    <section className="flex h-full min-h-0 flex-col bg-slate-50" aria-label={`Chat with ${recipientName}`}>
+    <section className="flex h-full min-h-0 flex-col bg-white" aria-label={`Chat with ${recipientName}`}>
       <header className="border-b border-cyan-800 bg-cyan-700 px-5 py-4 text-white shadow-sm">
         <h2 className="font-semibold">{recipientName}</h2>
         <p className="truncate text-sm text-cyan-100">{conversation.listing?.title || 'Marketplace listing'}</p>
       </header>
 
-      <div className="flex-1 space-y-4 overflow-y-auto p-4" aria-live="polite">
+      <div ref={messageListRef} className="flex-1 space-y-4 overflow-y-auto p-4" aria-live="polite">
         {isMessagesLoading ? (
           <p className="text-center text-sm text-slate-500">Loading messages…</p>
         ) : messages.length === 0 ? (
@@ -120,7 +121,6 @@ export default function ChatContainer({ user: conversation }) {
             </Message>
           );
         })}
-        <div ref={messageEndRef} />
       </div>
 
       <form className="border-t border-slate-200 bg-white p-3" onSubmit={handleSubmit}>
