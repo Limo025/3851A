@@ -27,6 +27,7 @@ import { initializeApp } from "firebase/app"
 import { Toaster } from 'react-hot-toast'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import ChatSocket from './components/ChatSocket'
 
 const firebaseConfig = {
   apiKey: "AIzaSyBgVJj8-z3-qsMxXY5EfrRDIC_cxizJ130",
@@ -42,6 +43,7 @@ initializeApp(firebaseConfig);
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
+    <ChatSocket />
       <Toaster
         position="top-center"
         reverseOrder={false}

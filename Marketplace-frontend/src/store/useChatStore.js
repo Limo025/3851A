@@ -187,4 +187,75 @@ export const useChatStore = create((set, get) => ({
       }
     }
   },
+
+  receiveMessage: ({ message, conversation }) => {
+  if (!message?._id || !message.conversationId || !conversation?._id) {
+    return;
+  }
+
+  set((state) => {
+    const conversationId = String(message.conversationId);
+    const selectedConversationId = String(state.selectedUser?._id || '');
+    const isSelectedConversation =
+      selectedConversationId === conversationId;
+
+    const messageAlreadyExists = state.messages.some(
+      (existingMessage) => String(existingMessage._id) === String(message._id),
+    );
+
+    let recipientRole = null;
+
+    if (String(conversation.buyer) === String(message.recipientId)) {
+      recipientRole = 'buyer';
+    } else if (String(conversation.seller) === String(message.recipientId)) {
+      recipientRole = 'seller';
+    }
+
+    if (!recipientRole) {
+      return state;
+    }
+
+    let conversations = state.conversations;
+
+    // Only show the conversation in the mode where this user received it.
+    if (state.currentMode === recipientRole) {
+      const preview = message.text || (message.image ? 'Image' : '');
+      const existingConversation = state.conversations.some(
+        (item) => String(item._id) === String(conversation._id),
+      );
+
+      conversations = existingConversation
+        ? state.conversations.map((item) =>
+            String(item._id) === String(conversation._id)
+              ? {
+                  ...item,
+                  ...conversation,
+                  lastMessage: preview,
+                  lastMessageAt: message.createdAt,
+                }
+              : item,
+          )
+        : [
+            ...state.conversations,
+            {
+              ...conversation,
+              lastMessage: preview,
+              lastMessageAt: message.createdAt,
+            },
+          ];
+
+      conversations = sortConversations(conversations);
+    }
+
+    return {
+      conversations,
+      messages:
+        state.currentMode === recipientRole
+          && isSelectedConversation
+          && !messageAlreadyExists
+            ? [...state.messages, message]
+            : state.messages,
+    };
+  });
+},
 }));

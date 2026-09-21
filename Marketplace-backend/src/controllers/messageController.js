@@ -3,7 +3,7 @@ import { Conversation } from '../models/Conversation.js';
 import Listing from '../models/Listing.js'
 import imageStorage from '../services/imageStorage.js';
 import User from '../models/User.js';
-// Maybe can extend it to seller and buyer page seperately (which mode ur in based on if ur sender or ur receiver)
+import { broadcastMessage } from '../sockets/broadcastMessage.js';
 
 const getUserId = (req) => req.user?.uid || req.user?.user_id || req.user?._id;
 const populateConversation = (query) =>
@@ -103,21 +103,36 @@ export const getOrCreateConversation = async (req, res) => {
 
 // Get or create a conversation between two users
 export const getOrCreateConversationHelper = async (senderId, recipientId, listing) => {
-  let conversation = await Conversation.findOne({
-    listing: listing,
+  const filter = {
+    listing,
     $or: [
       { buyer: senderId, seller: recipientId },
       { buyer: recipientId, seller: senderId },
     ],
-  });
-  if (!conversation) {
-    conversation = await Conversation.create({
+  };
+  const existingConversation = await Conversation.findOne(filter);
+  if (existingConversation) {
+    return existingConversation;
+  }
+  try {
+    return await Conversation.create({
       buyer: senderId,
       seller: recipientId,
-      listing: listing
+      listing,
     });
+  } catch (error) {
+    // Another request may have created the same conversation between our findOne() and create().
+    if (error?.code !== 11000) {
+      throw error;
+    }
+
+    const concurrentConversation = await Conversation.findOne(filter);
+    
+    if (!concurrentConversation) {
+      throw error;
+    }
+    return concurrentConversation;
   }
-  return conversation;
 };
 
 export const sendMessage = async (req, res) => {
@@ -178,7 +193,15 @@ export const sendMessage = async (req, res) => {
       { returnDocument: 'after' }
     );
 
-    // todo: send msg in real time
+    const populatedConversation = await populateConversation(
+      Conversation.findById(conversationId),
+    );
+
+    broadcastMessage(
+      recipientId,
+      newMessage.toJSON(),
+      populatedConversation.toJSON(),
+    );
 
     res.status(201).json(newMessage)
 

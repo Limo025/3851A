@@ -1,6 +1,5 @@
 import { WebSocketServer } from 'ws';
 import { verifyFirebaseToken } from '../utils/verifyToken.js';
-import { handleMessage } from '../sockets/messageRouter.js';
 import { addConnection, removeConnection } from '../sockets/connectionMap.js';
 
 export const setupWebSocket = (server) => {
@@ -9,7 +8,7 @@ export const setupWebSocket = (server) => {
   server.on('upgrade', async (req, socket, head) => {
     // Parse query parameter
     const searchParams = new URL(req.url, `http://${req.headers.host}`).searchParams;
-    const token = urlParams.get('token');
+    const token = searchParams.get('token');
     // Authentication with Firebase
     const user = await verifyFirebaseToken(token); 
     if (!user) {
@@ -19,7 +18,7 @@ export const setupWebSocket = (server) => {
     }
     // Handshake and attach id to connection
     wss.handleUpgrade(req, socket, head, (ws) => {
-      ws.userId = user.id; // user.id is decodedToken.uid
+      ws.userId = user.uid; // user.uid is decodedToken.uid
       wss.emit('connection', ws);
     });
   });
@@ -27,7 +26,6 @@ export const setupWebSocket = (server) => {
   wss.on('connection', (ws) => {
     addConnection(ws.userId, ws);
 
-    ws.on('message', (data) => handleMessage(ws, data));
-    ws.on('close', () => removeConnection(ws.userId));
+    ws.on('close', () => removeConnection(ws.userId, ws));
   });
 };

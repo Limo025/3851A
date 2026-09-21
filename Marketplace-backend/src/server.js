@@ -31,7 +31,7 @@ app.use((err, req, res, next) => {
 });
 
 connectDB().then(() => {
-    app.listen(PORT, () => {
-        console.log('Server is listening on port ' + PORT);
-    });
+    server.listen(PORT, () => {
+        console.log("Web socket is listening on port " + PORT)
+    })
 });
