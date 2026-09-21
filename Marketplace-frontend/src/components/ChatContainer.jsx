@@ -88,7 +88,7 @@ export default function ChatContainer({ user: conversation }) {
 
   return (
     <section className="flex h-full min-h-0 flex-col bg-white" aria-label={`Chat with ${recipientName}`}>
-      <header className="border-b border-cyan-800 bg-cyan-700 px-5 py-4 text-white shadow-sm">
+      <header className="border-b border-blue-800 bg-blue-700 px-5 py-4 text-white shadow-sm">
         <h2 className="font-semibold">{recipientName}</h2>
         <p className="truncate text-sm text-cyan-100">{conversation.listing?.title || 'Marketplace listing'}</p>
       </header>
@@ -106,7 +106,7 @@ export default function ChatContainer({ user: conversation }) {
                 <Avatar><AvatarFallback>{initials(isOwnMessage ? 'You' : recipientName)}</AvatarFallback></Avatar>
               </MessageAvatar>
               <MessageContent>
-                <Bubble variant={isOwnMessage ? 'default' : 'secondary'}>
+                <Bubble variant={isOwnMessage ? 'default' : 'tinted'}>
                   <BubbleContent>
                     {message.image ? (
                       <a href={message.image} target="_blank" rel="noreferrer">
