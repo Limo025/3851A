@@ -29,7 +29,7 @@ conversationSchema.virtual('sellerDetails', {
   foreignField: 'uid',
   justOne: true
 });
-// Prevent creating same conversation with same listing
-conversationSchema.index({ participants: 1, listing: 1 }, { unique: true });
+// A buyer and seller can have only one conversation for a given listing.
+conversationSchema.index({ buyer: 1, seller: 1, listing: 1 }, { unique: true });
 
 export const Conversation = mongoose.model('Conversation', conversationSchema);

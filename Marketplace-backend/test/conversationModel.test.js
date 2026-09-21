@@ -30,3 +30,16 @@ test('conversation user virtuals join Firebase UIDs to User.uid', () => {
     { ref: 'User', localField: 'seller', foreignField: 'uid', justOne: true },
   );
 });
+
+test('conversation uniqueness is scoped to buyer, seller, and listing', () => {
+  const indexes = Conversation.schema.indexes();
+
+  assert.ok(indexes.some(([fields, options]) => (
+    fields.buyer === 1
+    && fields.seller === 1
+    && fields.listing === 1
+    && Object.keys(fields).length === 3
+    && options.unique === true
+  )));
+  assert.equal(indexes.some(([fields]) => 'participants' in fields), false);
+});
