@@ -13,6 +13,7 @@ export default function Header()  {
     const [authView, setAuthView] = useState(() => getHeaderAuthView(session.hasSession()));
     const [searchValue, setSearchValue] = useState(() => getMarketplaceSearchTerm(location));
     const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const hasUnreadMessages = useChatStore((state) => state.unreadConversationIds.length > 0);
 
     const sidebarRef = useRef(null);
     const toggleRef = useRef(null);
@@ -99,10 +100,11 @@ export default function Header()  {
                 </form>
                 {/* <!-- Icon Buttons -->
                 <!-- Messages --> */}
-                <Link className="messageButton" to="/messages" aria-label="Messages">
+                <Link className="messageButton" to="/messages" aria-label={hasUnreadMessages ? 'Messages, unread messages' : 'Messages'}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M4 4h16v12H8l-4 4V4z"/>
                     </svg>
+                    {hasUnreadMessages && <span className="messageUnreadDot" aria-hidden="true" />}
                 </Link>
                 {/* <!-- Account --> */}
                 <Link className="accountButton" id="accountLink" to={authView.accountHref} aria-label={authView.accountLabel}>

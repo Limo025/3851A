@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useChatStore } from '../store/useChatStore.js';
+import { session } from '../auth/session.js';
 
 export const useWebSocket = (token) => {
   const [isConnected, setIsConnected] = useState(false);
@@ -8,41 +9,63 @@ export const useWebSocket = (token) => {
   useEffect(() => {
     if (!token) return;
 
-    // Establish connection with session token in query params
-    const wsUrl = `ws://localhost:8000?token=${encodeURIComponent(token)}`;
-    const ws = new WebSocket(wsUrl);
-    socketRef.current = ws;
+    let active = true;
+    let retryTimer;
+    let retryCount = 0;
 
-    ws.onopen = () => {
-      console.log('WebSocket Connected');
-      setIsConnected(true);
-    };
-
-    ws.onmessage = (event) => {
+    async function connect() {
+      let accessToken;
       try {
-        const data = JSON.parse(event.data);
-
-        if (data.type === 'NEW_MESSAGE') {
-          useChatStore.getState().receiveMessage(data.payload);
-        }
-      } catch (error) {
-        console.error('Invalid WebSocket message:', error);
+        accessToken = await session.getAccessToken();
+      } catch {
+        return;
       }
-    };
+      if (!active || !accessToken) return;
 
-    ws.onclose = () => {
-      console.log('WebSocket Disconnected');
-      setIsConnected(false);
-    };
+      const apiUrl = new URL(import.meta.env.VITE_API_URL || 'http://localhost:8000');
+      apiUrl.protocol = apiUrl.protocol === 'https:' ? 'wss:' : 'ws:';
+      apiUrl.pathname = '/';
+      apiUrl.search = '';
+      apiUrl.searchParams.set('token', accessToken);
 
-    ws.onerror = (error) => {
-      console.error('WebSocket Error:', error);
-    };
+      const ws = new WebSocket(apiUrl);
+      socketRef.current = ws;
 
-    // Clean up connection when component unmounts
+      ws.onopen = () => {
+        if (!active) return;
+        retryCount = 0;
+        setIsConnected(true);
+        useChatStore.getState().loadUnreadConversations();
+      };
+
+      ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.type === 'NEW_MESSAGE') {
+            useChatStore.getState().receiveMessage(data.payload);
+          }
+        } catch (error) {
+          console.error('Could not process WebSocket message:', error);
+        }
+      };
+
+      ws.onclose = () => {
+        if (!active) return;
+        socketRef.current = null;
+        setIsConnected(false);
+        retryTimer = window.setTimeout(connect, Math.min(1000 * 2 ** retryCount++, 30000));
+      };
+
+      ws.onerror = () => ws.close();
+    }
+
+    connect();
     return () => {
+      active = false;
+      window.clearTimeout(retryTimer);
+      const ws = socketRef.current;
       socketRef.current = null;
-      ws.close();
+      ws?.close();
     };
   }, [token]);
   return { isConnected };

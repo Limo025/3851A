@@ -12,6 +12,11 @@ export default function Messages() {
     getAllConversations(currentMode);
   }, [currentMode, getAllConversations]);
 
+  useEffect(() => {
+    useChatStore.setState({ isMessagesPageOpen: true });
+    return () => useChatStore.setState({ isMessagesPageOpen: false });
+  }, []);
+
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-white p-4 md:p-8 flex items-center justify-center">
       {/* Centered Chat Card Box (Fixed max width & height) */}
@@ -31,7 +36,7 @@ export default function Messages() {
         {/* Right Main Chat Area Box (3/4 Width) */}
         <main className="col-span-3 bg-white flex flex-col h-full overflow-hidden">
           {selectedUser ? (
-            <ChatContainer key={selectedUser._id} user={selectedUser} />
+            <ChatContainer key={`${selectedUser.buyer}:${selectedUser.seller}:${selectedUser.listing?._id || selectedUser.listing}`} user={selectedUser} />
           ) : (
             <NoConversationPlaceholder />
           )}

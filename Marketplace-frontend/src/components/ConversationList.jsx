@@ -22,6 +22,7 @@ export default function ConversationList() {
     conversations,
     currentMode,
     selectedUser,
+    unreadConversationIds,
     isUserLoading,
     selectConversation,
     getMessages,
@@ -78,6 +79,7 @@ export default function ConversationList() {
               : conversation.buyerDetails;
             const username = otherUser?.username || 'Marketplace user';
             const isSelected = selectedUser?._id === conversation._id;
+            const isUnread = unreadConversationIds.includes(String(conversation._id));
 
             return (
               <li key={conversation._id}>
@@ -89,11 +91,15 @@ export default function ConversationList() {
                       : 'text-white hover:bg-white/15'
                   }`}
                   aria-pressed={isSelected}
+                  aria-label={isUnread ? `${username}, unread messages` : undefined}
                   onClick={() => handleSelect(conversation)}
                 >
                   <span className="flex items-start justify-between gap-2">
                     <span className="min-w-0">
-                      <span className="block truncate font-semibold">{username}</span>
+                      <span className="flex items-center gap-2 font-semibold">
+                        <span className="min-w-0 truncate">{username}</span>
+                        {isUnread && <span className="size-2.5 shrink-0 rounded-full border border-white bg-blue-300" aria-hidden="true" />}
+                      </span>
                       <span className="block truncate text-xs text-blue-100">
                         {conversation.listing?.title || 'Listing unavailable'}
                       </span>

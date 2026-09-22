@@ -31,6 +31,46 @@ export const getAllConversations = async (req, res) => {
   }
 };
 
+export const getUnreadConversations = async (req, res) => {
+  try {
+    const userId = getUserId(req);
+    const conversations = await Conversation.find({
+      $or: [
+        { buyer: userId, seller: { $ne: userId } },
+        { seller: userId, buyer: { $ne: userId } },
+      ],
+    }).select('_id buyer seller lastMessageAt lastMessageSenderId buyerReadAt sellerReadAt');
+    const unreadConversations = conversations.filter((conversation) => {
+      if (!conversation.lastMessageSenderId || conversation.lastMessageSenderId === userId) return false;
+      const readAt = conversation.buyer === userId ? conversation.buyerReadAt : conversation.sellerReadAt;
+      return !readAt || conversation.lastMessageAt > readAt;
+    }).map((conversation) => ({
+      id: String(conversation._id),
+      role: conversation.buyer === userId ? 'buyer' : 'seller',
+    }));
+    res.json(unreadConversations);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch unread conversations' });
+  }
+};
+
+export const markConversationRead = async (req, res) => {
+  try {
+    const userId = getUserId(req);
+    const conversation = await Conversation.findOne({
+      _id: req.params.conversationId,
+      $or: [{ buyer: userId }, { seller: userId }],
+    });
+    if (!conversation) return res.status(404).json({ error: 'Conversation not found' });
+    const readField = conversation.buyer === userId ? 'buyerReadAt' : 'sellerReadAt';
+    conversation[readField] = new Date();
+    await conversation.save();
+    res.sendStatus(204);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to mark conversation as read' });
+  }
+};
+
 export const getConversationWithName = async (req, res) => {
   try {
     const userId = getUserId(req);
@@ -188,7 +228,9 @@ export const sendMessage = async (req, res) => {
       conversationId,
       {
         lastMessage: normalizedText || (image ? 'Image' : ''),
-        lastMessageAt: new Date()
+        lastMessageAt: new Date(),
+        lastMessageSenderId: senderId,
+        [conversation.buyer === senderId ? 'buyerReadAt' : 'sellerReadAt']: new Date(),
       },
       { returnDocument: 'after' }
     );
