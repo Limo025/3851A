@@ -113,6 +113,17 @@
 .optionsButtonImage:hover {
     background-color: rgba(255, 255, 255, 0.12);
 }
+.messageButton { position: relative; }
+.messageUnreadDot {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ef4444;
+    border: 2px solid #005bf9;
+}
 .messageButton svg,
 .accountButton svg,
 .optionsButtonImage svg {

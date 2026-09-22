@@ -26,6 +26,7 @@ import Help from './pages/Help.jsx'
 import ChatWidget from './assistant/ChatWidget.jsx'
 import { initializeApp } from "firebase/app"
 import { Toaster } from 'react-hot-toast'
+import MessageNotifications from './components/MessageNotifications.jsx'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import ChatSocket from './components/ChatSocket'
@@ -49,6 +50,7 @@ createRoot(document.getElementById('root')).render(
         position="top-center"
         reverseOrder={false}
       />
+      <MessageNotifications />
       <Header />
       {/* Keep the assistant available while users move between pages. */}
       <ChatWidget />

@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
+import { Fragment, useLayoutEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { Paperclip, Send, X } from 'lucide-react';
+import { ArrowDown, Paperclip, Send, X } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Bubble, BubbleContent } from '@/components/ui/bubble';
 import { Message, MessageAvatar, MessageContent, MessageFooter } from '@/components/ui/message';
@@ -21,6 +21,20 @@ function formatMessageTime(value) {
   return Number.isNaN(date.getTime()) ? '' : date.toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
 }
 
+function messageDay(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date.toDateString();
+}
+
+function formatMessageDay(value) {
+  const date = new Date(value);
+  const today = new Date();
+  if (date.toDateString() === today.toDateString()) return 'Today';
+  today.setDate(today.getDate() - 1);
+  if (date.toDateString() === today.toDateString()) return 'Yesterday';
+  return date.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+
 function readImage(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -35,6 +49,9 @@ export default function ChatContainer({ user: conversation }) {
   const [image, setImage] = useState(null);
   const fileInputRef = useRef(null);
   const messageListRef = useRef(null);
+  const hasScrolledInitially = useRef(false);
+  const isNearBottom = useRef(true);
+  const [showJumpToLatest, setShowJumpToLatest] = useState(false);
   const { messages, currentMode, isMessagesLoading, isSendingMessage, sendMessage } = useChatStore();
 
   const currentUserId = currentMode === 'buyer' ? conversation.buyer : conversation.seller;
@@ -43,10 +60,36 @@ export default function ChatContainer({ user: conversation }) {
   const recipientName = recipient?.username || 'Marketplace user';
   const listingId = conversation.listing?._id || conversation.listing;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    if (isMessagesLoading) {
+      hasScrolledInitially.current = false;
+      isNearBottom.current = true;
+      return;
+    }
+    if (messages.length === 0) return;
     const messageList = messageListRef.current;
-    messageList?.scrollTo({ top: messageList.scrollHeight, behavior: 'smooth' });
-  }, [messages]);
+    if (!messageList) return;
+    if (!hasScrolledInitially.current || isNearBottom.current) {
+      messageList.scrollTop = messageList.scrollHeight;
+      hasScrolledInitially.current = true;
+      isNearBottom.current = true;
+    }
+  }, [messages, isMessagesLoading]);
+
+  function handleMessageScroll() {
+    const messageList = messageListRef.current;
+    if (!messageList) return;
+    isNearBottom.current = messageList.scrollHeight - messageList.scrollTop - messageList.clientHeight < 120;
+    setShowJumpToLatest(!isNearBottom.current);
+  }
+
+  function scrollToLatest() {
+    const messageList = messageListRef.current;
+    if (!messageList) return;
+    isNearBottom.current = true;
+    setShowJumpToLatest(false);
+    messageList.scrollTo({ top: messageList.scrollHeight, behavior: 'smooth' });
+  }
 
   async function handleImageChange(event) {
     const file = event.target.files?.[0];
@@ -93,15 +136,26 @@ export default function ChatContainer({ user: conversation }) {
         <p className="truncate text-sm text-cyan-100">{conversation.listing?.title || 'Marketplace listing'}</p>
       </header>
 
-      <div ref={messageListRef} className="flex-1 space-y-4 overflow-y-auto p-4" aria-live="polite">
+      <div className="relative min-h-0 flex-1">
+      <div ref={messageListRef} onScroll={handleMessageScroll} className="h-full space-y-4 overflow-y-auto p-4" aria-live="polite">
         {isMessagesLoading ? (
           <p className="text-center text-sm text-slate-500">Loading messages…</p>
         ) : messages.length === 0 ? (
           <p className="text-center text-sm text-slate-500">No messages yet. Start the conversation.</p>
-        ) : messages.map((message) => {
+        ) : messages.map((message, index) => {
           const isOwnMessage = message.senderId === currentUserId;
+          const day = messageDay(message.createdAt);
+          const showDayDivider = day && day !== messageDay(messages[index - 1]?.createdAt);
           return (
-            <Message key={message._id} align={isOwnMessage ? 'end' : 'start'}>
+            <Fragment key={message._id}>
+            {showDayDivider && (
+              <div className="flex items-center gap-3 py-2 text-xs font-medium text-slate-500" aria-label={`Messages from ${formatMessageDay(message.createdAt)}`}>
+                <span className="h-px flex-1 bg-slate-200" aria-hidden="true" />
+                <span>{formatMessageDay(message.createdAt)}</span>
+                <span className="h-px flex-1 bg-slate-200" aria-hidden="true" />
+              </div>
+            )}
+            <Message align={isOwnMessage ? 'end' : 'start'}>
               <MessageAvatar>
                 <Avatar><AvatarFallback>{initials(isOwnMessage ? 'You' : recipientName)}</AvatarFallback></Avatar>
               </MessageAvatar>
@@ -110,7 +164,9 @@ export default function ChatContainer({ user: conversation }) {
                   <BubbleContent>
                     {message.image ? (
                       <a href={message.image} target="_blank" rel="noreferrer">
-                        <img className="mb-2 max-h-72 max-w-full rounded-lg object-contain" src={message.image} alt="Message attachment" />
+                        <img className="mb-2 max-h-72 max-w-full rounded-lg object-contain" src={message.image} alt="Message attachment" onLoad={() => {
+                          if (isNearBottom.current) messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight });
+                        }} />
                       </a>
                     ) : null}
                     {message.text ? <p className="whitespace-pre-wrap">{message.text}</p> : null}
@@ -119,8 +175,11 @@ export default function ChatContainer({ user: conversation }) {
                 <MessageFooter>{formatMessageTime(message.createdAt)}</MessageFooter>
               </MessageContent>
             </Message>
+            </Fragment>
           );
         })}
+      </div>
+      {showJumpToLatest && <Button type="button" size="sm" className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full shadow-lg" onClick={scrollToLatest}><ArrowDown className="size-4" />Latest messages</Button>}
       </div>
 
       <form className="border-t border-slate-200 bg-white p-3" onSubmit={handleSubmit}>
@@ -133,7 +192,7 @@ export default function ChatContainer({ user: conversation }) {
         <div className="flex items-center gap-2">
           <input ref={fileInputRef} className="sr-only" type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={handleImageChange} />
           <Button type="button" variant="outline" size="icon-lg" aria-label="Attach image" disabled={isSendingMessage} onClick={() => fileInputRef.current?.click()}><Paperclip /></Button>
-          <Input className="h-9" value={text} placeholder={`Message ${recipientName}`} aria-label="Message" disabled={isSendingMessage} onChange={(event) => setText(event.target.value)} />
+          <Input className="h-9" value={text} placeholder={`Message ${recipientName}`} aria-label="Message" readOnly={isSendingMessage} onChange={(event) => setText(event.target.value)} />
           <Button type="submit" size="icon-lg" aria-label="Send message" disabled={isSendingMessage || (!text.trim() && !image)}><Send /></Button>
         </div>
       </form>

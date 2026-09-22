@@ -6,7 +6,10 @@ const conversationSchema = new mongoose.Schema(
     seller: { type: String, ref: 'User', required: true },
     listing: { type:mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
     lastMessage: { type: String, default: '' },
-    lastMessageAt: { type: Date, default: Date.now }
+    lastMessageAt: { type: Date, default: Date.now },
+    lastMessageSenderId: { type: String },
+    buyerReadAt: { type: Date },
+    sellerReadAt: { type: Date }
   },
   {
     timestamps: true,
