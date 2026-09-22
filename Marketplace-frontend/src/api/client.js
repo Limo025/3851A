@@ -39,6 +39,11 @@ export function createApiClient({ fetchImpl = globalThis.fetch, sessionManager =
     const contentType = response.headers?.get?.('Content-Type') || '';
     const data = contentType.includes('application/json') ? await response.json() : null;
 
+    if (auth && response.status === 403 && data?.code === 'ACCOUNT_BANNED') {
+      sessionManager.clear();
+      throw new AuthenticationError(data.error || 'Account is banned');
+    }
+
     if (!response.ok) {
       throw new ApiError(response.status, data?.error || 'Request failed');
     }

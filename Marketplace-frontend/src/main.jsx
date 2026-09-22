@@ -18,10 +18,12 @@ import CreateListing from './pages/CreateListing.jsx'
 import MyListings from './pages/MyListings.jsx'
 import EditListing from './pages/EditListing.jsx'
 import RequireAuth from './components/RequireAuth.jsx'
+import RequireAdmin from './components/RequireAdmin.jsx'
 import About from './pages/About.jsx'
 import Sell from './pages/Sell.jsx'
 import Watchlist from './pages/Watchlist.jsx'
 import PurchaseHistory from './pages/PurchaseHistory.jsx'
+import Admin from './pages/Admin.jsx'
 import Help from './pages/Help.jsx'
 import ChatWidget from './assistant/ChatWidget.jsx'
 import { initializeApp } from "firebase/app"
@@ -73,6 +75,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/my-listings" element={<RequireAuth><MyListings /></RequireAuth>} />
         <Route path="/listings/:id/edit" element={<RequireAuth><EditListing /></RequireAuth>} />
         <Route path="/purchase-history" element={<RequireAuth><PurchaseHistory /></RequireAuth>} />
+        <Route path="/admin" element={<RequireAdmin><Admin /></RequireAdmin>} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

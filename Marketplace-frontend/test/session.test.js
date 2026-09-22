@@ -204,3 +204,29 @@ test('api client keeps public 401 responses as ApiError', async () => {
   });
   assert.equal(accessTokenCalls, 0);
 });
+
+test('api client clears the session when an authenticated account is banned', async () => {
+  const storage = createStorage();
+  const manager = createSessionManager({ storage });
+  const states = [];
+  manager.saveLogin({ idToken: 'id', refreshToken: 'refresh', expiresIn: '3600' });
+  manager.subscribe(() => states.push(manager.hasSession()));
+  const apiFetch = createApiClient({
+    baseUrl: 'http://api.test',
+    sessionManager: manager,
+    fetchImpl: async () => ({
+      ok: false,
+      status: 403,
+      headers: new Headers({ 'Content-Type': 'application/json' }),
+      json: async () => ({ error: 'Account is banned', code: 'ACCOUNT_BANNED' }),
+    }),
+  });
+
+  await assert.rejects(apiFetch('/api/listings/mine', { auth: true }), (error) => {
+    assert.equal(error instanceof AuthenticationError, true);
+    assert.equal(error.message, 'Account is banned');
+    return true;
+  });
+  assert.equal(manager.hasSession(), false);
+  assert.deepEqual(states, [false]);
+});

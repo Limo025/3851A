@@ -22,20 +22,53 @@ router.use(authenticate, (req, res, next) => (
   getAdminUids().has(req.user.uid) ? next() : res.status(403).json({ error: 'Admin access required' })
 ));
 
+router.get('/me', (req, res) => res.json({ isAdmin: true }));
+
 router.get('/users', async (req, res) => {
   const page = Number(req.query.page ?? 1);
   const limit = Number(req.query.limit ?? 20);
+  if (typeof req.query.search !== 'undefined' && typeof req.query.search !== 'string') {
+    return res.status(400).json({ error: 'Invalid search' });
+  }
+  const search = (req.query.search || '').trim();
+  if (search.length > 100) return res.status(400).json({ error: 'Search is too long' });
   if (!Number.isInteger(page) || page < 1 || !Number.isInteger(limit) || limit < 1 || limit > 50) {
     return res.status(400).json({ error: 'Invalid pagination' });
   }
   try {
+    const escapedSearch = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const filter = search ? { $or: [
+      { username: { $regex: escapedSearch, $options: 'i' } },
+      { email: { $regex: escapedSearch, $options: 'i' } },
+    ] } : {};
     const [users, total] = await Promise.all([
-      UserModel.find({}, '_id uid email username isBanned createdAt').sort({ createdAt: -1, _id: -1 }).skip((page - 1) * limit).limit(limit).lean(),
-      UserModel.countDocuments(),
+      UserModel.find(filter, '_id uid email username isBanned createdAt').sort({ createdAt: -1, _id: -1 }).skip((page - 1) * limit).limit(limit).lean(),
+      UserModel.countDocuments(filter),
     ]);
     return res.json({ users, page, pages: Math.max(1, Math.ceil(total / limit)), total });
   } catch {
     return res.status(500).json({ error: 'Failed to fetch users' });
+  }
+});
+
+router.get('/users/:id/listings', async (req, res) => {
+  const page = Number(req.query.page ?? 1);
+  const limit = Number(req.query.limit ?? 20);
+  if (!mongoose.isObjectIdOrHexString(req.params.id)) return res.status(400).json({ error: 'Invalid user id' });
+  if (!Number.isInteger(page) || page < 1 || !Number.isInteger(limit) || limit < 1 || limit > 50) {
+    return res.status(400).json({ error: 'Invalid pagination' });
+  }
+  try {
+    const user = await UserModel.findById(req.params.id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    const filter = { seller: user._id };
+    const [listings, total] = await Promise.all([
+      ListingModel.find(filter, '_id title price quantity soldAt images createdAt').sort({ createdAt: -1, _id: -1 }).skip((page - 1) * limit).limit(limit).lean(),
+      ListingModel.countDocuments(filter),
+    ]);
+    return res.json({ listings, page, pages: Math.max(1, Math.ceil(total / limit)), total });
+  } catch {
+    return res.status(500).json({ error: 'Failed to fetch user listings' });
   }
 });
 
