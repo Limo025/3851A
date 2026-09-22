@@ -23,15 +23,31 @@ export async function fetchWithTimeout(
     setTimeoutImpl = setTimeout,
     clearTimeoutImpl = clearTimeout,
     AbortControllerImpl = AbortController,
+    readResponse,
   } = {},
 ) {
   const controller = new AbortControllerImpl();
-  const timer = setTimeoutImpl(() => controller.abort(), timeoutMs);
+  let timedOut = false;
+  let rejectTimeout;
+  const timeoutPromise = new Promise((_resolve, reject) => {
+    rejectTimeout = reject;
+  });
+  const timer = setTimeoutImpl(() => {
+    timedOut = true;
+    controller.abort();
+    rejectTimeout(new ProviderTimeoutError(provider));
+  }, timeoutMs);
 
   try {
-    return await fetchImpl(url, { ...options, signal: controller.signal });
+    const operation = (async () => {
+      const response = await fetchImpl(url, { ...options, signal: controller.signal });
+      return typeof readResponse === 'function'
+        ? await readResponse(response)
+        : response;
+    })();
+    return await Promise.race([operation, timeoutPromise]);
   } catch (error) {
-    if (controller.signal.aborted) {
+    if (timedOut || controller.signal.aborted) {
       throw new ProviderTimeoutError(provider);
     }
     throw error;

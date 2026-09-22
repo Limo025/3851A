@@ -7,6 +7,7 @@ import { connectDB } from './config/mongodb.js';
 import authRoutes from './routes/auth.js';
 import listingRoutes from './routes/listings.js';
 import recentlyViewedRoutes from './routes/recentlyViewed.js';
+import assistantRoutes from './routes/assistant.js';
 import { handleUploadError } from './middleware/upload.js';
 import { setupWebSocket } from './config/websocket.js';
 import chatRoutes from './routes/chatRoutes.js';
@@ -25,6 +26,8 @@ app.use('/auth', authRoutes);
 app.use('/api/listings', listingRoutes);
 app.use('/api/recently-viewed', recentlyViewedRoutes);
 app.use('/api/chat', chatRoutes);
+// The marketplace assistant has a separate API from direct messages.
+app.use('/api/assistant', assistantRoutes);
 
 app.use(handleUploadError);
 

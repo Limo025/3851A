@@ -236,6 +236,6 @@ test('POST /auth/login creates a marketplace user when Firebase has no MongoDB p
         username: 'seller',
       },
     },
-    options: { upsert: true, new: true, setDefaultsOnInsert: true },
+    options: { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true },
   });
 });

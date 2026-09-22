@@ -1,5 +1,8 @@
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { apiFetch } from '../api/client.js';
+import { listingDraftFromLocationState } from '../assistant/listingDraft.js';
+import { consumeListingDraft } from '../assistant/draftHandoff.js';
 import { handleAuthenticationError } from '../auth/handleAuthenticationError.js';
 import { session } from '../auth/session.js';
 import ListingForm from '../components/ListingForm.jsx';
@@ -8,6 +11,16 @@ import '../css/listings.css';
 
 export default function CreateListing() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const initialValues = useMemo(
+    () => listingDraftFromLocationState(location.state),
+    [location.state],
+  );
+
+  useEffect(() => {
+    // Keep the draft available until React finishes rendering the form.
+    consumeListingDraft(location.state?.assistantDraftId);
+  }, [location.key, location.state]);
 
   async function createListing({ values, newFiles }) {
     const body = buildListingFormData(values, newFiles);
@@ -28,7 +41,7 @@ export default function CreateListing() {
           <h1>Create a listing</h1>
           <p>Share an item with the university community.</p>
         </header>
-        <ListingForm submitLabel="Create listing" onSubmit={createListing} />
+        <ListingForm key={location.key} initialValues={initialValues} submitLabel="Create listing" onSubmit={createListing} />
       </div>
     </main>
   );

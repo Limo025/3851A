@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import Listing from '../models/Listing.js';
 import User from '../models/User.js';
-import { uploadMessageImages } from '../middleware/upload.js';
+import { uploadListingImages } from '../middleware/upload.js';
 import imageStorage from '../services/imageStorage.js';
 import { isProviderTimeoutError } from '../services/providerRequest.js';
 import { MAX_LISTING_IMAGES } from '../constants/listings.js';
@@ -12,15 +12,19 @@ import {
   validateListingFields,
   ValidationError,
 } from '../validation/listings.js';
-import { verifyToken } from '../middleware/auth.js';
 
 const SAFE_SELLER_FIELDS = '_id uid username';
+
+async function verifyToken(req, res, next) {
+  const { verifyToken: authenticate } = await import('../middleware/auth.js');
+  return authenticate(req, res, next);
+}
 
 export function createListingRouter({
   ListingModel = Listing,
   UserModel = User,
   authenticate = verifyToken,
-  uploadMiddleware = uploadMessageImages,
+  uploadMiddleware = uploadListingImages,
   imageStore = imageStorage,
 } = {}) {
   const router = express.Router();

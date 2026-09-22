@@ -2,11 +2,11 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { once } from 'node:events';
 import express from 'express';
-import { handleUploadError, listingImagesUpload } from '../src/middleware/upload.js';
+import { handleUploadError, uploadListingImages } from '../src/middleware/upload.js';
 
 async function withUploadApp(run) {
   const app = express();
-  app.post('/upload', listingImagesUpload, (req, res) => {
+  app.post('/upload', uploadListingImages, (req, res) => {
     res.json({
       body: req.body,
       files: req.files.map(({ originalname, mimetype, size }) => ({ originalname, mimetype, size })),

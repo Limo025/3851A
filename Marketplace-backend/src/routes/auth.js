@@ -114,6 +114,9 @@ export function createAuthRouter({
                     : { uid: data.localId, email: data.email },
             });         //  not storing this anywhere
         } catch (err) {
+            if (isProviderTimeoutError(err)) {
+                return res.status(504).json({ error: 'Authentication provider timed out' });
+            }
             console.error('Login error:', err);
             res.status(500).json({ error: 'Login failed' });
         }

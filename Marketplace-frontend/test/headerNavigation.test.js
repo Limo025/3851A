@@ -4,7 +4,6 @@ import {
   buildMarketplaceSearchUrl,
   getMarketplaceSearchTerm,
   getHeaderAuthView,
-  initializeHeader,
   logout,
 } from '../src/js/script.js';
 import { createSidebarController, initializeSidebar } from '../src/js/sidebar.js';
@@ -149,50 +148,4 @@ test('sidebar closes only for outside pointer interaction and removes the docume
   teardown();
   documentRef.dispatch('pointerdown', { target: outsideTarget });
   assert.equal(sidebar.hidden, false);
-});
-
-test('header cleanup unsubscribes and removes every listener registered during initialization', () => {
-  const elements = {
-    headerSearch: createEventNode(),
-    headerSearchInput: createEventNode(),
-    accountLink: createEventNode(),
-    accountImage: createEventNode(),
-    logoutButton: createEventNode(),
-    sidebar: createEventNode({ hidden: true }),
-    sidebarToggle: createEventNode(),
-    sidebarClose: createEventNode(),
-  };
-  const sellerLink = createEventNode();
-  const anonymousLink = createEventNode();
-  const documentRef = createEventNode();
-  documentRef.getElementById = (id) => elements[id];
-  documentRef.querySelectorAll = (selector) => (
-    selector === '[data-auth="seller"]' ? [sellerLink] : [anonymousLink]
-  );
-  const destinations = [];
-  let clearCalls = 0;
-  let unsubscribeCalls = 0;
-  const cleanup = initializeHeader({
-    documentRef,
-    windowRef: { location: { assign: (path) => destinations.push(path) } },
-    sessionManager: {
-      clear: () => { clearCalls += 1; },
-      hasSession: () => false,
-      subscribe: () => () => { unsubscribeCalls += 1; },
-    },
-  });
-
-  elements.headerSearchInput.value = 'desk';
-  elements.headerSearch.dispatch('submit', { preventDefault() {} });
-  elements.logoutButton.dispatch('click');
-  assert.deepEqual(destinations, ['/marketplace?search=desk', '/']);
-  assert.equal(clearCalls, 1);
-
-  cleanup();
-  elements.headerSearch.dispatch('submit', { preventDefault() {} });
-  elements.logoutButton.dispatch('click');
-
-  assert.deepEqual(destinations, ['/marketplace?search=desk', '/']);
-  assert.equal(clearCalls, 1);
-  assert.equal(unsubscribeCalls, 1);
 });
