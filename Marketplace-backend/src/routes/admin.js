@@ -50,7 +50,12 @@ router.patch('/users/:id/ban', async (req, res) => {
     user.isBanned = req.body.banned;
     await user.save();
     if (user.isBanned) closeUserConnections(user.uid);
-    return res.json({ _id: user._id, uid: user.uid, isBanned: user.isBanned });
+    return res.json({
+      message: user.isBanned ? 'User banned successfully' : 'User unbanned successfully',
+      _id: user._id,
+      uid: user.uid,
+      isBanned: user.isBanned,
+    });
   } catch {
     return res.status(500).json({ error: 'Failed to change ban status' });
   }
@@ -62,7 +67,7 @@ router.delete('/listings/:id', async (req, res) => {
     const listing = await ListingModel.findById(req.params.id);
     if (!listing) return res.status(404).json({ error: 'Listing not found' });
     await removeListing(listing);
-    return res.status(204).end();
+    return res.json({ message: 'Listing deleted successfully', listingId: req.params.id });
   } catch {
     return res.status(500).json({ error: 'Failed to delete listing' });
   }
