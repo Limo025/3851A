@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import { connectDB } from './config/mongodb.js';
 import authRoutes from './routes/auth.js';
 import listingRoutes from './routes/listings.js';
+import recentlyViewedRoutes from './routes/recentlyViewed.js';
 import { handleUploadError } from './middleware/upload.js';
 import { setupWebSocket } from './config/websocket.js';
 import chatRoutes from './routes/chatRoutes.js';
@@ -22,7 +23,9 @@ setupWebSocket(server);
 
 app.use('/auth', authRoutes);
 app.use('/api/listings', listingRoutes);
+app.use('/api/recently-viewed', recentlyViewedRoutes);
 app.use('/api/chat', chatRoutes);
+
 app.use(handleUploadError);
 
 app.use((err, req, res, next) => {
