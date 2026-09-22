@@ -42,9 +42,15 @@ test('admin routes reject non-admins, protect admins, and ban ordinary users', a
     assert.equal((await send(null, true)).status, 401);
     assert.equal((await send('buyer', true)).status, 403);
     assert.equal((await send('admin', 'yes')).status, 400);
-    assert.equal((await send('admin', true)).status, 200);
+    const banned = await send('admin', true);
+    assert.equal(banned.status, 200);
+    assert.equal((await banned.json()).message, 'User banned successfully');
     assert.equal(user.isBanned, true);
     assert.deepEqual(closed, ['buyer']);
+    const unbanned = await send('admin', false);
+    assert.equal(unbanned.status, 200);
+    assert.equal((await unbanned.json()).message, 'User unbanned successfully');
+    assert.equal(user.isBanned, false);
     user.uid = 'admin';
     assert.equal((await send('admin', true)).status, 403);
   });
@@ -59,7 +65,9 @@ test('admin listing deletion uses the shared deletion path', async () => {
     ListingModel: { findById: async () => listing },
     removeListing: async (value) => removed.push(value),
   }), async (base) => {
-    assert.equal((await fetch(`${base}/listings/${id}`, { method: 'DELETE', headers: { 'x-uid': 'admin' } })).status, 204);
+    const response = await fetch(`${base}/listings/${id}`, { method: 'DELETE', headers: { 'x-uid': 'admin' } });
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), { message: 'Listing deleted successfully', listingId: id });
   });
   assert.deepEqual(removed, [listing]);
 });
