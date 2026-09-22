@@ -61,6 +61,16 @@ export default function ListingDetail() {
     return () => controller.abort();
   }, [id]);
 
+  useEffect(() => {
+    if (!listing?._id) return;
+    apiFetch('/api/recently-viewed', {
+      auth: true,
+      method: 'POST',
+      body: { listingId: listing._id },
+    }).catch(() => {
+    });
+  }, [listing?._id]);
+
   if (loading) {
     return <main className="marketplace-page"><div className="marketplace-page__content">{feedback}<p className="listing-state" role="status">Loading listing…</p></div></main>;
   }
