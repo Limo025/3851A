@@ -44,6 +44,43 @@ test('uploadImages sends signed Cloudinary uploads and maps secure responses', a
   assert.equal(await uploadedFile.text(), 'image-data');
 });
 
+test('uploadMessageImage converts a data URL and uploads it to the message folder', async () => {
+  const requests = [];
+  const store = createImageStorage({
+    config,
+    now: fixedNow,
+    fetchImpl: async (url, options) => {
+      requests.push({ url, options });
+      return jsonResponse({ secure_url: 'https://cdn.test/message.png', public_id: 'marketplace/messages/message' });
+    },
+  });
+
+  const result = await store.uploadMessageImage(`data:image/png;base64,${Buffer.from('message-image').toString('base64')}`);
+
+  assert.deepEqual(result, {
+    url: 'https://cdn.test/message.png',
+    publicId: 'marketplace/messages/message',
+  });
+  assert.equal(requests[0].options.body.get('folder'), 'marketplace/messages');
+  const uploadedFile = requests[0].options.body.get('file');
+  assert.equal(uploadedFile.name, 'message.png');
+  assert.equal(uploadedFile.type, 'image/png');
+  assert.equal(await uploadedFile.text(), 'message-image');
+});
+
+test('uploadMessageImage rejects malformed data URLs without contacting Cloudinary', async () => {
+  let requested = false;
+  const store = createImageStorage({
+    config,
+    fetchImpl: async () => {
+      requested = true;
+    },
+  });
+
+  await assert.rejects(store.uploadMessageImage('not-an-image'), /Invalid message image/);
+  assert.equal(requested, false);
+});
+
 test('uploadImages cleans up prior assets when a later upload fails', async () => {
   const requests = [];
   const store = createImageStorage({

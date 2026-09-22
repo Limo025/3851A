@@ -431,14 +431,25 @@
 }
 
 .listing-detail__contact {
-  background: #77839a;
-  border: 2px solid #77839a;
+  background: #005bf9;
+  border: 2px solid #005bf9;
   border-radius: 4px;
   color: #fff;
-  cursor: not-allowed;
+  cursor: pointer;
   font-family: FuseV2, Arial, sans-serif;
   margin-top: 28px;
-  padding: 10px 16px;
+  padding: 9px 16px;
+}
+
+.listing-detail__contact:hover:not(:disabled) {
+  background: #1C7373;
+  border-color: #145252;
+}
+
+.listing-detail__contact:disabled {
+  background: #77839a;
+  border-color: #77839a;
+  cursor: not-allowed;
 }
 
 .listing-form-page {

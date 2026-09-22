@@ -1,104 +1,44 @@
-import { useState } from 'react'
+import { useEffect } from 'react';
+import ModeTabSwitch from '../components/ModeTabSwitch.jsx';
+import ConversationList from '../components/ConversationList.jsx';
+import ChatContainer from '../components/ChatContainer.jsx';
+import NoConversationPlaceholder from '../components/NoConversationPlaceholder.jsx';
+import { useChatStore } from '../store/useChatStore.js';
 
-let isOpen = false;
+export default function Messages() {
+  const { currentMode, selectedUser, getAllConversations } = useChatStore();
 
-function openNav() {
-  if (isOpen == true){
-      document.getElementById("sidebar").style.display = "none";
-      isOpen=false;
-  } else{
-      document.getElementById("sidebar").style.display = "block";
-      isOpen=true;
-  }
-}
-function closeNav() {
-  document.getElementById("sidebar").style.display = "none";
-  isOpen=false;
-}
+  useEffect(() => {
+    getAllConversations(currentMode);
+  }, [currentMode, getAllConversations]);
 
-function receiveTextFromInput(text){
-  console.log(text);
-  document.getElementById('messageTextBox').value = "";
-      // generate a new sender message
-}
-
-function receiveTextFromInputViaKey(event){
-    if (event.key === 'Enter' && event.target.value.trim() != ''){
-      // user entered text into input box, and pressed enter key to input text into service. 
-      const text = event.target.value.trim();
-      receiveTextFromInput(text);
-    }
-}
-
-function receiveTextFromInputViaButton(){
-    receiveTextFromInput(document.getElementById('messageTextBox').value);
-}
-
-function handleSearch(event) {
-    if (event.key === 'Enter') {
-        alert('hello world');
-        const query = event.target.value.trim();
-        if (query) {
-            window.location.href = '/search?=' + encodeURIComponent(query);
-        }
-    }
-}
-
-function App() {
-  const [count, setCount] = useState(0)
-  // if user isn't logged in, redirect them to login page. 
   return (
-<>
-  {/* MAIN CONTENT*/}
-  <div id="contentBackground">
-    <div id="contentHeading">
-      <h1> Messages</h1>
-    </div>
-    <div class="wideContent">
-      <div class="messageFrame">
-        <div class="messageTopBar">
-          {/*  some search bar, and a create chat icon.      */}
-            <input class="messageSearchBar" type="text" placeholder="Search users"></input>
-        </div>
-        <div class="messageUsers">
-          <div class="messageUsersPartition">
-              <img class="messageUserIcon" src="src/img/testImage_1.png" alt="account image"></img>
-              <h3 class="messageUserName">userTestName</h3>
-              <p class="messageUserLastChat">lastChat</p>
+    <div className="min-h-[calc(100vh-4rem)] bg-white p-4 md:p-8 flex items-center justify-center">
+      {/* Centered Chat Card Box (Fixed max width & height) */}
+      <div className="w-full max-w-6xl h-[80vh] bg-white rounded-2xl shadow-[0_18px_45px_rgba(15,23,42,0.18)] overflow-hidden border-2 border-slate-200 grid grid-cols-4">
+        
+        {/* Left Sidebar Box (1/4 Width) */}
+        <aside className="col-span-1 bg-[#005bf9] text-white p-4 flex flex-col border-r border-blue-400">
+          <div className="pb-4 border-b border-blue-400">
+            <ModeTabSwitch />
           </div>
-          <div class="messageUsersPartition">
-              <img class="messageUserIcon" src="src/img/testImage_2.png" alt="account image"></img>
-              <h3 class="messageUserName">userTestName</h3>
-              <p class="messageUserLastChat">lastChat</p>
+          
+          <div className="flex-1 overflow-y-auto mt-4">
+            <ConversationList />
           </div>
-                    <div class="messageUsersPartition">
-              <img class="messageUserIcon" src="src/img/testImage_3.png" alt="account image"></img>
-              <h3 class="messageUserName">userTestName</h3>
-              <p class="messageUserLastChat">lastChat</p>
-          </div>
-        </div>
+        </aside>
 
-        <div class="messageComms">
-          <p>example communication (receiver's username would go here)</p>
+        {/* Right Main Chat Area Box (3/4 Width) */}
+        <main className="col-span-3 bg-white flex flex-col h-full overflow-hidden">
+          {selectedUser ? (
+            <ChatContainer key={selectedUser._id} user={selectedUser} />
+          ) : (
+            <NoConversationPlaceholder />
+          )}
+        </main>
 
-          <div class="receiverMessage">
-            <p>example receiver message</p>
-          </div>
-          <div class="senderMessage">
-            <p>example sender message</p>
-          </div>
-          <div class="messageTextInput">
-              <input id="messageTextBox" class="messageTextBox" type="text" placeholder="Type here..." onKeyDown={receiveTextFromInputViaKey}></input>
-              <button class="messageTextButton" onClick={receiveTextFromInputViaButton}>Send</button>
-          </div>
-        </div>
       </div>
     </div>
-  </div>
-</>
-
-
-  )
+    
+  );
 }
-
-export default App
