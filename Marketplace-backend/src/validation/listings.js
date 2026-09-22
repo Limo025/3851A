@@ -28,6 +28,7 @@ export function validateListingFields(input = {}) {
     price: Number(input.price),
     category: trimString(input.category),
     condition: trimString(input.condition),
+    quantity: input.quantity === undefined ? 1 : Number(input.quantity),
   };
   const errors = [];
 
@@ -45,6 +46,12 @@ export function validateListingFields(input = {}) {
   }
   if (!LISTING_CONDITIONS.includes(value.condition)) {
     errors.push('Condition is invalid');
+  }
+  if (
+    (input.quantity !== undefined && !['string', 'number'].includes(typeof input.quantity))
+    || !Number.isInteger(value.quantity) || value.quantity < 1 || value.quantity > 999
+  ) {
+    errors.push('Quantity must be an integer between 1 and 999');
   }
 
   return { value, errors };
@@ -100,6 +107,10 @@ export function parseListingQuery(query = {}) {
     const condition = trimString(query.condition);
     if (!LISTING_CONDITIONS.includes(condition)) errors.push('Condition is invalid');
     else filter.condition = condition;
+  }
+  if (query.availableOnly !== undefined) {
+    if (query.availableOnly !== 'true' && query.availableOnly !== 'false') errors.push('Available only must be true or false');
+    else if (query.availableOnly === 'true') filter.soldAt = null;
   }
   if (query.minPrice !== undefined) {
     minPrice = parseFiniteNonNegative(query.minPrice, 'Minimum price', errors);

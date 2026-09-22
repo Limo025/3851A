@@ -22,6 +22,7 @@ test('summarize uses one aggregation and returns condition counts', async () => 
     byCondition: { New: 0, 'Like New': 0, Good: 3, Fair: 0 },
   });
   assert.equal(pipelines.length, 1);
+  assert.equal(pipelines[0][0].$match.soldAt, null);
   assert.match(pipelines[0][0].$match.$or[0].title.$regex.source, /PS5\\\.\\\*/);
 });
 
@@ -56,6 +57,7 @@ test('final matches use an inclusion-only allowlist and limit to five', async ()
   });
 
   assert.equal(calls.limit, undefined, 'fallback must limit after relevance sorting');
+  assert.equal(calls.filter.$and[0].soldAt, null);
   assert.deepEqual(calls.projection, {
     _id: 1,
     title: 1,

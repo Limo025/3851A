@@ -71,7 +71,7 @@ test('GET / returns a filtered, paginated listing response with safe sellers', a
     );
 
     assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), { listings, page: 2, pages: 3, total: 7 });
+    assert.deepEqual(await response.json(), { listings: listings.map((listing) => ({ ...listing, quantity: 1, soldAt: null })), page: 2, pages: 3, total: 7 });
   });
 
   const expectedFilter = {
@@ -106,6 +106,18 @@ test('GET / reports one page when no listings match', async () => {
   assert.deepEqual(calls.sort, { createdAt: -1 });
   assert.equal(calls.skip, 0);
   assert.equal(calls.limit, 20);
+});
+
+test('GET / filters out sold listings when requested', async () => {
+  let filter;
+  const ListingModel = {
+    find(value) { filter = value; return listQuery([], {}); },
+    countDocuments: async () => 0,
+  };
+  await withListingApp(ListingModel, async (baseUrl) => {
+    assert.equal((await fetch(`${baseUrl}/api/listings?availableOnly=true`)).status, 200);
+  });
+  assert.deepEqual(filter, { soldAt: null });
 });
 
 test('GET / returns 400 for a recognized invalid query without querying listings', async () => {
@@ -146,7 +158,7 @@ test('GET /:id returns one populated listing with safe seller fields', async () 
     const response = await fetch(`${baseUrl}/api/listings/${listingId}`);
 
     assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), listing);
+    assert.deepEqual(await response.json(), { ...listing, quantity: 1, soldAt: null });
   });
 
   assert.equal(calls.id, listingId);

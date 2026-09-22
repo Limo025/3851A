@@ -47,6 +47,8 @@ const listingSchema = new mongoose.Schema({
       message: 'Price must be a finite number greater than zero',
     },
   },
+  quantity: { type: Number, default: 1, min: 1, max: 999, validate: Number.isInteger },
+  soldAt: { type: Date, default: null },
   category: {
     type: String,
     required: true,

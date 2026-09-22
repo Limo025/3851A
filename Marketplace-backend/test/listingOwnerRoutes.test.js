@@ -50,7 +50,7 @@ function makeListing({
 }
 
 async function withListingApp(dependencies, run) {
-  const app = express().use('/api/listings', createListingRouter(dependencies));
+  const app = express().use(express.json()).use('/api/listings', createListingRouter(dependencies));
   const server = app.listen(0, '127.0.0.1');
   await once(server, 'listening');
   const { port } = server.address();
@@ -64,6 +64,27 @@ async function withListingApp(dependencies, run) {
   }
 }
 
+test('PATCH /:id/sold is owner-only and idempotent', async () => {
+  let saves = 0;
+  const listing = makeListing({ save: async () => { saves += 1; } });
+  const ListingModel = { findById: async () => listing };
+  await withListingApp(baseDependencies({ ListingModel }), async (baseUrl) => {
+    const url = `${baseUrl}/api/listings/${listingId}/sold`;
+    const send = (uid, sold) => fetch(url, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json', 'x-firebase-uid': uid },
+      body: JSON.stringify({ sold }),
+    });
+    assert.equal((await send('firebase-b', true)).status, 403);
+    assert.equal((await send('firebase-a', true)).status, 200);
+    assert.ok(listing.soldAt instanceof Date);
+    assert.equal((await send('firebase-a', true)).status, 200);
+    assert.equal(saves, 1);
+    assert.equal((await send('firebase-a', false)).status, 200);
+    assert.equal(listing.soldAt, null);
+    assert.equal(saves, 2);
+  });
+});
+
 function baseDependencies({ ListingModel, uploadMiddleware = uploadWith(), imageStore } = {}) {
   return {
     ListingModel,
@@ -71,6 +92,8 @@ function baseDependencies({ ListingModel, uploadMiddleware = uploadWith(), image
     authenticate: fakeAuth,
     uploadMiddleware,
     imageStore: imageStore || { uploadImages: async () => [], deleteImages: async () => {} },
+    RecentlyViewedModel: { deleteMany: async () => {} },
+    WatchlistModel: { deleteMany: async () => {} },
   };
 }
 
@@ -92,7 +115,7 @@ test('GET /mine filters listings by the authenticated MongoDB seller', async () 
     const response = await fetch(`${baseUrl}/api/listings/mine`);
 
     assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), listings);
+    assert.deepEqual(await response.json(), listings.map((listing) => ({ ...listing, quantity: 1, soldAt: null })));
   });
 
   assert.deepEqual(filter, { seller: mongoA });

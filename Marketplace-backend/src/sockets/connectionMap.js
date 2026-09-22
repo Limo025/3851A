@@ -23,3 +23,8 @@ export function removeConnection(userId, socket) {
 export function getConnections(userId) {
   return activeConnections.get(userId) ?? new Set();
 }
+
+export function closeConnections(userId) {
+  // ponytail: this closes sockets on this server only; use pub/sub if the app runs on multiple servers.
+  for (const socket of getConnections(userId)) socket.close(1008, 'Account banned');
+}

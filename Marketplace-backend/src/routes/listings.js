@@ -6,6 +6,9 @@ import { uploadListingImages } from '../middleware/upload.js';
 import imageStorage from '../services/imageStorage.js';
 import { isProviderTimeoutError } from '../services/providerRequest.js';
 import { MAX_LISTING_IMAGES } from '../constants/listings.js';
+import { deleteListing } from '../services/deleteListing.js';
+import RecentlyViewed from '../models/RecentlyViewed.js';
+import Watchlist from '../models/Watchlist.js';
 import {
   parseListingQuery,
   parseRetainedImageIds,
@@ -14,6 +17,7 @@ import {
 } from '../validation/listings.js';
 
 const SAFE_SELLER_FIELDS = '_id uid username';
+const withAvailability = (listing) => ({ ...listing, quantity: listing.quantity ?? 1, soldAt: listing.soldAt ?? null });
 
 async function verifyToken(req, res, next) {
   const { verifyToken: authenticate } = await import('../middleware/auth.js');
@@ -26,6 +30,8 @@ export function createListingRouter({
   authenticate = verifyToken,
   uploadMiddleware = uploadListingImages,
   imageStore = imageStorage,
+  RecentlyViewedModel = RecentlyViewed,
+  WatchlistModel = Watchlist,
 } = {}) {
   const router = express.Router();
 
@@ -116,7 +122,7 @@ export function createListingRouter({
       ]);
 
       return res.json({
-        listings,
+        listings: listings.map(withAvailability),
         page,
         pages: Math.max(1, Math.ceil(total / limit)),
         total,
@@ -146,7 +152,7 @@ export function createListingRouter({
         .sort({ createdAt: -1 })
         .lean();
 
-      return res.json(listings);
+      return res.json(listings.map(withAvailability));
     } catch {
       return res.status(500).json({ error: 'Failed to fetch listings' });
     }
@@ -157,7 +163,7 @@ export function createListingRouter({
     try {
       const listing = req.listing;
 
-      const { value, errors } = validateListingFields(req.body);
+      const { value, errors } = validateListingFields({ ...req.body, quantity: req.body.quantity ?? listing.quantity ?? 1 });
       if (errors.length > 0) {
         return res.status(400).json({ error: errors.join('; ') });
       }
@@ -196,6 +202,7 @@ export function createListingRouter({
       listing.price = value.price;
       listing.category = value.category;
       listing.condition = value.condition;
+      listing.quantity = value.quantity;
       listing.images = [...retainedImages, ...uploadedImages];
       await listing.save();
 
@@ -228,20 +235,23 @@ export function createListingRouter({
     }
   });
 
-  router.delete('/:id', authenticate, authorizeOwnedListing, async (req, res) => {
+  router.patch('/:id/sold', authenticate, authorizeOwnedListing, async (req, res) => {
+    if (typeof req.body?.sold !== 'boolean') return res.status(400).json({ error: 'Sold must be true or false' });
     try {
       const listing = req.listing;
-
-      const publicIds = (Array.isArray(listing.images) ? listing.images : []).map(({ publicId }) => publicId);
-      await listing.deleteOne();
-
-      if (publicIds.length > 0) {
-        try {
-          await imageStore.deleteImages(publicIds);
-        } catch (error) {
-          console.error('Failed to remove deleted listing images', error);
-        }
+      if (Boolean(listing.soldAt) !== req.body.sold) {
+        listing.soldAt = req.body.sold ? new Date() : null;
+        await listing.save();
       }
+      return res.json(listing);
+    } catch {
+      return res.status(500).json({ error: 'Failed to update listing status' });
+    }
+  });
+
+  router.delete('/:id', authenticate, authorizeOwnedListing, async (req, res) => {
+    try {
+      await deleteListing(req.listing, { imageStore, RecentlyViewedModel, WatchlistModel });
 
       return res.status(204).end();
     } catch {
@@ -263,7 +273,7 @@ export function createListingRouter({
         return res.status(404).json({ error: 'Listing not found' });
       }
 
-      return res.json(listing);
+      return res.json(withAvailability(listing));
     } catch {
       return res.status(500).json({ error: 'Failed to fetch listing' });
     }
