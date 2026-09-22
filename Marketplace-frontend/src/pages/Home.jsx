@@ -1,10 +1,19 @@
+import '../css/styles/home.css';
+import '../css/styles/recommended-item.css';
+import bannerImg from '../img/panorama_background.webp';
+const bannerImgStyle = {
+    objectFit: 'cover',
+    width: '100%',
+    height: '350px',
+  };
+
 function App() {
   return (
     <>
         
         {/* BACKGROUND IMAGE FOR MAIN PAGE*/}
         <div id="headerImage">
-            <img src="src/img/panorama_background.webp" alt="background image" />
+            <img src="src/img/panorama_background.webp" alt="background image" style={bannerImgStyle} />
         </div>
         <div id="contentBackground">
             <div class="wideContent">

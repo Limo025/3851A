@@ -1,0 +1,32 @@
+#end {
+    background-color: #202020;
+    height: auto;
+    margin: 0;
+    color: white;
+    font-family: Corbel;
+}
+#end img {
+    padding: 50px;
+}
+#endContents {
+    display: grid;
+    width: fit-content;
+    height: fit-content;
+    grid-template-columns: auto auto;
+    padding-left: 5vw;
+    padding-right: 10vw;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    #endContents {
+        box-sizing: border-box;
+        grid-template-columns: 1fr;
+        padding: 24px;
+        width: 100%;
+    }
+    #end img {
+        max-width: 100%;
+        padding: 20px 0;
+    }
+}

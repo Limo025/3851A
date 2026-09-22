@@ -6,6 +6,7 @@ export const cloudinaryConfig = Object.freeze({
 
 export function validateCloudinaryConfig(config = cloudinaryConfig) {
   if (!config?.cloudName || !config.apiKey || !config.apiSecret) {
+    console.log("No cloudinary info in .env")
     throw new Error('Cloudinary configuration is incomplete');
   }
 

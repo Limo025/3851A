@@ -1,0 +1,12 @@
+@font-face {
+    font-family: FuseV2Bold; /* used for headings */
+    src: url(../../font/fuseV2bold.otf);
+}
+@font-face {
+    font-family: FuseV2; /* used for sub-headings */
+    src: url(../../font/fusev2.otf);
+}
+@font-face {
+    font-family: Corbel; /* used for plaintext */
+    src: url(../../font/corbel.ttf);
+}

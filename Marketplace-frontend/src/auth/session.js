@@ -32,7 +32,7 @@ function isStoredSession(value) {
     && value.idToken.trim()
     && typeof value.refreshToken === 'string'
     && value.refreshToken.trim()
-    && Number.isFinite(value.expiresAt),
+    && Number.isFinite(value.expiresAt)
   );
 }
 
@@ -70,16 +70,19 @@ export function createSessionManager({ storage, fetchImpl = globalThis.fetch, no
     notify();
   }
 
-  function saveLogin({ idToken, refreshToken, expiresIn }) {
+  function saveLogin({ idToken, refreshToken, expiresIn, user}) {
     const activeStorage = getStorage();
     if (!activeStorage) {
       return;
     }
 
+    const existingUser = readSession()?.user;
+
     activeStorage.setItem(SESSION_KEY, JSON.stringify({
       idToken,
       refreshToken,
       expiresAt: now() + Number(expiresIn) * 1000,
+      user: user ?? existingUser,
     }));
     notify();
   }
@@ -124,6 +127,7 @@ export function createSessionManager({ storage, fetchImpl = globalThis.fetch, no
   return {
     saveLogin,
     hasSession: () => Boolean(readSession()),
+    getUser: () => readSession()?.user ?? null,
     getAccessToken,
     clear,
     subscribe,

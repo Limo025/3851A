@@ -1,0 +1,99 @@
+.createAccountForm, 
+.loginAccountForm label {
+    font-size: 20px;
+    font-family: FuseV2Bold;
+}
+
+.createAccountForm input {
+    font-size: 15px;
+    font-family: FuseV2;
+    max-width: 300px;
+    width: 100%;
+    padding: 5px;
+    margin-right: 50px;
+}
+.loginAccountForm input {
+    font-size: 15px;
+    font-family: FuseV2;
+    max-width: 300px;
+    width: 100%;
+    padding: 5px;
+    margin-right: 50px;
+}
+.createAccountForm button {
+    font-size: 25px;
+    font-family: FuseV2;
+    min-width: 20vw;
+    padding: 5px;
+}
+
+.loadingIcon {
+    height: 50px;
+    padding-left: 50px;
+    position: relative;
+    top: 10px;
+    display: none;
+}
+
+.login-actions {
+    display: grid;
+    gap: 12px;
+    grid-column: 2;
+    margin-top: 14px;
+    max-width: 300px;
+}
+.login-actions .loadingIcon {
+    justify-self: center;
+    padding-left: 0;
+}
+.login-submit {
+    box-sizing: border-box;
+    width: 100%;
+}
+.login-forgot-link {
+    color: #005bf9;
+    justify-self: start;
+    font-family: FuseV2, Arial, sans-serif;
+    margin: 0;
+}
+.login-forgot-link:hover {
+    color: #00225e;
+}
+.login-forgot-link:focus-visible {
+    outline: 3px solid #202020;
+    outline-offset: 3px;
+}
+.login-create-account {
+    border-top: 1px solid #cbd6e8;
+    margin-top: 42px;
+    padding-top: 28px;
+}
+.login-create-account p {
+    color: #42526d;
+    font-family: FuseV2, Arial, sans-serif;
+    font-size: 1.15rem;
+    margin: 0 0 14px;
+}
+.login-create-account .bigButton {
+    font-size: 1.2rem;
+    padding: 14px 18px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .createAccountForm,
+    .loginAccountForm {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .createAccountForm input,
+    .loginAccountForm input {
+        box-sizing: border-box;
+        margin-right: 0;
+        max-width: 100%;
+        width: 100%;
+    }
+    .login-actions {
+        grid-column: auto;
+        max-width: 100%;
+    }
+}
