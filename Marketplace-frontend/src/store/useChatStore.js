@@ -98,7 +98,7 @@ export const useChatStore = create((set, get) => ({
     } catch (error) {
       if (requestVersion !== chatStateVersion) return [];
       set({ conversations: [] });
-      toast.error(error.message || 'Could not load conversations');
+      toast.error(error.message || 'Could not load conversations', { id: 'load-conversations-error' });
       return [];
     } finally {
       if (requestVersion === chatStateVersion) {
