@@ -32,9 +32,9 @@ function App() {
   return (
 <>
   {/* MAIN CONTENT*/}
-  <div id="contentBackground">
+  <div id="contentBackground">  
     <div id="content">
-
+    <h1>Watchlist</h1><br/>
       {/*  
           on opening this page, redirect to login if user is not logged in. Then,
           the database should query all items that this user has watchlisted. 
@@ -45,8 +45,8 @@ function App() {
           {
               hide document.getElementByID('availableWatchlistNull')
               for every user.wishlistedItems.available, 
-                new <div class='recItem'>
-                        <img class='recItemImage' alt='itemImageNotFound' src="{itemImage}"></img>
+                new <div class='watchlistItem'>
+                        <img class='watchlistItemImage' alt='itemImageNotFound' src="{itemImage}"></img>
                         <h3>{itemName}</h3>
                         <h3>{itemCost}</h3>
                     </div>
@@ -56,20 +56,43 @@ function App() {
           {
               hide document.getElementByID('unavailableWatchlistNull')
               for every user.wishlistedItems.unavailable, 
-                new <div class='recItem'>
-                        <img class='recItemImage' alt='itemImageNotFound' src="{itemImage}"></img>
+                new <div class='watchlistItgemUnavaiulable'>
+                        <img class='watchlistItemImage' alt='itemImageNotFound' src="{itemImage}"></img>
                         <h3>{itemName}</h3>
                         <h3>unavailable. </h3>
                     </div>
           }
-      
+
+            CONDENSED VIEW ITEM TEMPLATE
+          <div class="watchlistItemGridSmall">
+            <div class='watchlistItemSmall'>
+                          <p>Item Name</p>
+                          <p>$99.99</p>
+          </div>
+        </div>
+
+
+
       */}
       <h3> Watchlisted Items: </h3>
-        <p id="availableWatchlistNull">There are no items that are watchlisted. </p>
+        {/* remove this if there is items in this category. */}<p id="availableWatchlistNull">There are no items that are watchlisted. </p>
+        <div class="watchlistItemGrid">
+          <div class='watchlistItem'>
+            <img class='recItemImage' alt='itemImageNotFound' src="src/img/testImage_1.png"></img>
+                          <p>Item Name</p>
+                          <p>$99.99</p>
+          </div>
 
-
+        </div><br/><br/>
       <h3> Items that are no longer available: </h3>
           <p id="unavailableWatchlistNull">There are no items that are watchlisted, and are not available. </p>
+          <div class="watchlistItemGrid">
+            <div class='watchlistItemUnavailable'>
+              <img class='recItemImage' alt='itemImageNotFound' src="src/img/testImage_1.png"></img>
+                          <p>Item Name</p>
+                          <p>$99.99</p>
+          </div>
+        </div>
     </div>
   </div>
 </>
