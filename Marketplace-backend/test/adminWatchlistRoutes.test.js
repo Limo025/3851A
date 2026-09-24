@@ -72,6 +72,58 @@ test('admin listing deletion uses the shared deletion path', async () => {
   assert.deepEqual(removed, [listing]);
 });
 
+test('admin can page through a selected user’s listings', async () => {
+  const calls = [];
+  const listingQuery = {
+    sort(value) { calls.push(value); return this; },
+    skip(value) { calls.push(value); return this; },
+    limit(value) { calls.push(value); return this; },
+    async lean() { return [{ _id: id, title: 'Book' }]; },
+  };
+  const router = createAdminRouter({
+    authenticate: auth,
+    getAdminUids: () => new Set(['admin']),
+    UserModel: { findById: async () => ({ _id: id }) },
+    ListingModel: {
+      find: (filter) => { calls.push(filter); return listingQuery; },
+      countDocuments: async (filter) => { calls.push(filter); return 21; },
+    },
+  });
+  await withRouter('/api/admin', router, async (base) => {
+    const response = await fetch(`${base}/users/${id}/listings?page=2&limit=20`, { headers: { 'x-uid': 'admin' } });
+    assert.equal(response.status, 200);
+    assert.deepEqual(await response.json(), { listings: [{ _id: id, title: 'Book' }], page: 2, pages: 2, total: 21 });
+    assert.deepEqual(calls[0], { seller: id });
+    assert.equal(calls[2], 20);
+    assert.equal((await fetch(`${base}/users/${id}/listings`, { headers: { 'x-uid': 'buyer' } })).status, 403);
+  });
+});
+
+test('admin user search matches name or email and treats punctuation literally', async () => {
+  const filters = [];
+  const userQuery = {
+    sort() { return this; },
+    skip() { return this; },
+    limit() { return this; },
+    async lean() { return []; },
+  };
+  const router = createAdminRouter({
+    authenticate: auth,
+    getAdminUids: () => new Set(['admin']),
+    UserModel: {
+      find: (filter) => { filters.push(filter); return userQuery; },
+      countDocuments: async (filter) => { filters.push(filter); return 0; },
+    },
+  });
+  await withRouter('/api/admin', router, async (base) => {
+    const response = await fetch(`${base}/users?search=${encodeURIComponent('a.b')}`, { headers: { 'x-uid': 'admin' } });
+    assert.equal(response.status, 200);
+    assert.equal(filters[0].$or[0].username.$regex, 'a\\.b');
+    assert.deepEqual(filters[0], filters[1]);
+    assert.equal((await fetch(`${base}/users?search=x&search=y`, { headers: { 'x-uid': 'admin' } })).status, 400);
+  });
+});
+
 test('watchlist derives the owner from authentication and rejects sold listings', async () => {
   const calls = [];
   let soldAt = null;

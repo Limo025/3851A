@@ -5,6 +5,7 @@ import { useEffect, useState, useRef } from 'react';
 import { getHeaderAuthView, getMarketplaceSearchTerm, buildMarketplaceSearchUrl } from '@/js/script'
 import { session } from '@/auth/session';
 import { useChatStore } from '@/store/useChatStore';
+import { apiFetch } from '@/api/client.js';
 
 export default function Header()  {
     const navigate = useNavigate();
@@ -13,6 +14,7 @@ export default function Header()  {
     const [authView, setAuthView] = useState(() => getHeaderAuthView(session.hasSession()));
     const [searchValue, setSearchValue] = useState(() => getMarketplaceSearchTerm(location));
     const [isSidebarOpen, setSidebarOpen] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
     const hasUnreadMessages = useChatStore((state) => state.unreadConversationIds.length > 0);
 
     const sidebarRef = useRef(null);
@@ -25,6 +27,15 @@ export default function Header()  {
         const unsubscribe = session.subscribe?.(updateSession) ?? (() => {});
         return unsubscribe;
     },[]);
+
+    useEffect(() => {
+        if (!authView.showLogoutButton) return;
+        const controller = new AbortController();
+        apiFetch('/api/admin/me', { auth: true, signal: controller.signal })
+            .then(() => { if (!controller.signal.aborted) setIsAdmin(true); })
+            .catch(() => { if (!controller.signal.aborted) setIsAdmin(false); });
+        return () => controller.abort();
+    }, [authView.showLogoutButton]);
 
     useEffect(() => {
         setSearchValue(getMarketplaceSearchTerm(location));
@@ -137,17 +148,18 @@ export default function Header()  {
                             {authView.showSellerLinks && (
                                 <Link to="/my-listings" onClick={closeSidebarAndFocusToggle}><p>My Listings</p></Link>
                             )}
+                            <Link to="/messages" onClick={closeSidebarAndFocusToggle}><p>Messages</p></Link>
+                            <p>Purchase History</p>
+                            <Link to="/settings" onClick={closeSidebarAndFocusToggle}><p>Settings</p></Link>
+                            {isAdmin && <Link to="/admin" onClick={closeSidebarAndFocusToggle}><p>Admin</p></Link>}
+                            <p>Help</p>
+                            <Link to="/about" onClick={closeSidebarAndFocusToggle}><p>About</p></Link>
                             {authView.showLoginLink && (
                                 <Link to="/login" onClick={closeSidebarAndFocusToggle}><p>Log In</p></Link>
                             )}
                             {authView.showLogoutButton && (
                                 <Link to="/" onClick={handleLogout}><p>Log Out</p></Link>
                             )}
-                            <Link to="/messages" onClick={closeSidebarAndFocusToggle}><p>Messages</p></Link>
-                            <p>Purchase History</p>
-                            <Link to="/settings" onClick={closeSidebarAndFocusToggle}><p>Settings</p></Link>
-                            <p>Help</p>
-                            <Link to="/about" onClick={closeSidebarAndFocusToggle}><p>About</p></Link>
                         </div>
                     </nav>
                 </div>

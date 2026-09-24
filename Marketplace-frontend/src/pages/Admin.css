@@ -1,0 +1,176 @@
+.admin-page {
+  min-height: 70vh;
+  padding: 3rem 1.25rem;
+  background: #f4f7fc;
+  color: #14243d;
+}
+
+.admin-page__inner {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.admin-page h1 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.admin-page h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.admin-page__columns {
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr);
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.admin-page__columns > section {
+  min-width: 0;
+  padding: 1.25rem;
+  background: white;
+  border: 1px solid #dbe4f0;
+  border-radius: 1rem;
+}
+
+.admin-page__list {
+  display: grid;
+  gap: 0.65rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-page__list li {
+  border: 1px solid #dbe4f0;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.admin-page__list li > button:first-child {
+  display: grid;
+  width: 100%;
+  gap: 0.25rem;
+  padding: 0.9rem;
+  text-align: left;
+}
+
+.admin-page__selected {
+  background: #eaf1ff;
+}
+
+.admin-page__search {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.admin-page__search input {
+  min-width: 0;
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #b8c7dc;
+  border-radius: 0.5rem;
+}
+
+.admin-page__search button {
+  padding: 0.5rem 0.75rem;
+  color: #0649bd;
+  border: 1px solid #0649bd;
+  border-radius: 0.5rem;
+}
+
+.admin-page__search button:hover {
+  background: #eaf1ff;
+}
+
+.admin-page small,
+.admin-page__list span {
+  display: block;
+  color: #52627b;
+  overflow-wrap: anywhere;
+}
+
+.admin-page__detail-header,
+.admin-page__listing,
+.admin-page__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.admin-page__detail-header {
+  border-bottom: 1px solid #dbe4f0;
+  padding-bottom: 1rem;
+}
+
+.admin-page__detail-header p {
+  overflow-wrap: anywhere;
+}
+
+.admin-page__listing {
+  padding: 0.75rem;
+}
+
+.admin-page__listing img {
+  width: 4rem;
+  height: 4rem;
+  object-fit: cover;
+  border-radius: 0.5rem;
+}
+
+.admin-page__listing div {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-page__listing a {
+  font-weight: 600;
+  color: #0649bd;
+}
+
+.admin-page__listing button,
+.admin-page__detail-header button {
+  color: #a02121;
+  border: 1px solid #a02121;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.admin-page__listing button:hover:not(:disabled),
+.admin-page__detail-header button:hover:not(:disabled) {
+  background: #a02121;
+  color: white;
+}
+
+.admin-page__pagination {
+  justify-content: center;
+  padding-top: 1rem;
+}
+
+.admin-page__pagination button {
+  color: #0649bd;
+}
+
+.admin-page button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.admin-page__error {
+  color: #a02121;
+}
+
+.admin-page__notice {
+  color: #166534;
+}
+
+@media (max-width: 720px) {
+  .admin-page__columns {
+    grid-template-columns: 1fr;
+  }
+}
