@@ -1,6 +1,7 @@
 import { WebSocketServer } from 'ws';
 import { verifyFirebaseToken } from '../utils/verifyToken.js';
 import { addConnection, removeConnection } from '../sockets/connectionMap.js';
+import User from '../models/User.js';
 
 export const setupWebSocket = (server) => {
   const wss = new WebSocketServer({ noServer: true });
@@ -10,9 +11,18 @@ export const setupWebSocket = (server) => {
     const searchParams = new URL(req.url, `http://${req.headers.host}`).searchParams;
     const token = searchParams.get('token');
     // Authentication with Firebase
-    const user = await verifyFirebaseToken(token); 
-    if (!user) {
-      socket.write('HTTP/1.1 401 Unauthorized');
+    let user;
+    let currentUser;
+    try {
+      user = await verifyFirebaseToken(token);
+      currentUser = user?.uid ? await User.findOne({ uid: user.uid }) : null;
+    } catch {
+      socket.write('HTTP/1.1 503 Service Unavailable\r\n\r\n');
+      socket.destroy();
+      return;
+    }
+    if (!currentUser || currentUser.isBanned) {
+      socket.write('HTTP/1.1 401 Unauthorized\r\n\r\n');
       socket.destroy();
       return;
     }

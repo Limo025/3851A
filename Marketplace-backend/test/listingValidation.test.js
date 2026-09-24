@@ -36,6 +36,7 @@ test('validateListingFields trims valid fields and converts a finite price', () 
       price: 35.5,
       category: 'Books and Textbooks',
       condition: 'Good',
+      quantity: 1,
     },
   });
 });
@@ -49,6 +50,18 @@ test('parseListingQuery escapes search and whitelists sort', () => {
   assert.deepEqual(parsed.sort, { price: -1 });
   assert.equal(parsed.page, 2);
   assert.equal(parsed.limit, 10);
+});
+
+test('quantity and availability reject invalid values', () => {
+  assert.equal(validateListingFields({
+    title: 'Calculus textbook', description: 'Clean copy with notes.', price: 35,
+    category: 'Books and Textbooks', condition: 'Good', quantity: 2,
+  }).value.quantity, 2);
+  for (const quantity of [0, 1.5, 1000, true]) {
+    assert.match(validateListingFields({ quantity }).errors.join(' '), /quantity/i);
+  }
+  assert.deepEqual(parseListingQuery({ availableOnly: 'true' }).filter, { soldAt: null });
+  assert.throws(() => parseListingQuery({ availableOnly: 'yes' }), /available only/i);
 });
 
 test('parseListingQuery rejects a supplied non-string search', () => {

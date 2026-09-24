@@ -18,5 +18,6 @@ export function validateAssistantDraft({ facts, copy }) {
   };
   const { value, errors } = validateListingFields(candidate);
   if (errors.length) throw new AssistantDraftError(errors);
-  return value;
+  const { quantity, ...draft } = value;
+  return draft;
 }

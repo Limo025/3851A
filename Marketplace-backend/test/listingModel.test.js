@@ -15,6 +15,14 @@ const valid = {
 
 test('valid listing passes synchronous validation', () => {
   assert.equal(new Listing(valid).validateSync(), undefined);
+  assert.equal(new Listing(valid).quantity, 1);
+  assert.equal(new Listing(valid).soldAt, null);
+});
+
+test('listing rejects invalid quantities', () => {
+  for (const quantity of [0, 1.5, 1000]) {
+    assert.ok(new Listing({ ...valid, quantity }).validateSync().errors.quantity);
+  }
 });
 
 test('listing rejects zero price and no images', () => {

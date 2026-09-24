@@ -14,6 +14,7 @@ const RESULT_PROJECTION = Object.freeze({
 function searchMatch(query) {
   const regex = new RegExp(escapeRegex(query.slice(0, 100)), 'i');
   return {
+    soldAt: null,
     $or: [
       { title: { $regex: regex } },
       { description: { $regex: regex } },
