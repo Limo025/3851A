@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { useChatStore } from '../store/useChatStore.js';
+import { getOtherParticipant, isConversationListingSold } from '../utils/chatParticipants.js';
 
 function formatConversationTime(value) {
   if (!value) return '';
@@ -37,9 +38,7 @@ export default function ConversationList() {
   const filteredConversations = conversations.filter((conversation) => {
     if (!normalizedSearch) return true;
 
-    const otherUser = currentMode === 'buyer'
-      ? conversation.sellerDetails
-      : conversation.buyerDetails;
+    const otherUser = getOtherParticipant(conversation, currentMode);
     const searchableText = [
       otherUser?.username,
       conversation.listing?.title,
@@ -74,12 +73,11 @@ export default function ConversationList() {
       ) : (
         <ul className="space-y-2" aria-label={`${currentMode} conversations`}>
           {filteredConversations.map((conversation) => {
-            const otherUser = currentMode === 'buyer'
-              ? conversation.sellerDetails
-              : conversation.buyerDetails;
+            const otherUser = getOtherParticipant(conversation, currentMode);
             const username = otherUser?.username || 'Marketplace user';
             const isSelected = selectedUser?._id === conversation._id;
             const isUnread = unreadConversationIds.includes(String(conversation._id));
+            const listingIsSold = isConversationListingSold(conversation);
 
             return (
               <li key={conversation._id}>
@@ -101,7 +99,7 @@ export default function ConversationList() {
                         {isUnread && <span className="size-2.5 shrink-0 rounded-full border border-white bg-blue-300" aria-hidden="true" />}
                       </span>
                       <span className="block truncate text-xs text-blue-100">
-                        {conversation.listing?.title || 'Listing unavailable'}
+                        {otherUser?.isBanned ? 'Banned · ' : ''}{listingIsSold ? 'Item sold out · ' : ''}{conversation.listing?.title || 'Listing unavailable'}
                       </span>
                     </span>
                     <span className="shrink-0 text-[0.7rem] text-blue-100">

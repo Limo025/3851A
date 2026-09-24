@@ -6,11 +6,13 @@ import User from '../models/User.js';
 import { broadcastMessage } from '../sockets/broadcastMessage.js';
 
 const getUserId = (req) => req.user?.uid || req.user?.user_id || req.user?._id;
+export const CHAT_USER_FIELDS = 'username uid isBanned';
+export const CHAT_LISTING_FIELDS = 'title price images soldAt';
 const populateConversation = (query) =>
   query
-    .populate('buyerDetails', 'username uid')
-    .populate('sellerDetails', 'username uid')
-    .populate('listing', 'title price images');
+    .populate('buyerDetails', CHAT_USER_FIELDS)
+    .populate('sellerDetails', CHAT_USER_FIELDS)
+    .populate('listing', CHAT_LISTING_FIELDS);
 // Fetch all user's conversation
 export const getAllConversations = async (req, res) => {
   try {

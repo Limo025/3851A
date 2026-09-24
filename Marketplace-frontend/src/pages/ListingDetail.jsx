@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { apiFetch } from '../api/client.js';
+import { handleAuthenticationError } from '../auth/handleAuthenticationError.js';
 import { session } from '../auth/session.js';
 import { useChatStore } from '../store/useChatStore.js';
 import { formatListingDate, formatListingPrice } from '../utils/listingFormat.js';
+import { saveToWatchlist } from '../utils/watchlist.js';
 import '../css/listings.css';
 
 function displayValue(value, fallback = 'Not specified') {
@@ -20,6 +22,8 @@ export default function ListingDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [notFound, setNotFound] = useState(false);
+  const [watchlistSaving, setWatchlistSaving] = useState(false);
+  const [watchlistFeedback, setWatchlistFeedback] = useState('');
   const feedback = location.state?.message ? <p className="listing-detail__feedback" role="status">{location.state.message}</p> : null;
 
   useEffect(() => {
@@ -123,6 +127,35 @@ export default function ListingDetail() {
     navigate('/messages');
   }
 
+  async function handleAddToWatchlist() {
+    if (!session.hasSession()) {
+      navigate('/login', {
+        state: {
+          from: `${location.pathname}${location.search}${location.hash}`,
+          message: 'Please log in to use your watchlist.',
+        },
+      });
+      return;
+    }
+
+    setWatchlistSaving(true);
+    setWatchlistFeedback('');
+    try {
+      await saveToWatchlist(listing._id);
+      setWatchlistFeedback('Added to your watchlist.');
+    } catch (requestError) {
+      if (!handleAuthenticationError(requestError, {
+        sessionManager: session,
+        navigate,
+        returnPath: `${location.pathname}${location.search}${location.hash}`,
+      })) {
+        setWatchlistFeedback(requestError instanceof Error ? requestError.message : 'Unable to add this listing.');
+      }
+    } finally {
+      setWatchlistSaving(false);
+    }
+  }
+
   return (
     <main className="marketplace-page">
       <div className="marketplace-page__content listing-detail">
@@ -163,9 +196,20 @@ export default function ListingDetail() {
             <div><dt>Seller</dt><dd>{displayValue(listing.seller?.username, 'Unknown seller')}</dd></div>
             <div><dt>Listed</dt><dd>{formatListingDate(listing.createdAt)}</dd></div>
           </dl>
-          <button className="listing-detail__contact" type="button" disabled={isOwnListing} onClick={handleContactSeller}>
-            {isOwnListing ? 'This is your listing' : 'Contact Seller'}
-          </button>
+          {watchlistFeedback ? <p className="listing-detail__watchlist-feedback" role="status">{watchlistFeedback}</p> : null}
+          <div className="listing-detail__actions">
+            <button className="listing-detail__contact" type="button" disabled={isOwnListing || Boolean(listing.soldAt)} onClick={handleContactSeller}>
+              {listing.soldAt ? 'Listing sold' : isOwnListing ? 'This is your listing' : 'Contact Seller'}
+            </button>
+            <button
+              className="listing-detail__contact"
+              type="button"
+              disabled={isOwnListing || Boolean(listing.soldAt) || watchlistSaving}
+              onClick={handleAddToWatchlist}
+            >
+              {listing.soldAt ? 'Listing sold' : watchlistSaving ? 'Adding…' : 'Add to Watchlist'}
+            </button>
+          </div>
         </div>
       </div>
     </main>

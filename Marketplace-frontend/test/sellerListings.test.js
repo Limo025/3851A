@@ -1,11 +1,10 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {
-  DELETE_LISTING_CONFIRMATION,
   buildEditListingFormData,
-  getDeleteErrorMessage,
+  getAvailabilityErrorMessage,
   prepareListingForEdit,
-  requestListingDeletion,
+  requestListingAvailabilityUpdate,
 } from '../src/utils/sellerListings.js';
 
 function imageFile(name, { type = 'image/jpeg' } = {}) {
@@ -57,23 +56,7 @@ test('edit multipart data sends retained public IDs and new images without clien
   assert.equal(body.has('sellerId'), false);
 });
 
-test('delete cancellation does not call the seller API', async () => {
-  let requests = 0;
-  const deleted = await requestListingDeletion({
-    listingId: 'listing-1',
-    activeIds: new Set(),
-    confirmDelete: (message) => {
-      assert.equal(message, DELETE_LISTING_CONFIRMATION);
-      return false;
-    },
-    request: async () => { requests += 1; },
-  });
-
-  assert.equal(deleted, false);
-  assert.equal(requests, 0);
-});
-
-test('delete locking prevents a repeated request and releases after the request settles', async () => {
+test('availability update sends sold state and prevents repeated requests', async () => {
   const activeIds = new Set();
   const pendingStates = [];
   const calls = [];
@@ -83,55 +66,42 @@ test('delete locking prevents a repeated request and releases after the request 
     return new Promise((resolve) => { releaseRequest = resolve; });
   };
 
-  const first = requestListingDeletion({
+  const first = requestListingAvailabilityUpdate({
     listingId: 'listing/1',
+    sold: true,
     activeIds,
-    confirmDelete: () => true,
     request,
     onPendingChange: (pending) => pendingStates.push(pending),
   });
-  const repeated = await requestListingDeletion({
+  const repeated = await requestListingAvailabilityUpdate({
     listingId: 'listing/1',
+    sold: true,
     activeIds,
-    confirmDelete: () => true,
     request,
   });
 
-  assert.equal(repeated, false);
+  assert.equal(repeated, null);
   assert.equal(calls.length, 1);
   assert.deepEqual(calls[0], {
-    path: '/api/listings/listing%2F1',
-    options: { method: 'DELETE', auth: true, signal: undefined },
+    path: '/api/listings/listing%2F1/sold',
+    options: { method: 'PATCH', auth: true, body: { sold: true }, signal: undefined },
   });
   assert.deepEqual(pendingStates, [true]);
 
-  releaseRequest();
-  assert.equal(await first, true);
+  releaseRequest({ _id: 'listing/1', soldAt: '2026-09-24T00:00:00.000Z' });
+  assert.deepEqual(await first, { _id: 'listing/1', soldAt: '2026-09-24T00:00:00.000Z' });
   assert.deepEqual(pendingStates, [true, false]);
   assert.equal(activeIds.size, 0);
 });
 
-test('failed deletion releases its lock for an accessible retry', async () => {
-  const activeIds = new Set();
-
-  await assert.rejects(requestListingDeletion({
-    listingId: 'listing-1',
-    activeIds,
-    confirmDelete: () => true,
-    request: async () => { throw new Error('Network unavailable'); },
-  }), /Network unavailable/);
-
-  assert.equal(activeIds.size, 0);
-});
-
-test('delete failures have clear ownership, missing, and network messages', () => {
-  assert.equal(getDeleteErrorMessage({ status: 403 }), 'You do not own this listing');
+test('availability failures have clear ownership, missing, and network messages', () => {
+  assert.equal(getAvailabilityErrorMessage({ status: 403 }), 'You do not own this listing');
   assert.equal(
-    getDeleteErrorMessage({ status: 404 }),
+    getAvailabilityErrorMessage({ status: 404 }),
     'This listing no longer exists. Refresh the page to update your listings.',
   );
   assert.equal(
-    getDeleteErrorMessage(new TypeError('Failed to fetch')),
-    'Unable to delete this listing. Check your connection and try again.',
+    getAvailabilityErrorMessage(new TypeError('Failed to fetch')),
+    'Unable to update this listing. Check your connection and try again.',
   );
 });
