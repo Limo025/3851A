@@ -4,7 +4,7 @@ import { apiFetch } from '../api/client.js';
 import ListingFilters from '../components/ListingFilters.jsx';
 import ListingGrid from '../components/ListingGrid.jsx';
 import '../css/listings.css';
-import { clearMarketplaceFilters } from '../utils/marketplaceFilters.js';
+import { buildMarketplaceApiQuery, clearMarketplaceFilters } from '../utils/marketplaceFilters.js';
 import { clampPage } from '../utils/pagination.js';
 
 function readFilters(searchParams) {
@@ -29,6 +29,7 @@ export default function Marketplace() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const queryString = searchParams.toString();
+  const apiQueryString = buildMarketplaceApiQuery(searchParams);
   const filters = readFilters(searchParams);
   const requestedPage = pageFrom(searchParams);
   const currentPage = response.page || requestedPage;
@@ -43,7 +44,7 @@ export default function Marketplace() {
       setError('');
 
       try {
-        const data = await apiFetch(`/api/listings${queryString ? `?${queryString}` : ''}`, {
+        const data = await apiFetch(`/api/listings?${apiQueryString}`, {
           signal: controller.signal,
         });
         if (!controller.signal.aborted) {
@@ -70,7 +71,7 @@ export default function Marketplace() {
 
     fetchListings();
     return () => controller.abort();
-  }, [queryString, requestedPage, setSearchParams]);
+  }, [apiQueryString, queryString, requestedPage, setSearchParams]);
 
   function updateParameters(updates, resetPage = false) {
     const nextParams = new URLSearchParams(searchParams);

@@ -7,3 +7,9 @@ export function clearMarketplaceFilters(searchParams) {
 
   return nextParams;
 }
+
+export function buildMarketplaceApiQuery(searchParams) {
+  const apiParams = new URLSearchParams(searchParams);
+  apiParams.set('availableOnly', 'true');
+  return apiParams.toString();
+}

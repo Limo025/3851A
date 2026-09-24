@@ -21,8 +21,7 @@ const EXPLICIT_ROUTE_SIGNATURES = Object.freeze([
   '<Routepath="/messages"element={<RequireAuth><Messages/></RequireAuth>}/>',
   '<Routepath="/settings"element={<Settings/>}/>',
   '<Routepath="/about"element={<About/>}/>',
-  '<Routepath="/watchlist"element={<Watchlist/>}/>',
-  '<Routepath="/categories"element={<Categories/>}/>',
+  '<Routepath="/watchlist"element={<RequireAuth><Watchlist/></RequireAuth>}/>',
   '<Routepath="/marketplace"element={<Marketplace/>}/>',
   '<Routepath="/listings/:id"element={<ListingDetail/>}/>',
   '<Routepath="/help"element={<Help/>}/>',
@@ -30,6 +29,7 @@ const EXPLICIT_ROUTE_SIGNATURES = Object.freeze([
   '<Routepath="/my-listings"element={<RequireAuth><MyListings/></RequireAuth>}/>',
   '<Routepath="/listings/:id/edit"element={<RequireAuth><EditListing/></RequireAuth>}/>',
   '<Routepath="/purchase-history"element={<RequireAuth><PurchaseHistory/></RequireAuth>}/>',
+  '<Routepath="/admin"element={<RequireAdmin><Admin/></RequireAdmin>}/>',
   '<Routepath="*"element={<NotFound/>}/>',
 ]);
 
@@ -55,8 +55,7 @@ const EXPLICIT_MAIN_FIXTURE = `
       <Route path="/messages" element={<RequireAuth><Messages /></RequireAuth>} />
       <Route path="/settings" element={<Settings />} />
       <Route path="/about" element={<About />} />
-      <Route path="/watchlist" element={<Watchlist />} />
-      <Route path="/categories" element={<Categories />} />
+      <Route path="/watchlist" element={<RequireAuth><Watchlist /></RequireAuth>} />
       <Route path="/marketplace" element={<Marketplace />} />
       <Route path="/listings/:id" element={<ListingDetail />} />
       <Route path="/help" element={<Help />} />
@@ -64,6 +63,7 @@ const EXPLICIT_MAIN_FIXTURE = `
       <Route path="/my-listings" element={<RequireAuth><MyListings /></RequireAuth>} />
       <Route path="/listings/:id/edit" element={<RequireAuth><EditListing /></RequireAuth>} />
       <Route path="/purchase-history" element={<RequireAuth><PurchaseHistory /></RequireAuth>} />
+      <Route path="/admin" element={<RequireAdmin><Admin /></RequireAdmin>} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>
