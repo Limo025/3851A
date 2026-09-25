@@ -64,7 +64,7 @@ function itemSmallClick(event, a){
 
 function App() {
     useEffect(() => {loadItemData();}, []);
-
+    document.title = "Search | UON Marketplace";
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [count, setCount] = useState(0);
   const [email, setEmail] = useState('');

@@ -1,6 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Conversation } from '../src/models/Conversation.js';
+import { CHAT_LISTING_FIELDS, CHAT_USER_FIELDS } from '../src/controllers/messageController.js';
+
+test('conversation responses include the participant ban status', () => {
+  assert.equal(CHAT_USER_FIELDS, 'username uid isBanned');
+});
+
+test('conversation responses include the listing sold status', () => {
+  assert.equal(CHAT_LISTING_FIELDS, 'title price images soldAt');
+});
 
 test('conversation serializes populated buyer and seller details', () => {
   assert.equal(Conversation.schema.get('toJSON').virtuals, true);

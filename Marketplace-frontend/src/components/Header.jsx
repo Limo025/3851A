@@ -144,12 +144,11 @@ export default function Header()  {
                             </div>
                             <Link to="/" onClick={closeSidebarAndFocusToggle}><p>Home</p></Link>
                             <Link to="/marketplace" onClick={closeSidebarAndFocusToggle}><p>Marketplace</p></Link>
-                            <Link to="/categories" onClick={closeSidebarAndFocusToggle}><p>Categories</p></Link>
                             {authView.showSellerLinks && (
                                 <Link to="/my-listings" onClick={closeSidebarAndFocusToggle}><p>My Listings</p></Link>
                             )}
                             <Link to="/messages" onClick={closeSidebarAndFocusToggle}><p>Messages</p></Link>
-                            <p>Purchase History</p>
+                            <Link to="/purchase-history" onClick={closeSidebarAndFocusToggle}><p>Purchase History</p></Link>
                             <Link to="/settings" onClick={closeSidebarAndFocusToggle}><p>Settings</p></Link>
                             {isAdmin && <Link to="/admin" onClick={closeSidebarAndFocusToggle}><p>Admin</p></Link>}
                             <p>Help</p>

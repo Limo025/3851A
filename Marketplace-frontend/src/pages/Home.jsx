@@ -10,7 +10,10 @@ const bannerImgStyle = {
     height: '350px',
   };
 
+
+
 function App() {
+  document.title = "UON Marketplace";
   const [recentlyViewed, setRecentlyViewed] = useState([]);
 
   useEffect(() => {
@@ -20,6 +23,7 @@ function App() {
   }, []);
 
   return (
+    
     <>
         
         {/* BACKGROUND IMAGE FOR MAIN PAGE*/}

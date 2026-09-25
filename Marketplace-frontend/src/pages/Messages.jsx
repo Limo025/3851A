@@ -17,6 +17,7 @@ export default function Messages() {
     return () => useChatStore.setState({ isMessagesPageOpen: false });
   }, []);
 
+  document.title = "Messages | UON Marketplace";
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-white p-4 md:p-8 flex items-center justify-center">
       {/* Centered Chat Card Box (Fixed max width & height) */}

@@ -56,6 +56,7 @@ function App() {
         }
     }
 
+    document.title = "Login | UON Marketplace";
   return (
 <>
   

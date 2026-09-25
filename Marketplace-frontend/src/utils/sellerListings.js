@@ -1,12 +1,10 @@
 import { buildListingFormData } from './listingForm.js';
 
-export const DELETE_LISTING_CONFIRMATION = 'Delete this listing? This action cannot be undone.';
-
-export function getDeleteErrorMessage(error) {
+export function getAvailabilityErrorMessage(error) {
   if (error?.status === 403) return 'You do not own this listing';
   if (error?.status === 404) return 'This listing no longer exists. Refresh the page to update your listings.';
   if (Number.isInteger(error?.status) && error instanceof Error) return error.message;
-  return 'Unable to delete this listing. Check your connection and try again.';
+  return 'Unable to update this listing. Check your connection and try again.';
 }
 
 function stringValue(value) {
@@ -44,26 +42,25 @@ export function buildEditListingFormData(values, retainedImages, newFiles) {
   return body;
 }
 
-export async function requestListingDeletion({
+export async function requestListingAvailabilityUpdate({
   listingId,
+  sold,
   activeIds,
-  confirmDelete,
   request,
   signal,
   onPendingChange = () => {},
 }) {
-  if (activeIds.has(listingId)) return false;
-  if (!confirmDelete(DELETE_LISTING_CONFIRMATION)) return false;
+  if (activeIds.has(listingId)) return null;
 
   activeIds.add(listingId);
   onPendingChange(true);
   try {
-    await request(`/api/listings/${encodeURIComponent(listingId)}`, {
-      method: 'DELETE',
+    return await request(`/api/listings/${encodeURIComponent(listingId)}/sold`, {
+      method: 'PATCH',
       auth: true,
+      body: { sold },
       signal,
     });
-    return true;
   } finally {
     activeIds.delete(listingId);
     onPendingChange(false);

@@ -25,6 +25,7 @@ function loadItemData(event){
   if(urlParams.has('itemid')){
     const itemID = urlParams.get('itemid');
     const pageItemID = document.getElementById('itemID_onPage');
+    document.title = "itemName | UON Marketplace";
     pageItemID.textContent = '#' + itemID;
     itemCookies(event, itemID);
   }else{  // send the user to a 404 page, as we don't have all the data in the URL params to load. 

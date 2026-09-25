@@ -7,6 +7,7 @@ import { Message, MessageAvatar, MessageContent, MessageFooter } from '@/compone
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useChatStore } from '../store/useChatStore.js';
+import { getOtherParticipant, isConversationListingSold, isOtherParticipantBanned } from '../utils/chatParticipants.js';
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
@@ -55,7 +56,9 @@ export default function ChatContainer({ user: conversation }) {
   const { messages, currentMode, isMessagesLoading, isSendingMessage, sendMessage } = useChatStore();
 
   const currentUserId = currentMode === 'buyer' ? conversation.buyer : conversation.seller;
-  const recipient = currentMode === 'buyer' ? conversation.sellerDetails : conversation.buyerDetails;
+  const recipient = getOtherParticipant(conversation, currentMode);
+  const recipientIsBanned = isOtherParticipantBanned(conversation, currentMode);
+  const listingIsSold = isConversationListingSold(conversation);
   const recipientId = currentMode === 'buyer' ? conversation.seller : conversation.buyer;
   const recipientName = recipient?.username || 'Marketplace user';
   const listingId = conversation.listing?._id || conversation.listing;
@@ -114,7 +117,7 @@ export default function ChatContainer({ user: conversation }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if ((!text.trim() && !image) || isSendingMessage) return;
+    if (recipientIsBanned || (!text.trim() && !image) || isSendingMessage) return;
 
     const sent = await sendMessage({
       conversationId: conversation.isDraft ? undefined : conversation._id,
@@ -135,6 +138,9 @@ export default function ChatContainer({ user: conversation }) {
         <h2 className="font-semibold">{recipientName}</h2>
         <p className="truncate text-sm text-cyan-100">{conversation.listing?.title || 'Marketplace listing'}</p>
       </header>
+
+      {recipientIsBanned && <p className="border-b border-red-200 bg-red-50 px-5 py-3 text-sm font-medium text-red-800" role="alert">This user has been banned.</p>}
+      {listingIsSold && <p className="border-b border-amber-200 bg-amber-50 px-5 py-3 text-sm font-medium text-amber-900" role="status">This item is sold out.</p>}
 
       <div className="relative min-h-0 flex-1">
       <div ref={messageListRef} onScroll={handleMessageScroll} className="h-full space-y-4 overflow-y-auto p-4" aria-live="polite">
@@ -190,10 +196,10 @@ export default function ChatContainer({ user: conversation }) {
           </div>
         ) : null}
         <div className="flex items-center gap-2">
-          <input ref={fileInputRef} className="sr-only" type="file" accept="image/jpeg,image/png,image/webp,image/gif" onChange={handleImageChange} />
-          <Button type="button" variant="outline" size="icon-lg" aria-label="Attach image" disabled={isSendingMessage} onClick={() => fileInputRef.current?.click()}><Paperclip /></Button>
-          <Input className="h-9" value={text} placeholder={`Message ${recipientName}`} aria-label="Message" readOnly={isSendingMessage} onChange={(event) => setText(event.target.value)} />
-          <Button type="submit" size="icon-lg" aria-label="Send message" disabled={isSendingMessage || (!text.trim() && !image)}><Send /></Button>
+          <input ref={fileInputRef} className="sr-only" type="file" accept="image/jpeg,image/png,image/webp,image/gif" disabled={recipientIsBanned} onChange={handleImageChange} />
+          <Button type="button" variant="outline" size="icon-lg" aria-label="Attach image" disabled={recipientIsBanned || isSendingMessage} onClick={() => fileInputRef.current?.click()}><Paperclip /></Button>
+          <Input className="h-9" value={text} placeholder={recipientIsBanned ? 'This user has been banned' : `Message ${recipientName}`} aria-label="Message" readOnly={recipientIsBanned || isSendingMessage} onChange={(event) => setText(event.target.value)} />
+          <Button type="submit" size="icon-lg" aria-label="Send message" disabled={recipientIsBanned || isSendingMessage || (!text.trim() && !image)}><Send /></Button>
         </div>
       </form>
     </section>

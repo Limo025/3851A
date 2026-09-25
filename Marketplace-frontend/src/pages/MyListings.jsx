@@ -5,25 +5,25 @@ import { handleAuthenticationError } from '../auth/handleAuthenticationError.js'
 import { buildReturnPath } from '../auth/returnPath.js';
 import { session } from '../auth/session.js';
 import ListingGrid from '../components/ListingGrid.jsx';
-import { getDeleteErrorMessage, requestListingDeletion } from '../utils/sellerListings.js';
+import { getAvailabilityErrorMessage, requestListingAvailabilityUpdate } from '../utils/sellerListings.js';
 import '../css/listings.css';
 
 export default function MyListings() {
   const navigate = useNavigate();
   const location = useLocation();
   const mounted = useRef(false);
-  const activeDeleteIds = useRef(new Set());
-  const deleteControllers = useRef(new Map());
+  const activeStatusIds = useRef(new Set());
+  const statusControllers = useRef(new Map());
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [actionError, setActionError] = useState('');
   const [feedback, setFeedback] = useState('');
-  const [deletingIds, setDeletingIds] = useState(new Set());
+  const [updatingIds, setUpdatingIds] = useState(new Set());
   const returnPath = buildReturnPath(location);
 
   useEffect(() => {
-    const controllers = deleteControllers.current;
+    const controllers = statusControllers.current;
     mounted.current = true;
     return () => {
       mounted.current = false;
@@ -64,23 +64,24 @@ export default function MyListings() {
     return () => controller.abort();
   }, [navigate, returnPath]);
 
-  async function deleteListing(listing) {
+  async function updateAvailability(listing) {
     const controller = new AbortController();
+    const sold = !listing.soldAt;
     setActionError('');
     setFeedback('');
 
     try {
-      const deleted = await requestListingDeletion({
+      const updated = await requestListingAvailabilityUpdate({
         listingId: listing._id,
-        activeIds: activeDeleteIds.current,
-        confirmDelete: (message) => window.confirm(message),
+        sold,
+        activeIds: activeStatusIds.current,
         request: apiFetch,
         signal: controller.signal,
         onPendingChange: (pending) => {
-          if (pending) deleteControllers.current.set(listing._id, controller);
-          else if (deleteControllers.current.get(listing._id) === controller) deleteControllers.current.delete(listing._id);
+          if (pending) statusControllers.current.set(listing._id, controller);
+          else if (statusControllers.current.get(listing._id) === controller) statusControllers.current.delete(listing._id);
           if (!mounted.current) return;
-          setDeletingIds((current) => {
+          setUpdatingIds((current) => {
             const next = new Set(current);
             if (pending) next.add(listing._id);
             else next.delete(listing._id);
@@ -89,9 +90,9 @@ export default function MyListings() {
         },
       });
 
-      if (deleted && mounted.current) {
-        setListings((current) => current.filter((item) => item._id !== listing._id));
-        setFeedback(`“${listing.title || 'Listing'}” was deleted successfully.`);
+      if (updated && mounted.current) {
+        setListings((current) => current.map((item) => item._id === listing._id ? { ...item, ...updated } : item));
+        setFeedback(`“${listing.title || 'Listing'}” is now ${sold ? 'sold out' : 'available'}.`);
       }
     } catch (error) {
       if (controller.signal.aborted || !mounted.current) return;
@@ -100,30 +101,33 @@ export default function MyListings() {
         navigate,
         returnPath,
       })) {
-        setActionError(getDeleteErrorMessage(error));
+        setActionError(getAvailabilityErrorMessage(error));
       }
     } finally {
-      if (deleteControllers.current.get(listing._id) === controller) deleteControllers.current.delete(listing._id);
+      if (statusControllers.current.get(listing._id) === controller) statusControllers.current.delete(listing._id);
     }
   }
 
   function renderActions(listing) {
-    const deleting = deletingIds.has(listing._id);
+    const updating = updatingIds.has(listing._id);
     return (
       <div className="seller-listing-actions">
+        <span className={listing.soldAt ? 'seller-listing-status seller-listing-status--sold' : 'seller-listing-status'}>
+          {listing.soldAt ? 'Sold out' : 'Available'}
+        </span>
         <Link to={`/listings/${listing._id}/edit`}>Edit</Link>
         <button
           type="button"
-          onClick={() => deleteListing(listing)}
-          disabled={deleting}
-          aria-label={`Delete ${listing.title || 'listing'}`}
+          onClick={() => updateAvailability(listing)}
+          disabled={updating}
+          aria-label={`${listing.soldAt ? 'Make available' : 'Mark sold out'} ${listing.title || 'listing'}`}
         >
-          {deleting ? 'Deleting…' : 'Delete'}
+          {updating ? 'Updating…' : listing.soldAt ? 'Make available' : 'Mark sold out'}
         </button>
       </div>
     );
   }
-
+document.title = "My Listings | UON Marketplace";
   return (
     <main className="marketplace-page">
       <div className="marketplace-page__content">

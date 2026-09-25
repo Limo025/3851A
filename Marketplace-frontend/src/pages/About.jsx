@@ -12,7 +12,7 @@ function handleSearch(event) {
 
 function App() {
   const [count, setCount] = useState(0)
-
+  document.title = "About | UON Marketplace";
   return (
 <>
   {/* MAIN CONTENT*/}

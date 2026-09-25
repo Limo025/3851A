@@ -102,7 +102,7 @@ export default function Admin() {
       setPending('');
     }
   }
-
+  document.title = "ADMIN | UON Marketplace";
   return (
     <main className="admin-page">
       <div className="admin-page__inner">

@@ -125,6 +125,8 @@ export default function EditListing() {
     return <main className="marketplace-page"><div className="marketplace-page__content"><p className="listing-state listing-state--error" role="alert">{error || 'Unable to load this listing. Please try again.'}</p></div></main>;
   }
 
+  document.title = "Listing | UON Marketplace";
+
   return (
     <main className="marketplace-page">
       <div className="marketplace-page__content listing-form-page">
