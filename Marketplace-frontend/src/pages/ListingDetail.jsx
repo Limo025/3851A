@@ -156,6 +156,7 @@ export default function ListingDetail() {
     }
   }
 
+  document.title = "Listing Detail | UON Marketplace";
   return (
     <main className="marketplace-page">
       <div className="marketplace-page__content listing-detail">

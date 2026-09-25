@@ -7,8 +7,12 @@ const bannerImgStyle = {
     height: '350px',
   };
 
+
+
 function App() {
+    document.title = "UON Marketplace";
   return (
+    
     <>
         
         {/* BACKGROUND IMAGE FOR MAIN PAGE*/}

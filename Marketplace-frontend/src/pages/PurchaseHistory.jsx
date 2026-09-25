@@ -34,7 +34,7 @@ export default function PurchaseHistory() {
 
     return () => { cancelled = true; };
   }, [navigate, returnPath]);
-
+  document.title = "Purchase History | UON Marketplace";
   return (
     <main className="marketplace-page">
       <div className="marketplace-page__content">

@@ -86,7 +86,7 @@ export default function Watchlist() {
   }
 
   const groups = splitWatchlist(listings);
-
+  document.title = "Watchlist | UON Marketplace";
   return (
     <main className="marketplace-page">
       <div className="marketplace-page__content">

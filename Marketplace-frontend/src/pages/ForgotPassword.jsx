@@ -47,6 +47,8 @@ export default function ForgotPassword() {
     }
   }
 
+  document.title = "Forgot Password | UON Marketplace";
+
   return (
     <main id="contentBackground" className="password-reset-page" style={backgroundStyle}>
       <section className="password-reset-card" aria-labelledby="password-reset-title">
