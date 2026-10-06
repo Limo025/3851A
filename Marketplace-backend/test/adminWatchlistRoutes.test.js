@@ -35,24 +35,27 @@ test('admin routes reject non-admins, protect admins, and ban ordinary users', a
   });
   await withRouter('/api/admin', router, async (base) => {
     const url = `${base}/users/${id}/ban`;
-    const send = (uid, banned) => fetch(url, {
+    const send = (uid, banned, reason = '') => fetch(url, {
       method: 'PATCH', headers: { 'Content-Type': 'application/json', ...(uid ? { 'x-uid': uid } : {}) },
-      body: JSON.stringify({ banned }),
+      body: JSON.stringify({ banned, reason }),
     });
     assert.equal((await send(null, true)).status, 401);
     assert.equal((await send('buyer', true)).status, 403);
     assert.equal((await send('admin', 'yes')).status, 400);
-    const banned = await send('admin', true);
+    assert.equal((await send('admin', true)).status, 400);
+    const banned = await send('admin', true, 'Repeated prohibited listings');
     assert.equal(banned.status, 200);
     assert.equal((await banned.json()).message, 'User banned successfully');
     assert.equal(user.isBanned, true);
+    assert.equal(user.banReason, 'Repeated prohibited listings');
     assert.deepEqual(closed, ['buyer']);
     const unbanned = await send('admin', false);
     assert.equal(unbanned.status, 200);
     assert.equal((await unbanned.json()).message, 'User unbanned successfully');
     assert.equal(user.isBanned, false);
+    assert.equal(user.banReason, '');
     user.uid = 'admin';
-    assert.equal((await send('admin', true)).status, 403);
+    assert.equal((await send('admin', true, 'Test reason')).status, 403);
   });
 });
 

@@ -14,7 +14,7 @@ export function createVerifyToken({ verify = verifyFirebaseToken, UserModel = Us
     try {
         const currentUser = await UserModel.findOne({ uid: decoded.uid });
         if (!currentUser) return res.status(401).json({ error: 'Authenticated user was not found' });
-        if (currentUser.isBanned) return res.status(403).json({ error: 'Account is banned', code: 'ACCOUNT_BANNED' });
+        if (currentUser.isBanned) return res.status(403).json({ error: 'Account is banned', code: 'ACCOUNT_BANNED', reason: currentUser.banReason || '' });
         req.user = decoded;
         req.currentUser = currentUser;
         return next();

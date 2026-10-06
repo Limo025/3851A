@@ -111,6 +111,53 @@
   overflow-wrap: anywhere;
 }
 
+.admin-page__ban-form,
+.admin-page__ban-reason {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1rem 0;
+  padding: 1rem;
+  background: #fff7f7;
+  border: 1px solid #e5b8b8;
+  border-radius: 0.75rem;
+}
+
+.admin-page__ban-form label,
+.admin-page__ban-reason h3 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.admin-page__ban-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #b8c7dc;
+  border-radius: 0.5rem;
+  resize: vertical;
+}
+
+.admin-page__ban-form > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.admin-page__ban-reason p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.admin-page__ban-form button,
+.admin-page__ban-reason button {
+  justify-self: end;
+  padding: 0.5rem 0.75rem;
+  color: #a02121;
+  border: 1px solid #a02121;
+  border-radius: 0.5rem;
+}
+
 .admin-page__listing {
   padding: 0.75rem;
 }
