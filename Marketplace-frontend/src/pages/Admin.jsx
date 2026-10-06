@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { apiFetch } from '../api/client.js';
 import { handleAuthenticationError } from '../auth/handleAuthenticationError.js';
 import { session } from '../auth/session.js';
-import './Admin.css';
+import '../css/styles/Admin.css';
 
 export default function Admin() {
   const navigate = useNavigate();
