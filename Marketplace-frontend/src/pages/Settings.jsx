@@ -38,14 +38,13 @@ function initialiseSettings(event){
 }
 function App() {
   const [count, setCount] = useState(0)
-
+  document.title = "Settings | UON Marketplace";
   return (
 <>
   {/* MAIN CONTENT*/}
   <div id="contentBackground">
     <div id="content">
-      <h1> Error 404</h1>
-      <h3> The website you were trying to go to is either unavailable, or doesn't exist.<br /> If you think this is a mistake, please contact support. </h3>
+      <h1> Settings</h1>
 
     </div>
   </div>

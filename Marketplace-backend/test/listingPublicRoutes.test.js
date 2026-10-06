@@ -4,8 +4,8 @@ import { once } from 'node:events';
 import express from 'express';
 import { createListingRouter } from '../src/routes/listings.js';
 
-async function withListingApp(ListingModel, run) {
-  const app = express().use('/api/listings', createListingRouter({ ListingModel }));
+async function withListingApp(ListingModel, run, UserModel = { distinct: async () => [] }) {
+  const app = express().use('/api/listings', createListingRouter({ ListingModel, UserModel }));
   const server = app.listen(0, '127.0.0.1');
   await once(server, 'listening');
   const { port } = server.address();
@@ -143,13 +143,44 @@ test('GET / returns 400 for a recognized invalid query without querying listings
   assert.equal(queried, false);
 });
 
+test('GET / excludes listings from banned sellers', async () => {
+  const bannedSellerId = '507f1f77bcf86cd799439012';
+  const calls = {};
+  const ListingModel = {
+    find(filter) {
+      calls.findFilter = filter;
+      return listQuery([], calls);
+    },
+    async countDocuments(filter) {
+      calls.countFilter = filter;
+      return 0;
+    },
+  };
+  const UserModel = {
+    async distinct(field, filter) {
+      calls.distinct = [field, filter];
+      return [bannedSellerId];
+    },
+  };
+
+  await withListingApp(ListingModel, async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/api/listings`);
+    assert.equal(response.status, 200);
+  }, UserModel);
+
+  const expectedFilter = { seller: { $nin: [bannedSellerId] } };
+  assert.deepEqual(calls.distinct, ['_id', { isBanned: true }]);
+  assert.deepEqual(calls.findFilter, expectedFilter);
+  assert.deepEqual(calls.countFilter, expectedFilter);
+});
+
 test('GET /:id returns one populated listing with safe seller fields', async () => {
   const calls = {};
   const listingId = '507f1f77bcf86cd799439011';
   const listing = { _id: listingId, title: 'Desk lamp', seller: { _id: 'seller-1', username: 'Ada' } };
   const ListingModel = {
-    findById(id) {
-      calls.id = id;
+    findOne(filter) {
+      calls.filter = filter;
       return detailQuery(listing, calls);
     },
   };
@@ -161,14 +192,14 @@ test('GET /:id returns one populated listing with safe seller fields', async () 
     assert.deepEqual(await response.json(), { ...listing, quantity: 1, soldAt: null });
   });
 
-  assert.equal(calls.id, listingId);
+  assert.deepEqual(calls.filter, { _id: listingId });
   assert.deepEqual(calls.populate, ['seller', '_id uid username']);
 });
 
 test('GET /:id returns 404 when a valid listing id is absent', async () => {
   const listingId = '507f1f77bcf86cd799439011';
   const ListingModel = {
-    findById: () => detailQuery(null, {}),
+    findOne: () => detailQuery(null, {}),
   };
 
   await withListingApp(ListingModel, async (baseUrl) => {
@@ -182,7 +213,7 @@ test('GET /:id returns 404 when a valid listing id is absent', async () => {
 test('GET /:id rejects malformed ObjectIds before querying listings', async () => {
   let queried = false;
   const ListingModel = {
-    findById() {
+    findOne() {
       queried = true;
       throw new Error('malformed ids must not reach the database');
     },
@@ -196,4 +227,24 @@ test('GET /:id rejects malformed ObjectIds before querying listings', async () =
   });
 
   assert.equal(queried, false);
+});
+
+test('GET /:id hides a listing owned by a banned seller', async () => {
+  const listingId = '507f1f77bcf86cd799439011';
+  const bannedSellerId = '507f1f77bcf86cd799439012';
+  let filter;
+  const ListingModel = {
+    findOne(value) {
+      filter = value;
+      return detailQuery(null, {});
+    },
+  };
+  const UserModel = { distinct: async () => [bannedSellerId] };
+
+  await withListingApp(ListingModel, async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/api/listings/${listingId}`);
+    assert.equal(response.status, 404);
+  }, UserModel);
+
+  assert.deepEqual(filter, { _id: listingId, seller: { $nin: [bannedSellerId] } });
 });

@@ -96,7 +96,7 @@ export default function Marketplace() {
   function goToPage(page) {
     updateParameters({ page: String(page) });
   }
-
+  document.title = "Search | UON Marketplace";
   return (
     <main className="marketplace-page">
       <div className="marketplace-page__content">

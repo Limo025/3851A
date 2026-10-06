@@ -17,9 +17,9 @@ export default function Messages() {
     return () => useChatStore.setState({ isMessagesPageOpen: false });
   }, []);
 
+  document.title = "Messages | UON Marketplace";
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-white p-4 md:p-8 flex items-center justify-center">
-      {/* Centered Chat Card Box (Fixed max width & height) */}
       <div className="w-full max-w-6xl h-[80vh] bg-white rounded-2xl shadow-[0_18px_45px_rgba(15,23,42,0.18)] overflow-hidden border-2 border-slate-200 grid grid-cols-4">
         
         {/* Left Sidebar Box (1/4 Width) */}
@@ -33,7 +33,6 @@ export default function Messages() {
           </div>
         </aside>
 
-        {/* Right Main Chat Area Box (3/4 Width) */}
         <main className="col-span-3 bg-white flex flex-col h-full overflow-hidden">
           {selectedUser ? (
             <ChatContainer key={`${selectedUser.buyer}:${selectedUser.seller}:${selectedUser.listing?._id || selectedUser.listing}`} user={selectedUser} />

@@ -35,6 +35,13 @@ export function createListingRouter({
 } = {}) {
   const router = express.Router();
 
+  async function publicListingFilter(filter = {}) {
+    const bannedSellerIds = await UserModel.distinct('_id', { isBanned: true });
+    return bannedSellerIds.length > 0
+      ? { ...filter, seller: { $nin: bannedSellerIds } }
+      : filter;
+  }
+
   async function authorizeOwnedListing(req, res, next) {
     if (!mongoose.isObjectIdOrHexString(req.params.id)) {
       return res.status(400).json({ error: 'Listing id is invalid' });
@@ -111,14 +118,15 @@ export function createListingRouter({
   router.get('/', async (req, res) => {
     try {
       const { filter, sort, page, limit } = parseListingQuery(req.query);
+      const visibleFilter = await publicListingFilter(filter);
       const [listings, total] = await Promise.all([
-        ListingModel.find(filter)
+        ListingModel.find(visibleFilter)
           .populate('seller', SAFE_SELLER_FIELDS)
           .sort(sort)
           .skip((page - 1) * limit)
           .limit(limit)
           .lean(),
-        ListingModel.countDocuments(filter),
+        ListingModel.countDocuments(visibleFilter),
       ]);
 
       return res.json({
@@ -265,7 +273,8 @@ export function createListingRouter({
     }
 
     try {
-      const listing = await ListingModel.findById(req.params.id)
+      const visibleFilter = await publicListingFilter({ _id: req.params.id });
+      const listing = await ListingModel.findOne(visibleFilter)
         .populate('seller', SAFE_SELLER_FIELDS)
         .lean();
 

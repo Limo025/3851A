@@ -26,6 +26,7 @@ function handleSearch(event) {
 }
 
 function App() {
+  document.title = "Help | UON Marketplace";
   const [selectedCategory, setSelectedCategory] = useState(' ');
   const [count, setCount] = useState(0)
 

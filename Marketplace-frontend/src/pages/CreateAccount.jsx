@@ -63,6 +63,7 @@ function App() {
     }
   }
   
+  document.title = "Create Account | UON Marketplace";
   return (
     <div id="loginPageBackground" className="flex justify-center py-10 px-4" style={backgroundStyle}>
       <div className='flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg h-fit'>

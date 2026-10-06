@@ -34,6 +34,8 @@ export default function CreateListing() {
     }
   }
 
+  document.title = "New Listing | UON Marketplace";
+
   return (
     <main className="marketplace-page">
       <div className="marketplace-page__content listing-form-page">

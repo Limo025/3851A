@@ -1,7 +1,9 @@
 function App() {
+  document.title = "Page Not Found | UON Marketplace";
   return (
 <>
   {/* MAIN CONTENT*/}
+  
   <div id="contentBackground">
     <div id="content">
       <h1> Not Found. </h1>

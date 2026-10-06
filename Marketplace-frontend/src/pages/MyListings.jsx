@@ -127,7 +127,7 @@ export default function MyListings() {
       </div>
     );
   }
-
+document.title = "My Listings | UON Marketplace";
   return (
     <main className="marketplace-page">
       <div className="marketplace-page__content">
