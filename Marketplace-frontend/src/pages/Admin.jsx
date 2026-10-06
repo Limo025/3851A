@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { apiFetch } from '../api/client.js';
 import { handleAuthenticationError } from '../auth/handleAuthenticationError.js';
 import { session } from '../auth/session.js';
-import '../css/styles/Admin.css';
+import './Admin.css';
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -126,8 +126,7 @@ export default function Admin() {
             </form>
             {loadingUsers ? <p>Loading users…</p> : users.length === 0 ? <p>{search ? 'No users match your search.' : 'No users found.'}</p> : (
               <ul className="admin-page__list">
-                {users.map((user) => 
-                <li key={user._id}>
+                {users.map((user) => <li key={user._id}>
                   <button type="button" className={selected?._id === user._id ? 'admin-page__selected' : ''} onClick={() => { setSelected(user); setListingPage(1); setListings([]); setNotice(''); }}>
                     <strong>{user.username || 'Unnamed user'}</strong>
                     <span>{user.email}</span>
