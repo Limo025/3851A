@@ -50,18 +50,17 @@ export default function ForgotPassword() {
   document.title = "Forgot Password | UON Marketplace";
 
   return (
-    <main id="contentBackground" className="password-reset-page" style={backgroundStyle}>
-      <section className="password-reset-card" aria-labelledby="password-reset-title">
-        <p className="password-reset-card__eyebrow">Account recovery</p>
-        <h1 id="password-reset-title">Reset your password</h1>
-        <p className="password-reset-card__intro">
+
+    <main id="loginPageBackground" style={backgroundStyle}>
+    <div className='flex flex-col items-center gap-4 p-8'>
+      <div className="flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
+          <img src='src/img/logoHrz.png' alt='University of Newcastle logo'></img>
+        <h2 className="font-['Corbel'] text-3xl text-center w-full">Forgot Password</h2>
+       <p className="password-reset-card__intro">
           Enter the email used for your Marketplace account. Firebase will email you a secure reset link.
         </p>
-
-        {sent ? <p className="password-reset-card__success" role="status">{successMessage}</p> : null}
-        {error ? <p className="password-reset-card__error" role="alert">{error}</p> : null}
-
-        <form className="password-reset-form" onSubmit={handleSubmit} noValidate>
+        
+         <form className="password-reset-form" onSubmit={handleSubmit} noValidate>
           <label htmlFor="reset-email">Email address</label>
           <input
             id="reset-email"
@@ -80,7 +79,27 @@ export default function ForgotPassword() {
         </form>
 
         <Link className="password-reset-card__back" to="/login">Back to login</Link>
+        
+        <br />
+      </div>
+    </div>
+  </main>
+  )
+}
+ /* return (
+    <main id="contentBackground" className="password-reset-page" style={backgroundStyle}>
+      <section className="password-reset-card" aria-labelledby="password-reset-title">
+        <p className="password-reset-card__eyebrow">Account recovery</p>
+        <h1 id="password-reset-title">Reset your password</h1>
+       
+
+        {sent ? <p className="password-reset-card__success" role="status">{successMessage}</p> : null}
+        {error ? <p className="password-reset-card__error" role="alert">{error}</p> : null}
+
+       
       </section>
     </main>
   );
-}
+} */
+
+
