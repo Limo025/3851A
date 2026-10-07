@@ -67,9 +67,10 @@ function App() {
   return (
     <div id="loginPageBackground" className="flex justify-center py-10 px-4" style={backgroundStyle}>
       <div className='flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg h-fit'>
-        <div>
-          <h1 className="text-3xl font-semibold">Create Account</h1>
-          <p className="text-sm text-gray-500">All fields are required.</p>
+        <div className="text-center;">
+          <img src='src/img/logoHrz.png' alt='University of Newcastle logo'></img>
+          <br/>
+          <p className="text-3xl font-['Corbel'] text-center">Create Account</p>
         </div>
         {error && <p className="text-sm text-red-600">{error}</p>}
           <FieldSet id="registerForm" className='createAccountForm w-full'>
@@ -85,7 +86,7 @@ function App() {
                   onChange={(e) => setUsername(e.target.value)}
                 />
                 <FieldDescription>
-                This will be your displayed name by default, unless changed otherwise.
+                This will be your displayed name by default.
                 </FieldDescription>
               </Field>
 
@@ -99,7 +100,7 @@ function App() {
                   onChange={e => setDob(e.target.value)}
                 />
                 <FieldDescription>
-                  You must be at least 18 years of age to use the Marketplace.
+                  You must be at least 18 years of age.
                 </FieldDescription>
               </Field>
               <Field>
@@ -141,7 +142,7 @@ function App() {
               </Field>
             </FieldGroup>
           </FieldSet>
-
+          <br/><br/>
           <div className="flex flex-col gap-2 w-full text-sm">
             <label htmlFor="terms" className="flex items-start gap-2">
               <input
@@ -153,7 +154,7 @@ function App() {
                 className="mt-1"
               />
               <span>
-                I agree to the Community Marketplace{' '}
+                I agree to the{' '}
                 <a href="#" className="underline">Terms and Conditions</a>.
               </span>
             </label>
@@ -168,7 +169,7 @@ function App() {
                 className="mt-1"
               />
               <span>
-                I acknowledge the Community Marketplace{' '}
+                I acknowledge the Marketplace's{' '}
                 <a href="#" className="underline">Privacy Policy</a>.
               </span>
             </label>
@@ -183,8 +184,8 @@ function App() {
                 className="mt-1"
               />
               <span>
-                I agree to the University of Marketplace{' '}
-                <a href="#" className="underline">Code of Conduct</a>.
+                I agree to the UON {' '}
+                <a href="https://policies.newcastle.edu.au/document/view-current.php?id=204" className="underline">Code of Conduct</a>.
               </span>
             </label>
           </div>

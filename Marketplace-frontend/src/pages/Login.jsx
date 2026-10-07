@@ -64,10 +64,13 @@ function App() {
   <div id="loginPageBackground" style={backgroundStyle}>
     <div className='flex flex-col items-center gap-4 p-8'>
       <div className="flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
-        <h1 >
-          <img src='https://ok2static2.oktacdn.com/fs/bco/1/fs01bgsfcgbz8rdD10x8' alt='University of Newcastle logo'></img>
-        </h1>
-        <h2 className="font-['FuseV2Bold'] text-3xl">Login page</h2>
+          {/* <img src='https://ok2static2.oktacdn.com/fs/bco/1/fs01bgsfcgbz8rdD10x8' alt='University of Newcastle logo'></img> 
+          whoever told chatgpt to generate me a login page based on the uni's okta login page, fuck you
+          you ripped the uni logo from the okta login page i can literally see the okta in the url
+          at least TRY and make it original*/}
+          <img src='src/img/logoHrz.png' alt='University of Newcastle logo'></img>
+        <h2 className="font-['Corbel'] text-3xl text-center w-full">Login page</h2>
+        <p>This is different to the MyUni OKTA Login.</p>
         {error && <p className="text-sm text-red-600">{error}</p>}
         <FieldSet id="loginForm" className="loginAccountForm w-full max-w-xs">
           <FieldGroup>
