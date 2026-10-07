@@ -42,7 +42,7 @@ router.get('/users', async (req, res) => {
       { email: { $regex: escapedSearch, $options: 'i' } },
     ] } : {};
     const [users, total] = await Promise.all([
-      UserModel.find(filter, '_id uid email username isBanned createdAt').sort({ createdAt: -1, _id: -1 }).skip((page - 1) * limit).limit(limit).lean(),
+      UserModel.find(filter, '_id uid email username isBanned banReason createdAt').sort({ createdAt: -1, _id: -1 }).skip((page - 1) * limit).limit(limit).lean(),
       UserModel.countDocuments(filter),
     ]);
     return res.json({ users, page, pages: Math.max(1, Math.ceil(total / limit)), total });
@@ -76,11 +76,15 @@ router.patch('/users/:id/ban', async (req, res) => {
   if (!mongoose.isObjectIdOrHexString(req.params.id) || typeof req.body?.banned !== 'boolean') {
     return res.status(400).json({ error: 'Invalid user id or banned value' });
   }
+  const reason = typeof req.body?.reason === 'string' ? req.body.reason.trim() : '';
+  if (req.body.banned && !reason) return res.status(400).json({ error: 'A ban reason is required' });
+  if (reason.length > 1000) return res.status(400).json({ error: 'Ban reason must be 1000 characters or fewer' });
   try {
     const user = await UserModel.findById(req.params.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
     if (req.body.banned && getAdminUids().has(user.uid)) return res.status(403).json({ error: 'Cannot ban an admin' });
     user.isBanned = req.body.banned;
+    user.banReason = user.isBanned ? reason : '';
     await user.save();
     if (user.isBanned) closeUserConnections(user.uid);
     return res.json({
@@ -88,6 +92,7 @@ router.patch('/users/:id/ban', async (req, res) => {
       _id: user._id,
       uid: user.uid,
       isBanned: user.isBanned,
+      banReason: user.banReason,
     });
   } catch {
     return res.status(500).json({ error: 'Failed to change ban status' });

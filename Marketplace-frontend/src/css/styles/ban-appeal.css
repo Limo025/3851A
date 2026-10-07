@@ -1,0 +1,131 @@
+.ban-appeal-page {
+  box-sizing: border-box;
+  min-height: 100vh;
+  padding: 90px 24px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.ban-appeal-card {
+  box-sizing: border-box;
+  max-width: 660px;
+  margin: 0 auto;
+  padding: 42px;
+  background: #fff;
+  border: 1px solid #cbd6e8;
+  border-top: 8px solid #b00020;
+  box-shadow: 0 18px 50px rgba(0, 34, 94, 0.14);
+}
+
+.ban-appeal-card__eyebrow {
+  margin: 0 0 8px;
+  color: #b00020;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.ban-appeal-card h1,
+.ban-appeal-card h2 {
+  color: #202020;
+}
+
+.ban-appeal-card h1 {
+  margin: 0;
+}
+
+.ban-appeal-card__intro,
+.ban-appeal-card__instructions,
+.ban-appeal-card__warning {
+  color: #42526d;
+  font-family: Corbel, Arial, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.ban-appeal-card__intro {
+  margin: 14px 0 22px;
+}
+
+.ban-appeal-card__email {
+  display: inline-block;
+  padding: 12px 18px;
+  color: #fff;
+  background: #005bf9;
+  border-radius: 8px;
+  font-family: FuseV2, Arial, sans-serif;
+  overflow-wrap: anywhere;
+}
+
+.ban-appeal-card__reason {
+  margin: 0 0 24px;
+  padding: 16px;
+  color: #202020;
+  background: #f4f7fc;
+  border-left: 5px solid #b00020;
+}
+
+.ban-appeal-card__reason h2 {
+  margin: 0 0 6px;
+  font-size: 1.1rem;
+}
+
+.ban-appeal-card__reason p {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.ban-appeal-card__email:hover {
+  background: #00225e;
+}
+
+.ban-appeal-card__instructions {
+  margin-top: 28px;
+}
+
+.ban-appeal-card__instructions h2 {
+  margin-bottom: 8px;
+  font-size: 1.25rem;
+}
+
+.ban-appeal-card__instructions ul {
+  padding-left: 24px;
+  list-style: disc;
+}
+
+.ban-appeal-card__warning {
+  margin: 24px 0 0;
+  padding: 14px 16px;
+  color: #7a0015;
+  background: #fff0f0;
+  border-left: 5px solid #b00020;
+}
+
+.ban-appeal-card__back {
+  display: inline-block;
+  margin-top: 26px;
+  color: #005bf9;
+  font-family: FuseV2, Arial, sans-serif;
+}
+
+.ban-appeal-card__back:hover {
+  color: #00225e;
+}
+
+.ban-appeal-card__email:focus-visible,
+.ban-appeal-card__back:focus-visible {
+  outline: 3px solid #202020;
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .ban-appeal-page {
+    padding: 48px 14px;
+  }
+
+  .ban-appeal-card {
+    padding: 28px 20px;
+  }
+}

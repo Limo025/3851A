@@ -22,6 +22,7 @@ export default function Admin() {
   const [pending, setPending] = useState('');
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
+  const [banReason, setBanReason] = useState('');
 
   const selectedId = selected?._id;
   const report = useCallback((errorValue) => {
@@ -69,16 +70,22 @@ export default function Admin() {
 
   async function changeBan(user) {
     const banned = !user.isBanned;
+    const reason = banReason.trim();
+    if (banned && !reason) {
+      setError('Enter a reason before banning this user.');
+      return;
+    }
     if (!window.confirm(`${banned ? 'Ban' : 'Unban'} ${user.username || user.email}?`)) return;
     setPending(`user:${user._id}`);
     setError('');
     setNotice('');
     try {
       const result = await apiFetch(`/api/admin/users/${user._id}/ban`, {
-        auth: true, method: 'PATCH', body: { banned },
+        auth: true, method: 'PATCH', body: { banned, reason: banned ? reason : '' },
       });
-      setUsers((current) => current.map((item) => item._id === user._id ? { ...item, isBanned: result.isBanned } : item));
-      setSelected((current) => current?._id === user._id ? { ...current, isBanned: result.isBanned } : current);
+      setUsers((current) => current.map((item) => item._id === user._id ? { ...item, isBanned: result.isBanned, banReason: result.banReason } : item));
+      setSelected((current) => current?._id === user._id ? { ...current, isBanned: result.isBanned, banReason: result.banReason } : current);
+      setBanReason(result.banReason || '');
       setNotice(result.message);
     } catch (requestError) {
       report(requestError);
@@ -126,9 +133,8 @@ export default function Admin() {
             </form>
             {loadingUsers ? <p>Loading users…</p> : users.length === 0 ? <p>{search ? 'No users match your search.' : 'No users found.'}</p> : (
               <ul className="admin-page__list">
-                {users.map((user) => 
-                <li key={user._id}>
-                  <button type="button" className={selected?._id === user._id ? 'admin-page__selected' : ''} onClick={() => { setSelected(user); setListingPage(1); setListings([]); setNotice(''); }}>
+                {users.map((user) => <li key={user._id}>
+                  <button type="button" className={selected?._id === user._id ? 'admin-page__selected' : ''} onClick={() => { setSelected(user); setBanReason(user.banReason || ''); setListingPage(1); setListings([]); setNotice(''); }}>
                     <strong>{user.username || 'Unnamed user'}</strong>
                     <span>{user.email}</span>
                     <small>{user.isBanned ? 'Banned' : 'Active'} · Joined {new Date(user.createdAt).toLocaleDateString()}</small>
@@ -146,8 +152,22 @@ export default function Admin() {
             {!selected ? <p>Select a user to see their listings.</p> : <>
               <div className="admin-page__detail-header">
                 <div><h2>{selected.username || 'Unnamed user'}</h2><p>{selected.email}</p></div>
-                <button type="button" disabled={Boolean(pending)} onClick={() => changeBan(selected)}>{pending === `user:${selected._id}` ? 'Saving…' : selected.isBanned ? 'Unban user' : 'Ban user'}</button>
               </div>
+              {selected.isBanned ? (
+                <div className="admin-page__ban-reason">
+                  <h3>Ban reason</h3>
+                  <p>{selected.banReason || 'No reason was recorded.'}</p>
+                  <button type="button" disabled={Boolean(pending)} onClick={() => changeBan(selected)}>
+                    {pending === `user:${selected._id}` ? 'Saving…' : 'Unban user'}
+                  </button>
+                </div>
+              ) : (
+                <form className="admin-page__ban-form" onSubmit={(event) => { event.preventDefault(); changeBan(selected); }}>
+                  <label htmlFor="admin-ban-reason">Reason for ban</label>
+                  <textarea id="admin-ban-reason" value={banReason} onChange={(event) => setBanReason(event.target.value)} maxLength={1000} rows={4} placeholder="Explain which marketplace rule was violated" disabled={Boolean(pending)} required />
+                  <div><small>{banReason.length}/1000 characters</small><button type="submit" disabled={Boolean(pending) || !banReason.trim()}>{pending === `user:${selected._id}` ? 'Saving…' : 'Ban user'}</button></div>
+                </form>
+              )}
               {loadingListings ? <p>Loading listings…</p> : listings.length === 0 ? <p>No listings on this page.</p> : (
                 <ul className="admin-page__list">
                   {listings.map((listing) => <li className="admin-page__listing" key={listing._id}>

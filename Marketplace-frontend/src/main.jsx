@@ -24,6 +24,7 @@ import Watchlist from './pages/Watchlist.jsx'
 import PurchaseHistory from './pages/PurchaseHistory.jsx'
 import Admin from './pages/Admin.jsx'
 import Help from './pages/Help.jsx'
+import BanAppeal from './pages/BanAppeal.jsx'
 import ChatWidget from './assistant/ChatWidget.jsx'
 import { initializeApp } from "firebase/app"
 import { Toaster } from 'react-hot-toast'
@@ -59,6 +60,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/ban-appeal" element={<BanAppeal />} />
         <Route path="/item" element={<Item />} />
         <Route path="/createAccount" element={<CreateAccount />} />
         <Route path="/search" element={<Search />} />

@@ -23,8 +23,6 @@ function App() {
   const location = useLocation();
   const loadingIcon = document.getElementById('loadingIcon');
 
-  const toggleNav = () => setIsNavOpen(!isNavOpen);
-
   const backgroundStyle = {
     backgroundImage: ` url(${backgroundImg})`,
     backgroundSize: 'cover',
@@ -45,6 +43,11 @@ function App() {
                 body: JSON.stringify({ email, password }),
             });
             const data = await res.json();
+            if (res.status === 403 && data.code === 'ACCOUNT_BANNED') {
+                session.clear();
+                navigate('/ban-appeal', { replace: true, state: { email, reason: data.reason } });
+                return;
+            }
             if (!res.ok) throw new Error(data.error);
             useChatStore.getState().resetChatState();
             session.saveLogin(data);

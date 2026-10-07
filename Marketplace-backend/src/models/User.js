@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     username: { type: String, default: '' },
     isBanned: { type: Boolean, default: false },
+    banReason: { type: String, default: '', trim: true, maxlength: 1000 },
     createdAt: { type: Date, default: Date.now },
 });
 

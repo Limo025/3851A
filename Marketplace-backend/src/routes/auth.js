@@ -105,7 +105,7 @@ export function createAuthRouter({
                 { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true },       // fix bcs new here is deprecated
             );
 
-            if (user?.isBanned) return res.status(403).json({ error: 'Account is banned', code: 'ACCOUNT_BANNED' });
+            if (user?.isBanned) return res.status(403).json({ error: 'Account is banned', code: 'ACCOUNT_BANNED', reason: user.banReason || '' });
 
             res.json({
                 idToken: data.idToken,
@@ -178,7 +178,7 @@ export function createAuthRouter({
                 const fallbackUsername = name || (email ? email.split('@')[0] : `user_${uid.slice(0, 6)}`);
                 user = await UserModel.create({ uid, email, username: fallbackUsername });
             }
-            if (user.isBanned) return res.status(403).json({ error: 'Account is banned', code: 'ACCOUNT_BANNED' });
+            if (user.isBanned) return res.status(403).json({ error: 'Account is banned', code: 'ACCOUNT_BANNED', reason: user.banReason || '' });
             res.json({ user: { uid: user.uid, email: user.email, username: user.username } });
         } catch (err) {
             console.error('Google auth error:', err);
@@ -204,7 +204,7 @@ export function createAuthRouter({
             if (!user) {
                 return res.status(404).json({ error: 'User not found' });
             }
-            if (user.isBanned) return res.status(403).json({ error: 'Account is banned', code: 'ACCOUNT_BANNED' });
+            if (user.isBanned) return res.status(403).json({ error: 'Account is banned', code: 'ACCOUNT_BANNED', reason: user.banReason || '' });
             res.json({ uid: user.uid, email: user.email, username: user.username });
         } catch (err) {
             console.error('Me error:', err);
