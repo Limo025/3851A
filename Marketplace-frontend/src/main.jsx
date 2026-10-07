@@ -11,6 +11,8 @@ import CreateAccount from './pages/CreateAccount.jsx'
 import Search from './pages/Search.jsx'
 import Messages from './pages/Messages.jsx'
 import Settings from './pages/Settings.jsx'
+import UserPage from './pages/UserPage.jsx'
+import Appeal, { BanListener } from './pages/Appeal.jsx'
 import Marketplace from './pages/Marketplace.jsx'
 import ListingDetail from './pages/ListingDetail.jsx'
 import CreateListing from './pages/CreateListing.jsx'
@@ -24,7 +26,6 @@ import Watchlist from './pages/Watchlist.jsx'
 import PurchaseHistory from './pages/PurchaseHistory.jsx'
 import Admin from './pages/Admin.jsx'
 import Help from './pages/Help.jsx'
-import BanAppeal from './pages/BanAppeal.jsx'
 import ChatWidget from './assistant/ChatWidget.jsx'
 import { initializeApp } from "firebase/app"
 import { Toaster } from 'react-hot-toast'
@@ -48,6 +49,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
     <ChatSocket />
+    <BanListener />
       <Toaster
         position="top-center"
         reverseOrder={false}
@@ -60,12 +62,15 @@ createRoot(document.getElementById('root')).render(
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/ban-appeal" element={<BanAppeal />} />
+        <Route path="/ban-appeal" element={<Appeal />} />
         <Route path="/item" element={<Item />} />
         <Route path="/createAccount" element={<CreateAccount />} />
         <Route path="/search" element={<Search />} />
         <Route path="/messages" element={<RequireAuth><Messages /></RequireAuth>} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/profile" element={<RequireAuth><UserPage /></RequireAuth>} />
+        <Route path="/users/:id" element={<UserPage />} />
+        <Route path="/appeal" element={<Appeal />} />
         <Route path="/about" element={<About />} />
         <Route path="/watchlist" element={<RequireAuth><Watchlist /></RequireAuth>} />
         <Route path="/marketplace" element={<Marketplace />} />

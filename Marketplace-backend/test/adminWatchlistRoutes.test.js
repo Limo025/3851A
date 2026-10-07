@@ -48,6 +48,7 @@ test('admin routes reject non-admins, protect admins, and ban ordinary users', a
     assert.equal((await banned.json()).message, 'User banned successfully');
     assert.equal(user.isBanned, true);
     assert.equal(user.banReason, 'Repeated prohibited listings');
+    assert.equal(user.appeal.status, 'rejected');
     assert.deepEqual(closed, ['buyer']);
     const unbanned = await send('admin', false);
     assert.equal(unbanned.status, 200);

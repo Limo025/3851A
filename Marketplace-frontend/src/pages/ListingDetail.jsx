@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { apiFetch } from '../api/client.js';
 import { handleAuthenticationError } from '../auth/handleAuthenticationError.js';
 import { session } from '../auth/session.js';
@@ -194,7 +194,7 @@ export default function ListingDetail() {
           <p className="listing-detail__description">{displayValue(listing.description, 'No description provided.')}</p>
           <dl className="listing-detail__details">
             <div><dt>Condition</dt><dd>{displayValue(listing.condition)}</dd></div>
-            <div><dt>Seller</dt><dd>{displayValue(listing.seller?.username, 'Unknown seller')}</dd></div>
+            <div><dt>Seller</dt><dd>{listing.seller?._id ? <Link to={`/users/${listing.seller._id}`}>{displayValue(listing.seller.username, 'Unknown seller')}</Link> : 'Unknown seller'}</dd></div>
             <div><dt>Listed</dt><dd>{formatListingDate(listing.createdAt)}</dd></div>
           </dl>
           {watchlistFeedback ? <p className="listing-detail__watchlist-feedback" role="status">{watchlistFeedback}</p> : null}

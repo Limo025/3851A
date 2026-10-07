@@ -23,6 +23,11 @@ export default function Admin() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [banReason, setBanReason] = useState('');
+  const [appeals, setAppeals] = useState([]);
+  const [appealPage, setAppealPage] = useState(1);
+  const [appealPages, setAppealPages] = useState(1);
+  const [loadingAppeals, setLoadingAppeals] = useState(true);
+  const [appealRefresh, setAppealRefresh] = useState(0);
 
   const selectedId = selected?._id;
   const report = useCallback((errorValue) => {
@@ -30,6 +35,30 @@ export default function Admin() {
       setError(errorValue.message || 'The request failed. Please try again.');
     }
   }, [navigate, location.pathname]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    setLoadingAppeals(true);
+    apiFetch(`/api/admin/appeals?page=${appealPage}`, { auth: true, signal: controller.signal })
+      .then(data => { if (!controller.signal.aborted) { setAppeals(data.appeals); setAppealPages(data.pages); } })
+      .catch(requestError => { if (!controller.signal.aborted) report(requestError); })
+      .finally(() => { if (!controller.signal.aborted) setLoadingAppeals(false); });
+    return () => controller.abort();
+  }, [appealPage, appealRefresh, report]);
+
+  async function reviewAppeal(user, status) {
+    if (!window.confirm(status === 'approved' ? `Approve appeal and unban ${user.username}?` : `Reject appeal from ${user.username}?`)) return;
+    setPending(`appeal:${user._id}`); setError(''); setNotice('');
+    try {
+      const result = await apiFetch(`/api/admin/appeals/${user._id}`, { auth: true, method: 'PATCH', body: { status } });
+      setUsers(current => current.map(item => item._id === user._id ? { ...item, isBanned: result.isBanned, banReason: result.banReason } : item));
+      setSelected(current => current?._id === user._id ? { ...current, isBanned: result.isBanned, banReason: result.banReason } : current);
+      if (selectedId === user._id) setBanReason(result.banReason);
+      setNotice(result.message);
+      setAppealPage(1); setAppealRefresh(value => value + 1);
+    } catch (requestError) { report(requestError); setAppealRefresh(value => value + 1); }
+    finally { setPending(''); }
+  }
 
   useEffect(() => {
     const controller = new AbortController();
@@ -117,6 +146,23 @@ export default function Admin() {
         <p>Manage users and their listings.</p>
         {error && <p role="alert" className="admin-page__error">{error}</p>}
         {notice && <p role="status" className="admin-page__notice">{notice}</p>}
+        <section aria-label="Ban appeals">
+          <h2>Ban appeals</h2>
+          <button type="button" disabled={loadingAppeals || Boolean(pending)} onClick={() => setAppealRefresh(value => value + 1)}>Refresh appeals</button>
+          {loadingAppeals ? <p>Loading appeals…</p> : !appeals.length ? <p>No pending appeals.</p> : <ul className="admin-page__list">
+            {appeals.map(user => <li key={user._id}>
+              <strong>{user.username}</strong><p>{user.email} · {new Date(user.appeal.submittedAt).toLocaleString()}</p>
+              <p className="whitespace-pre-wrap break-words">{user.appeal.reason}</p>
+              <button type="button" disabled={Boolean(pending)} onClick={() => reviewAppeal(user, 'approved')}>Approve &amp; unban</button>
+              <button type="button" disabled={Boolean(pending)} onClick={() => reviewAppeal(user, 'rejected')}>Reject</button>
+            </li>)}
+          </ul>}
+          <div className="admin-page__pagination">
+            <button disabled={appealPage <= 1 || loadingAppeals} onClick={() => setAppealPage(value => value - 1)}>Previous</button>
+            <span>Page {appealPage} of {appealPages}</span>
+            <button disabled={appealPage >= appealPages || loadingAppeals} onClick={() => setAppealPage(value => value + 1)}>Next</button>
+          </div>
+        </section>
         <div className="admin-page__columns">
           <section aria-label="Users">
             <h2>Users</h2>
