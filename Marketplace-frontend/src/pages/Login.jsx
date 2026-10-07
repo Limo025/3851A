@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { session } from '../auth/session.js';
+import { setAppealToken } from '../auth/banNotice.js';
 import { useChatStore } from '../store/useChatStore.js';
 import { getPostLoginPath } from '../auth/returnPath.js';
 import backgroundImg from '../img/well.jpg';
@@ -44,8 +45,9 @@ function App() {
             });
             const data = await res.json();
             if (res.status === 403 && data.code === 'ACCOUNT_BANNED') {
+                setAppealToken(data.appealToken, data.reason);
                 session.clear();
-                navigate('/ban-appeal', { replace: true, state: { email, reason: data.reason } });
+                navigate('/appeal', { replace: true });
                 return;
             }
             if (!res.ok) throw new Error(data.error);

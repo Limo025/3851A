@@ -10,6 +10,8 @@ import recentlyViewedRoutes from './routes/recentlyViewed.js';
 import assistantRoutes from './routes/assistant.js';
 import adminRoutes from './routes/admin.js';
 import watchlistRoutes from './routes/watchlist.js';
+import userRoutes from './routes/users.js';
+import appealRoutes from './routes/appeals.js';
 import { handleUploadError } from './middleware/upload.js';
 import { setupWebSocket } from './config/websocket.js';
 import chatRoutes from './routes/chatRoutes.js';
@@ -32,6 +34,8 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/assistant', assistantRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/watchlist', watchlistRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/appeals', appealRoutes);
 
 app.use(handleUploadError);
 

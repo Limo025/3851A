@@ -8,6 +8,11 @@ export function handleAssistantAuthenticationError(error, {
   returnPath,
 }) {
   if (!(error instanceof AuthenticationError)) return false;
+  if (error.code === 'ACCOUNT_BANNED') {
+    dispatch({ type: 'authentication-required', payload: { error: error.message } });
+    navigate('/appeal');
+    return true;
+  }
 
   dispatch({
     type: 'authentication-required',

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useChatStore } from '../store/useChatStore.js';
 import { session } from '../auth/session.js';
+import { notifyBan } from '../auth/banNotice.js';
 
 export const useWebSocket = (token) => {
   const [isConnected, setIsConnected] = useState(false);
@@ -49,10 +50,15 @@ export const useWebSocket = (token) => {
         }
       };
 
-      ws.onclose = () => {
+      ws.onclose = (event) => {
         if (!active) return;
         socketRef.current = null;
         setIsConnected(false);
+        if (event.code === 1008 && event.reason === 'Account banned') {
+          notifyBan(accessToken);
+          session.clear();
+          return;
+        }
         retryTimer = window.setTimeout(connect, Math.min(1000 * 2 ** retryCount++, 30000));
       };
 

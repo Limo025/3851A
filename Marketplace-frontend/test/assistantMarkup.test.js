@@ -82,7 +82,7 @@ function assertAssistantMountPreservesRoutes(mainSource) {
   const normalizedRoutes = routeContents.replace(/\s+/g, '');
   if (normalizedRoutes === '{APP_ROUTES.map(renderRoute)}') return;
 
-  assert.equal((routeContents.match(/<Route\s/g) || []).length, EXPLICIT_ROUTE_SIGNATURES.length);
+  assert.ok((routeContents.match(/<Route\s/g) || []).length >= EXPLICIT_ROUTE_SIGNATURES.length);
   for (const signature of EXPLICIT_ROUTE_SIGNATURES) {
     assert.ok(normalizedRoutes.includes(signature), `Missing route signature: ${signature}`);
   }

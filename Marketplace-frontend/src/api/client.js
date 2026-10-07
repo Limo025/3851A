@@ -1,4 +1,5 @@
 import { AuthenticationError, session } from '../auth/session.js';
+import { notifyBan } from '../auth/banNotice.js';
 
 function apiBaseUrl() {
   return import.meta.env?.VITE_API_URL || 'http://localhost:8000';
@@ -40,8 +41,11 @@ export function createApiClient({ fetchImpl = globalThis.fetch, sessionManager =
     const data = contentType.includes('application/json') ? await response.json() : null;
 
     if (auth && response.status === 403 && data?.code === 'ACCOUNT_BANNED') {
+      notifyBan(requestHeaders.Authorization?.slice(7), data.reason);
       sessionManager.clear();
-      throw new AuthenticationError(data.error || 'Account is banned');
+      const error = new AuthenticationError(data.error || 'Account is banned');
+      error.code = 'ACCOUNT_BANNED';
+      throw error;
     }
 
     if (!response.ok) {

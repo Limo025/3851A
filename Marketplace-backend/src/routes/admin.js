@@ -24,6 +24,27 @@ router.use(authenticate, (req, res, next) => (
 
 router.get('/me', (req, res) => res.json({ isAdmin: true }));
 
+router.get('/appeals', async (req, res) => {
+  const page = Number(req.query.page ?? 1);
+  if (!Number.isInteger(page) || page < 1 || page > 10000) return res.status(400).json({ error: 'Invalid pagination' });
+  const filter = { 'appeal.status': 'pending' };
+  const [appeals, total] = await Promise.all([
+    UserModel.find(filter, '_id username email isBanned appeal').sort({ 'appeal.submittedAt': 1, _id: 1 }).skip((page - 1) * 20).limit(20).lean(),
+    UserModel.countDocuments(filter),
+  ]);
+  return res.json({ appeals, page, pages: Math.max(1, Math.ceil(total / 20)), total });
+});
+
+router.patch('/appeals/:id', async (req, res) => {
+  if (!mongoose.isObjectIdOrHexString(req.params.id) || !['approved', 'rejected'].includes(req.body?.status)) return res.status(400).json({ error: 'Invalid appeal id or status' });
+  const status = req.body.status;
+  const update = { 'appeal.status': status, 'appeal.reviewedAt': new Date() };
+  if (status === 'approved') { update.isBanned = false; update.banReason = ''; }
+  const user = await UserModel.findOneAndUpdate({ _id: req.params.id, 'appeal.status': 'pending' }, { $set: update }, { returnDocument: 'after', runValidators: true });
+  if (!user) return res.status(409).json({ error: 'No pending appeal found. Refresh the appeals list.' });
+  return res.json({ message: status === 'approved' ? 'Appeal approved. User unbanned.' : 'Appeal rejected.', isBanned: user.isBanned, banReason: user.banReason || '' });
+});
+
 router.get('/users', async (req, res) => {
   const page = Number(req.query.page ?? 1);
   const limit = Number(req.query.limit ?? 10);
@@ -85,6 +106,9 @@ router.patch('/users/:id/ban', async (req, res) => {
     if (req.body.banned && getAdminUids().has(user.uid)) return res.status(403).json({ error: 'Cannot ban an admin' });
     user.isBanned = req.body.banned;
     user.banReason = user.isBanned ? reason : '';
+    if (!user.appeal) user.appeal = {};
+    user.appeal.status = 'rejected';
+    user.appeal.reviewedAt = new Date();
     await user.save();
     if (user.isBanned) closeUserConnections(user.uid);
     return res.json({
