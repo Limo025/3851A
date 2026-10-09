@@ -10,26 +10,11 @@ const bannerImgStyle = {
     height: '350px',
   };
 
-function ItemCard({ item }) {
-  return (
-    <div className='recItem'>
-      <img
-        className='recItemImage'
-        alt={item.title || 'itemImageNotFound'}
-        src={item.images?.[0]?.url || 'src/img/testImage_1.png'}
-      />
-      <p className='recItem__category'>{item.category}</p>
-      <h3 className='recItem__title' title={item.title}>{item.title}</h3>
-      <p className='recItem__price'>${item.price}</p>
-      <p className='recItem__seller'>Seller: {item.seller?.username || 'Unknown'}</p>
-    </div>
-  );
-}
+
 
 function App() {
   document.title = "UON Marketplace";
   const [recentlyViewed, setRecentlyViewed] = useState([]);
-  const [recommended, setRecommended] = useState([]);
 
   useEffect(() => {
     apiFetch('/api/recently-viewed', { auth: true })
@@ -37,45 +22,77 @@ function App() {
       .catch(() => setRecentlyViewed([]));
   }, []);
 
-  useEffect(() => {
-    apiFetch('/api/listings?limit=5')
-      .then((data) => setRecommended(data.listings || []))
-      .catch(() => setRecommended([]));
-  }, []);
-
   return (
+    
     <>
+        
         {/* BACKGROUND IMAGE FOR MAIN PAGE*/}
         <div id="headerImage">
             <img src="src/img/panorama_background.webp" alt="background image" style={bannerImgStyle} />
         </div>
-
         <div id="contentBackground">
             <div className="wideContent">
                 <h1>Recently viewed</h1>
             </div>
-            <div className='recItemsHomepage'>
-                {recentlyViewed.length === 0 ? (
-                    <p>No recently viewed items yet.</p>
-                ) : (
-                    recentlyViewed.map((item) => <ItemCard item={item} key={item._id} />)
-                )}
-            </div>
+                <div className='recItemsHomepage'>
+                    {recentlyViewed.length === 0 ? (
+                        <p>No recently viewed items yet.</p>
+                    ) : (
+                        recentlyViewed.map((item) => (
+                            <div className='recItem' key={item._id}>
+                                <img
+                                    className='recItemImage'
+                                    alt={item.title || 'itemImageNotFound'}
+                                    src={item.images?.[0]?.url || 'src/img/testImage_1.png'}
+                                />
+                                <h3>{item.title}</h3>
+                                <h3>${item.price}</h3>
+                            </div>
+                        ))
+                    )}
+                </div>
         </div>
-
-        <div id="contentBackground">
+                <div id="contentBackground">
             <div className="wideContent">
-                <h1>Recommended Items</h1>
+                <h1>Recommended Items </h1>
             </div>
-            <div className='recItemsHomepage'>
-                {recommended.length === 0 ? (
-                    <p>No recommended items right now.</p>
-                ) : (
-                    recommended.map((item) => <ItemCard item={item} key={item._id} />)
-                )}
-            </div>
+                <div className='recItemsHomepage'>
+                    
+                    <div className='recItem'>
+                        <img className='recItemImage' alt='itemImageNotFound' src="src/img/testImage_2.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    <div className='recItem'>
+                        <img className='recItemImage' alt='itemImageNotFound' src="src/img/testImage_1.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    <div className='recItem'>
+                        <img className='recItemImage' alt='itemImageNotFound' src="src/img/testImage_2.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    <div className='recItem'>
+                        <img className='recItemImage' alt='itemImageNotFound' src="src/img/testImage_3.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    <div className='recItem'>
+                        <img className='recItemImage' alt='itemImageNotFound' src="src/img/testImage_1.png"></img>
+                        <h3>item</h3>
+                        <h3>$item</h3>
+                    </div>
+
+                    
+                </div>
         </div>
-    </>
+        </>
+
   )
 }
 
