@@ -47,7 +47,11 @@ export default function BanAppeal() {
             <li>Any relevant context or evidence that may help the review.</li>
           </ul>
         </div>
-        
+
+        <p className="ban-appeal-card__warning">
+          Never include your password, verification codes, or other sensitive login information.
+        </p>
+
         <Link className="ban-appeal-card__back" to="/login">Back to login</Link>
       </section>
     </main>
