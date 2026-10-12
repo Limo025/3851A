@@ -10,7 +10,7 @@ test('appeals are stored without SMTP and only admins can review a pending appea
   let pending = false;
   let banned = true;
   const UserModel = {
-    findOne: async () => ({ _id: id, isBanned: banned }),
+    findOne: async () => ({ _id: id, isBanned: banned, appeal: { status: pending ? 'pending' : 'rejected' }, lastAppealAt: null }),
     findOneAndUpdate: async (filter, update) => {
       if (filter['appeal.status'] === 'pending') {
         if (!pending) return null;
@@ -37,7 +37,9 @@ test('appeals are stored without SMTP and only admins can review a pending appea
     const auth = { Authorization: 'Bearer valid' };
     assert.equal((await send('/appeals', { reason: 'short' }, auth)).status, 400);
     assert.equal((await send('/appeals', { reason: 'a'.repeat(25) }, auth)).status, 200);
-    assert.equal((await send('/appeals', { reason: 'a'.repeat(25) }, auth)).status, 429);
+    const duplicate = await send('/appeals', { reason: 'a'.repeat(25) }, auth);
+    assert.equal(duplicate.status, 409);
+    assert.equal((await duplicate.json()).error, 'You already have an appeal pending administrator review.');
     assert.equal((await send(`/admin/appeals/${id}`, { status: 'approved' }, { 'x-uid': 'buyer' }, 'PATCH')).status, 403);
     assert.equal((await send(`/admin/appeals/${id}`, { status: 'bad' }, { 'x-uid': 'admin' }, 'PATCH')).status, 400);
     assert.equal((await send(`/admin/appeals/${id}`, { status: 'rejected' }, { 'x-uid': 'admin' }, 'PATCH')).status, 200);

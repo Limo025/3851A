@@ -109,6 +109,7 @@ router.patch('/users/:id/ban', async (req, res) => {
     if (!user.appeal) user.appeal = {};
     user.appeal.status = 'rejected';
     user.appeal.reviewedAt = new Date();
+    if (user.isBanned) user.lastAppealAt = null;
     await user.save();
     if (user.isBanned) closeUserConnections(user.uid);
     return res.json({

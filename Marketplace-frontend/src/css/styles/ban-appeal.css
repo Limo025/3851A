@@ -83,13 +83,11 @@
 .ban-appeal-card__message--success {
   color: #14532d;
   background: #f0fdf4;
-  border-left: 5px solid #15803d;
 }
 
 .ban-appeal-card__message--error {
   color: #7a0015;
   background: #fff0f0;
-  border-left: 5px solid #b00020;
 }
 
 .ban-appeal-card__sign-in {
@@ -159,13 +157,6 @@
 
 .ban-appeal-card__back:hover {
   color: #0649bd;
-}
-
-.ban-appeal-form textarea:focus-visible,
-.ban-appeal-form button:focus-visible,
-.ban-appeal-card__back:focus-visible {
-  outline: 3px solid #202020;
-  outline-offset: 3px;
 }
 
 @media (max-width: 480px) {

@@ -24,9 +24,9 @@ async function withRouter(path, router, run) {
   }
 }
 
-test('admin routes reject non-admins, protect admins, and ban ordinary users', async () => {
+test('admin routes reject non-admins, protect admins, and give each new ban a fresh appeal window', async () => {
   const closed = [];
-  const user = { _id: id, uid: 'buyer', isBanned: false, async save() {} };
+  const user = { _id: id, uid: 'buyer', isBanned: false, lastAppealAt: new Date(), async save() {} };
   const router = createAdminRouter({
     authenticate: auth,
     getAdminUids: () => new Set(['admin']),
@@ -49,6 +49,7 @@ test('admin routes reject non-admins, protect admins, and ban ordinary users', a
     assert.equal(user.isBanned, true);
     assert.equal(user.banReason, 'Repeated prohibited listings');
     assert.equal(user.appeal.status, 'rejected');
+    assert.equal(user.lastAppealAt, null);
     assert.deepEqual(closed, ['buyer']);
     const unbanned = await send('admin', false);
     assert.equal(unbanned.status, 200);
