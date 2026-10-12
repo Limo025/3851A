@@ -6,7 +6,8 @@
 }
 
 #loginPageBackground {
-    height: fit-content;
+    min-height: 100dvh;
+    height: auto;
     display: grid;
 }
 
