@@ -28,6 +28,45 @@
     padding: 5px;
 }
 
+.form-link {
+    color: #005bf9;
+    font-family: Arial, sans-serif;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.form-link:hover {
+    color: #00225e;
+}
+
+.form-link:focus-visible {
+    border-radius: 2px;
+    outline: 3px solid #202020;
+    outline-offset: 3px;
+}
+
+.form-submit-button {
+    color: #fff;
+    background: #000;
+    border-color: #000;
+}
+
+.form-submit-button:hover:not(:disabled) {
+    color: #fff;
+    background: #202020;
+    border-color: #202020;
+}
+
+.form-submit-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+.form-submit-button:focus-visible {
+    outline: 3px solid #005bf9;
+    outline-offset: 3px;
+}
+
 .loadingIcon {
     height: 50px;
     padding-left: 50px;

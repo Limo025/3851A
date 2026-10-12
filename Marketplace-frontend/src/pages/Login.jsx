@@ -29,7 +29,6 @@ function App() {
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
-    width: '100vw',
     minHeight: '100vh',
   };
 
@@ -45,7 +44,7 @@ function App() {
             });
             const data = await res.json();
             if (res.status === 403 && data.code === 'ACCOUNT_BANNED') {
-                setAppealToken(data.appealToken, data.reason);
+                setAppealToken(data.appealToken, data.reason, data.appealExpiresIn);
                 session.clear();
                 navigate('/appeal', { replace: true });
                 return;
@@ -71,7 +70,6 @@ function App() {
       <div className="flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
           <img src='src/img/logoHrz.png' alt='University of Newcastle logo'></img>
         <h2 className="font-['Corbel'] text-3xl text-center w-full">Login page</h2>
-        <p>This is different to the MyUni OKTA Login.</p>
         {error && <p className="text-sm text-red-600">{error}</p>}
         <FieldSet id="loginForm" className="loginAccountForm w-full max-w-xs">
           <FieldGroup>
@@ -96,13 +94,13 @@ function App() {
           </FieldGroup>
         </FieldSet>
         
-        <Button className="p-6 text-xl font-['FuseV2']" onClick={logIn}>Log In</Button>
+        <Button className="form-submit-button p-6 text-xl font-['FuseV2']" onClick={logIn}>Log In</Button>
         <p className=" text-lg font-normal">
-          <Link to='/forgot-password' className="w-full">Forgot your password?</Link>
+          <Link to='/forgot-password' className="form-link w-full">Forgot your password?</Link>
         </p>
         <img id="loadingIcon" className="loadingIcon" src="src/icon/loading.gif" alt="loading" />
         <p className=" text-lg font-normal"> or, 
-          <Link to="/createAccount" className="w-full pl-1.5">Create an Account</Link>
+          <Link to="/createAccount" className="form-link w-full pl-1.5">Create an Account</Link>
         </p>
         <br />
       </div>

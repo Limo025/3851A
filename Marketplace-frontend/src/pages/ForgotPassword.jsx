@@ -18,7 +18,6 @@ export default function ForgotPassword() {
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      width: '100vw',
       minHeight: '100vh',
     };
 
@@ -75,12 +74,12 @@ export default function ForgotPassword() {
             disabled={submitting}
             required
           />
-          <button type="submit" disabled={submitting}>
+          <button className="form-submit-button" type="submit" disabled={submitting}>
             {submitting ? 'Sending…' : 'Send reset link'}
           </button>
         </form>
 
-        <Link className="password-reset-card__back" to="/login">Back to login</Link>
+        <Link className="form-link password-reset-card__back" to="/login">Back to login</Link>
         
       </div>
     </div>
