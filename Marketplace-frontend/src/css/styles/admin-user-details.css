@@ -102,7 +102,7 @@
 }
 
 .admin-page__listing a {
-  color: #0649bd;
+  color: #005bf9;
   font-weight: 600;
 }
 
@@ -122,10 +122,10 @@
 }
 
 .admin-page__columns > section:last-child .admin-page__pagination button {
-  color: #0649bd;
+  color: #005bf9;
 }
 
-.admin-page__columns > section:last-child .admin-page__pagination button:hover {
+.admin-page__columns > section:last-child .admin-page__pagination button:hover:not(:disabled) {
   color: #0649bd;
   text-decoration: underline;
 }

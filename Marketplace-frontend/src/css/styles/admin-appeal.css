@@ -68,6 +68,7 @@
 
 .admin-page__appeals .admin-page__pagination button {
   border: 0px;
+  color: #005bf9;
 }
 
 .admin-page__appeals .admin-page__pagination button:hover:not(:disabled) {

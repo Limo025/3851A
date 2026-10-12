@@ -36,7 +36,7 @@
 }
 
 .form-link:hover {
-    color: #00225e;
+    color: #0649bd;
 }
 
 .form-link:focus-visible {
@@ -53,8 +53,8 @@
 
 .form-submit-button:hover:not(:disabled) {
     color: #fff;
-    background: #202020;
-    border-color: #202020;
+    background: #363636;
+    border-color: #363636;
 }
 
 .form-submit-button:disabled {

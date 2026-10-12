@@ -98,7 +98,7 @@
 }
 
 .ban-appeal-card__sign-in a {
-  color: #005bf9;
+  color: #0649bd;
   font-weight: 700;
 }
 
@@ -158,7 +158,7 @@
 }
 
 .ban-appeal-card__back:hover {
-  color: #00225e;
+  color: #0649bd;
 }
 
 .ban-appeal-form textarea:focus-visible,

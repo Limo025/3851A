@@ -66,11 +66,12 @@
 }
 
 .admin-page__columns > section:first-child .admin-page__pagination button {
-  color: #0649bd;
+  color: #005bf9;
 }
 
 .admin-page__columns > section:first-child .admin-page__pagination button:hover {
   text-decoration: underline;
+  color: #0649bd;
 }
 
 @media (max-width: 480px) {
