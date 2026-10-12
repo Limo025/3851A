@@ -21,6 +21,11 @@
   border-radius: 0.5rem;
 }
 
+.admin-page__appeals button:hover:not(:disabled) {
+  color: white;
+  background-color: #0649bd;
+}
+
 .admin-page__appeals button.reject {
   padding: 0.5rem 0.75rem;
   color: #a02121;
@@ -59,6 +64,16 @@
   justify-content: center;
   gap: 1rem;
   padding-top: 1rem;
+}
+
+.admin-page__appeals .admin-page__pagination button {
+  border: 0px;
+}
+
+.admin-page__appeals .admin-page__pagination button:hover:not(:disabled) {
+  color: #0649bd;
+  text-decoration: underline;
+  background: transparent;
 }
 
 @media (max-width: 480px) {

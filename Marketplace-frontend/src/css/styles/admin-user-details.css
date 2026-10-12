@@ -125,6 +125,11 @@
   color: #0649bd;
 }
 
+.admin-page__columns > section:last-child .admin-page__pagination button:hover {
+  color: #0649bd;
+  text-decoration: underline;
+}
+
 @media (max-width: 480px) {
   .admin-page__listing {
     align-items: stretch;

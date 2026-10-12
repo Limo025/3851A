@@ -62,7 +62,7 @@ export default function AdminAppeal({ pending, setPending, setError, setNotice, 
               <p>{user.email} . {new Date(user.appeal.submittedAt).toLocaleString()}</p>
               <p>{user.appeal.reason}</p>
               <div>
-                <button type="button" disabled={Boolean(pending)} onClick={() => reviewAppeal(user, 'approved')}>Approve &amp; unban</button>
+                <button type="button" disabled={Boolean(pending)} onClick={() => reviewAppeal(user, 'approved')}>Approve & unban</button>
                 <button className='reject' type="button" disabled={Boolean(pending)} onClick={() => reviewAppeal(user, 'rejected')}>Reject</button>
               </div>
             </li>

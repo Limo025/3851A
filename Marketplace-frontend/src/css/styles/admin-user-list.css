@@ -19,8 +19,9 @@
   border-radius: 0.5rem;
 }
 
-.admin-page__search button:hover {
-  background: #eaf1ff;
+.admin-page__search button:hover:not(:disabled) {
+  color: white;
+  background: #0649bd;
 }
 
 .admin-page__columns > section:first-child .admin-page__list {
@@ -66,6 +67,10 @@
 
 .admin-page__columns > section:first-child .admin-page__pagination button {
   color: #0649bd;
+}
+
+.admin-page__columns > section:first-child .admin-page__pagination button:hover {
+  text-decoration: underline;
 }
 
 @media (max-width: 480px) {

@@ -20,9 +20,56 @@
   font-weight: 700;
 }
 
+.admin-page__mode-panel {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(15 23 42 / 8%);
+}
+
+.admin-page__modes {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0 0 1.25rem;
+  padding: 0.35rem;
+  width: fit-content;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.75rem;
+  background: #e8eef8;
+}
+
+.admin-page__mode {
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  color: #0649bd;
+  font-weight: 600;
+}
+
+.admin-page__mode:hover:not(:disabled) {
+  color: #fff;
+  background: #0649bd;
+}
+
+.admin-page__mode--active,
+.admin-page__mode--active:hover {
+  color: #fff;
+  background: #0649bd;
+}
+
+.admin-page__mode:focus-visible {
+  outline: 3px solid rgb(0 91 249 / 30%);
+  outline-offset: 2px;
+}
+
 .admin-page button:disabled {
   cursor: not-allowed;
   opacity: 0.45;
+}
+
+.admin-page button {
+  transition: background-color 150ms ease, color 150ms ease;
 }
 
 .admin-page__error {
