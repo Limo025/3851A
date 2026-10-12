@@ -94,11 +94,12 @@ test('admin can page through a selected user’s listings', async () => {
     },
   });
   await withRouter('/api/admin', router, async (base) => {
-    const response = await fetch(`${base}/users/${id}/listings?page=2&limit=20`, { headers: { 'x-uid': 'admin' } });
+    const response = await fetch(`${base}/users/${id}/listings?page=2`, { headers: { 'x-uid': 'admin' } });
     assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), { listings: [{ _id: id, title: 'Book' }], page: 2, pages: 2, total: 21 });
+    assert.deepEqual(await response.json(), { listings: [{ _id: id, title: 'Book' }], page: 2, pages: 3, total: 21 });
     assert.deepEqual(calls[0], { seller: id });
-    assert.equal(calls[2], 20);
+    assert.equal(calls[2], 10);
+    assert.equal(calls[3], 10);
     assert.equal((await fetch(`${base}/users/${id}/listings`, { headers: { 'x-uid': 'buyer' } })).status, 403);
   });
 });
