@@ -151,7 +151,7 @@ export default function Header()  {
                             <Link to="/purchase-history" onClick={closeSidebarAndFocusToggle}><p>Purchase History</p></Link>
                             <Link to="/settings" onClick={closeSidebarAndFocusToggle}><p>Settings</p></Link>
                             {isAdmin && <Link to="/admin" onClick={closeSidebarAndFocusToggle}><p>Admin</p></Link>}
-                            <p>Help</p>
+                            <Link to="/help" onClick={closeSidebarAndFocusToggle}><p>Help</p></Link>
                             <Link to="/about" onClick={closeSidebarAndFocusToggle}><p>About</p></Link>
                             {authView.showLoginLink && (
                                 <Link to="/login" onClick={closeSidebarAndFocusToggle}><p>Log In</p></Link>

@@ -17,9 +17,9 @@ import { Button } from "@/components/ui/button"
 
 async function checkRedirect(){
   const urlParams = new URLSearchParams(window.location.search);
-  if(!urlParams.has('requireAuth')){
+  if(urlParams.has('requireAuth')){
     const messageDisplay = document.getElementById('requireAuth');
-    messageDisplay.hidden = true;
+    messageDisplay.hidden = false;
   }
 }
 
