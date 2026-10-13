@@ -37,17 +37,16 @@
 }
 .requireAuthMessage{
     display: flex;
-    color: white;
+    color: black;
     align-items: center;
     justify-self: center;
     text-align: center;
     margin-top: 3rem;
     margin-bottom: -6rem;
-    border: 5px solid white;
     width: fit-content;
     height: fit-content;
     padding: 20px 20px;
-    background-color: #ff8b8b52;
+    background-color: #e3fffd6c;
     border-radius: 15px;
 }
 .helpTab{

@@ -15,22 +15,14 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 
-async function checkRedirect(){
-  const urlParams = new URLSearchParams(window.location.search);
-  if(urlParams.has('requireAuth')){
-    const messageDisplay = document.getElementById('requireAuth');
-    messageDisplay.hidden = false;
-  }
-}
-
 function App() {
-  const messageDisplay = document.getElementById('requireAuth');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const navigate = useNavigate();
   const location = useLocation();
+  const showRequireAuthMessage = new URLSearchParams(location.search).has('requireAuth');
   const loadingIcon = document.getElementById('loadingIcon');
 
   const backgroundStyle = {
@@ -65,15 +57,16 @@ function App() {
     }
 
     document.title = "Login | UON Marketplace";
-    checkRedirect();
   return (
 <>
   
   {/* MAIN CONTENT*/}
   <div id="loginPageBackground" style={backgroundStyle}>
-    <div class="requireAuthMessage" id="requireAuth">
-      <h2>You must be logged in to access this feature. </h2>
-    </div>
+    {showRequireAuthMessage && (
+      <div className="requireAuthMessage" id="requireAuth">
+        <h2>You must be logged in to access this feature. </h2>
+      </div>
+    )}
     <div className='flex flex-col items-center gap-4 p-8'>
       <div className="flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
           
