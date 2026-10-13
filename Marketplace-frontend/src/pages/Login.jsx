@@ -14,7 +14,17 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
+
+async function checkRedirect(){
+  const urlParams = new URLSearchParams(window.location.search);
+  if(!urlParams.has('requireAuth')){
+    const messageDisplay = document.getElementById('requireAuth');
+    messageDisplay.hidden = true;
+  }
+}
+
 function App() {
+  const messageDisplay = document.getElementById('requireAuth');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -22,8 +32,6 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const loadingIcon = document.getElementById('loadingIcon');
-
-  const toggleNav = () => setIsNavOpen(!isNavOpen);
 
   const backgroundStyle = {
     backgroundImage: ` url(${backgroundImg})`,
@@ -57,17 +65,18 @@ function App() {
     }
 
     document.title = "Login | UON Marketplace";
+    checkRedirect();
   return (
 <>
   
   {/* MAIN CONTENT*/}
   <div id="loginPageBackground" style={backgroundStyle}>
+    <div class="requireAuthMessage" id="requireAuth">
+      <h2>You must be logged in to access this feature. </h2>
+    </div>
     <div className='flex flex-col items-center gap-4 p-8'>
       <div className="flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
-          {/* <img src='https://ok2static2.oktacdn.com/fs/bco/1/fs01bgsfcgbz8rdD10x8' alt='University of Newcastle logo'></img> 
-          whoever told chatgpt to generate me a login page based on the uni's okta login page, fuck you
-          you ripped the uni logo from the okta login page i can literally see the okta in the url
-          at least TRY and make it original*/}
+          
           <img src='src/img/logoHrz.png' alt='University of Newcastle logo'></img>
         <h2 className="font-['Corbel'] text-3xl text-center w-full">Login page</h2>
         <p>This is different to the MyUni OKTA Login.</p>

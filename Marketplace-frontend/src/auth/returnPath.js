@@ -6,7 +6,7 @@ export function getLoginRedirect(hasSession, location) {
   if (hasSession) return null;
 
   return {
-    to: '/login',
+    to: '/login?requireAuth',
     replace: true,
     state: {
       from: buildReturnPath(location),
