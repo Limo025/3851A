@@ -5,3 +5,31 @@
     padding-left: 200px;
     padding-right: 200px;
 }
+
+.homeListings {
+    padding-left: 200px;
+    padding-right: 200px;
+}
+
+.homeArrows {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.homeArrows button {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #1f4e6b;
+    border-radius: 50%;
+    background: white;
+    color: #1f4e6b;
+    cursor: pointer;
+}
+
+.homeArrows button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
