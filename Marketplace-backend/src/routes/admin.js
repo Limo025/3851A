@@ -76,7 +76,7 @@ router.get('/users', async (req, res) => {
 
 router.get('/users/:id/listings', async (req, res) => {
   const page = Number(req.query.page ?? 1);
-  const limit = Number(req.query.limit ?? 20);
+  const limit = Number(req.query.limit ?? 10);
   if (!mongoose.isObjectIdOrHexString(req.params.id)) return res.status(400).json({ error: 'Invalid user id' });
   if (!Number.isInteger(page) || page < 1 || !Number.isInteger(limit) || limit < 1 || limit > 50) {
     return res.status(400).json({ error: 'Invalid pagination' });
@@ -111,6 +111,7 @@ router.patch('/users/:id/ban', async (req, res) => {
     if (!user.appeal) user.appeal = {};
     user.appeal.status = 'rejected';
     user.appeal.reviewedAt = new Date();
+    if (user.isBanned) user.lastAppealAt = null;
     await user.save();
     if (user.isBanned) closeUserConnections(user.uid);
     return res.json({

@@ -1,0 +1,81 @@
+.admin-page__search {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.admin-page__search input {
+  min-width: 0;
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #b8c7dc;
+  border-radius: 0.5rem;
+}
+
+.admin-page__search button {
+  padding: 0.5rem 0.75rem;
+  color: #0649bd;
+  border: 1px solid #0649bd;
+  border-radius: 0.5rem;
+}
+
+.admin-page__search button:hover:not(:disabled) {
+  color: white;
+  background: #0649bd;
+}
+
+.admin-page__columns > section:first-child .admin-page__list {
+  display: grid;
+  gap: 0.65rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-page__columns > section:first-child .admin-page__list li {
+  overflow: hidden;
+  border: 1px solid #dbe4f0;
+  border-radius: 0.75rem;
+}
+
+.admin-page__columns > section:first-child .admin-page__list li > button {
+  display: grid;
+  width: 100%;
+  gap: 0.25rem;
+  padding: 0.9rem;
+  text-align: left;
+}
+
+.admin-page__selected {
+  background: #eaf1ff;
+}
+
+.admin-page__columns > section:first-child small,
+.admin-page__columns > section:first-child .admin-page__list span {
+  display: block;
+  color: #52627b;
+  overflow-wrap: anywhere;
+}
+
+.admin-page__columns > section:first-child .admin-page__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.admin-page__columns > section:first-child .admin-page__pagination button {
+  color: #005bf9;
+}
+
+.admin-page__columns > section:first-child .admin-page__pagination button:hover {
+  text-decoration: underline;
+  color: #0649bd;
+}
+
+@media (max-width: 480px) {
+  .admin-page__search {
+    flex-direction: column;
+  }
+}
