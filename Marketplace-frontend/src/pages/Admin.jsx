@@ -1,235 +1,84 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { apiFetch } from '../api/client.js';
+import { useLocation, useNavigate } from 'react-router-dom';
+import AdminAppeal from '../components/AdminAppeal.jsx';
+import AdminDefault from '../components/AdminDefault.jsx';
 import { handleAuthenticationError } from '../auth/handleAuthenticationError.js';
 import { session } from '../auth/session.js';
-import '../css/styles/Admin.css';
+import '../css/styles/admin.css';
+
+const ADMIN_MODE_STORAGE_KEY = 'adminMode';
+const ADMIN_MODES = [
+  { id: 'default', label: 'Users & listings', Component: AdminDefault },
+  { id: 'appeal', label: 'Appeals', Component: AdminAppeal },
+];
+
+const validAdminModes = new Set(ADMIN_MODES.map(({ id }) => id));
+
+function getInitialMode() {
+  if (typeof window === 'undefined') return ADMIN_MODES[0].id;
+
+  const storedMode = window.localStorage.getItem(ADMIN_MODE_STORAGE_KEY);
+  return validAdminModes.has(storedMode) ? storedMode : ADMIN_MODES[0].id;
+}
 
 export default function Admin() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [page, setPage] = useState(1);
-  const [searchInput, setSearchInput] = useState('');
-  const [search, setSearch] = useState('');
-  const [users, setUsers] = useState([]);
-  const [pages, setPages] = useState(1);
-  const [selected, setSelected] = useState(null);
-  const [listingPage, setListingPage] = useState(1);
-  const [listings, setListings] = useState([]);
-  const [listingPages, setListingPages] = useState(1);
-  const [loadingUsers, setLoadingUsers] = useState(true);
-  const [loadingListings, setLoadingListings] = useState(false);
   const [pending, setPending] = useState('');
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
-  const [banReason, setBanReason] = useState('');
-  const [appeals, setAppeals] = useState([]);
-  const [appealPage, setAppealPage] = useState(1);
-  const [appealPages, setAppealPages] = useState(1);
-  const [loadingAppeals, setLoadingAppeals] = useState(true);
-  const [appealRefresh, setAppealRefresh] = useState(0);
+  const [userRefresh, setUserRefresh] = useState(0);
+  const [currentMode, setCurrentMode] = useState(getInitialMode);
 
-  const selectedId = selected?._id;
   const report = useCallback((errorValue) => {
     if (!handleAuthenticationError(errorValue, { sessionManager: session, navigate, returnPath: location.pathname })) {
       setError(errorValue.message || 'The request failed. Please try again.');
     }
   }, [navigate, location.pathname]);
 
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoadingAppeals(true);
-    apiFetch(`/api/admin/appeals?page=${appealPage}`, { auth: true, signal: controller.signal })
-      .then(data => { if (!controller.signal.aborted) { setAppeals(data.appeals); setAppealPages(data.pages); } })
-      .catch(requestError => { if (!controller.signal.aborted) report(requestError); })
-      .finally(() => { if (!controller.signal.aborted) setLoadingAppeals(false); });
-    return () => controller.abort();
-  }, [appealPage, appealRefresh, report]);
+  const sharedProps = { pending, setPending, setError, setNotice, report };
+  const activeMode = ADMIN_MODES.find(({ id }) => id === currentMode) ?? ADMIN_MODES[0];
+  const ActiveComponent = activeMode.Component;
 
-  async function reviewAppeal(user, status) {
-    if (!window.confirm(status === 'approved' ? `Approve appeal and unban ${user.username}?` : `Reject appeal from ${user.username}?`)) return;
-    setPending(`appeal:${user._id}`); setError(''); setNotice('');
-    try {
-      const result = await apiFetch(`/api/admin/appeals/${user._id}`, { auth: true, method: 'PATCH', body: { status } });
-      setUsers(current => current.map(item => item._id === user._id ? { ...item, isBanned: result.isBanned, banReason: result.banReason } : item));
-      setSelected(current => current?._id === user._id ? { ...current, isBanned: result.isBanned, banReason: result.banReason } : current);
-      if (selectedId === user._id) setBanReason(result.banReason);
-      setNotice(result.message);
-      setAppealPage(1); setAppealRefresh(value => value + 1);
-    } catch (requestError) { report(requestError); setAppealRefresh(value => value + 1); }
-    finally { setPending(''); }
-  }
+  function changeMode(mode) {
+    if (!validAdminModes.has(mode)) return;
 
-  useEffect(() => {
-    const controller = new AbortController();
-    setLoadingUsers(true);
-    apiFetch(`/api/admin/users?page=${page}&search=${encodeURIComponent(search)}`, { auth: true, signal: controller.signal })
-      .then((data) => {
-        if (controller.signal.aborted) return;
-        setUsers(data.users);
-        setPages(data.pages);
-        setError('');
-      })
-      .catch((requestError) => { if (!controller.signal.aborted) report(requestError); })
-      .finally(() => { if (!controller.signal.aborted) setLoadingUsers(false); });
-    return () => controller.abort();
-  }, [page, search, report]);
-
-  function submitSearch(event) {
-    event.preventDefault();
-    setPage(1);
-    setSearch(searchInput.trim());
-  }
-
-  useEffect(() => {
-    if (!selectedId) return;
-    const controller = new AbortController();
-    setLoadingListings(true);
-    apiFetch(`/api/admin/users/${selectedId}/listings?page=${listingPage}`, { auth: true, signal: controller.signal })
-      .then((data) => {
-        if (controller.signal.aborted) return;
-        setListings(data.listings);
-        setListingPages(data.pages);
-        setError('');
-      })
-      .catch((requestError) => { if (!controller.signal.aborted) report(requestError); })
-      .finally(() => { if (!controller.signal.aborted) setLoadingListings(false); });
-    return () => controller.abort();
-  }, [selectedId, listingPage, report]);
-
-  async function changeBan(user) {
-    const banned = !user.isBanned;
-    const reason = banReason.trim();
-    if (banned && !reason) {
-      setError('Enter a reason before banning this user.');
-      return;
-    }
-    if (!window.confirm(`${banned ? 'Ban' : 'Unban'} ${user.username || user.email}?`)) return;
-    setPending(`user:${user._id}`);
+    window.localStorage.setItem(ADMIN_MODE_STORAGE_KEY, mode);
+    setCurrentMode(mode);
     setError('');
     setNotice('');
-    try {
-      const result = await apiFetch(`/api/admin/users/${user._id}/ban`, {
-        auth: true, method: 'PATCH', body: { banned, reason: banned ? reason : '' },
-      });
-      setUsers((current) => current.map((item) => item._id === user._id ? { ...item, isBanned: result.isBanned, banReason: result.banReason } : item));
-      setSelected((current) => current?._id === user._id ? { ...current, isBanned: result.isBanned, banReason: result.banReason } : current);
-      setBanReason(result.banReason || '');
-      setNotice(result.message);
-    } catch (requestError) {
-      report(requestError);
-    } finally {
-      setPending('');
-    }
   }
 
-  async function removeListing(listing) {
-    if (!window.confirm(`Permanently delete “${listing.title}”?`)) return;
-    setPending(`listing:${listing._id}`);
-    setError('');
-    setNotice('');
-    try {
-      await apiFetch(`/api/admin/listings/${listing._id}`, { auth: true, method: 'DELETE' });
-      setListings((current) => current.filter((item) => item._id !== listing._id));
-      setNotice(`“${listing.title}” was deleted.`);
-    } catch (requestError) {
-      report(requestError);
-    } finally {
-      setPending('');
-    }
-  }
-  document.title = "ADMIN | UON Marketplace";
+  useEffect(() => {
+    document.title = 'ADMIN | UON Marketplace';
+  }, []);
+
   return (
     <main className="admin-page">
       <div className="admin-page__inner">
         <h1>Admin</h1>
-        <p>Manage users and their listings.</p>
-        {error && <p role="alert" className="admin-page__error">{error}</p>}
-        {notice && <p role="status" className="admin-page__notice">{notice}</p>}
-        <section aria-label="Ban appeals">
-          <h2>Ban appeals</h2>
-          <button type="button" disabled={loadingAppeals || Boolean(pending)} onClick={() => setAppealRefresh(value => value + 1)}>Refresh appeals</button>
-          {loadingAppeals ? <p>Loading appeals…</p> : !appeals.length ? <p>No pending appeals.</p> : <ul className="admin-page__list">
-            {appeals.map(user => <li key={user._id}>
-              <strong>{user.username}</strong><p>{user.email} · {new Date(user.appeal.submittedAt).toLocaleString()}</p>
-              <p className="whitespace-pre-wrap break-words">{user.appeal.reason}</p>
-              <button type="button" disabled={Boolean(pending)} onClick={() => reviewAppeal(user, 'approved')}>Approve &amp; unban</button>
-              <button type="button" disabled={Boolean(pending)} onClick={() => reviewAppeal(user, 'rejected')}>Reject</button>
-            </li>)}
-          </ul>}
-          <div className="admin-page__pagination">
-            <button disabled={appealPage <= 1 || loadingAppeals} onClick={() => setAppealPage(value => value - 1)}>Previous</button>
-            <span>Page {appealPage} of {appealPages}</span>
-            <button disabled={appealPage >= appealPages || loadingAppeals} onClick={() => setAppealPage(value => value + 1)}>Next</button>
-          </div>
-        </section>
-        <div className="admin-page__columns">
-          <section aria-label="Users">
-            <h2>Users</h2>
-            <form className="admin-page__search" role="search" onSubmit={submitSearch}>
-              <input
-                type="search"
-                aria-label="Search users by name or email"
-                placeholder="Search name or email"
-                maxLength={100}
-                value={searchInput}
-                onChange={(event) => setSearchInput(event.target.value)}
-              />
-              <button type="submit">Search</button>
-            </form>
-            {loadingUsers ? <p>Loading users…</p> : users.length === 0 ? <p>{search ? 'No users match your search.' : 'No users found.'}</p> : (
-              <ul className="admin-page__list">
-                {users.map((user) => <li key={user._id}>
-                  <button type="button" className={selected?._id === user._id ? 'admin-page__selected' : ''} onClick={() => { setSelected(user); setBanReason(user.banReason || ''); setListingPage(1); setListings([]); setNotice(''); }}>
-                    <strong>{user.username || 'Unnamed user'}</strong>
-                    <span>{user.email}</span>
-                    <small>{user.isBanned ? 'Banned' : 'Active'} · Joined {new Date(user.createdAt).toLocaleDateString()}</small>
-                  </button>
-                </li>)}
-              </ul>
-            )}
-            <div className="admin-page__pagination">
-              <button disabled={page === 1 || loadingUsers} onClick={() => setPage(page - 1)}>Previous</button>
-              <span>Page {page} of {pages}</span>
-              <button disabled={page >= pages || loadingUsers} onClick={() => setPage(page + 1)}>Next</button>
-            </div>
-          </section>
-          <section aria-label="Selected user listings">
-            {!selected ? <p>Select a user to see their listings.</p> : <>
-              <div className="admin-page__detail-header">
-                <div><h2>{selected.username || 'Unnamed user'}</h2><p>{selected.email}</p></div>
-              </div>
-              {selected.isBanned ? (
-                <div className="admin-page__ban-reason">
-                  <h3>Ban reason</h3>
-                  <p>{selected.banReason || 'No reason was recorded.'}</p>
-                  <button type="button" disabled={Boolean(pending)} onClick={() => changeBan(selected)}>
-                    {pending === `user:${selected._id}` ? 'Saving…' : 'Unban user'}
-                  </button>
-                </div>
-              ) : (
-                <form className="admin-page__ban-form" onSubmit={(event) => { event.preventDefault(); changeBan(selected); }}>
-                  <label htmlFor="admin-ban-reason">Reason for ban</label>
-                  <textarea id="admin-ban-reason" value={banReason} onChange={(event) => setBanReason(event.target.value)} maxLength={1000} rows={4} placeholder="Explain which marketplace rule was violated" disabled={Boolean(pending)} required />
-                  <div><small>{banReason.length}/1000 characters</small><button type="submit" disabled={Boolean(pending) || !banReason.trim()}>{pending === `user:${selected._id}` ? 'Saving…' : 'Ban user'}</button></div>
-                </form>
-              )}
-              {loadingListings ? <p>Loading listings…</p> : listings.length === 0 ? <p>No listings on this page.</p> : (
-                <ul className="admin-page__list">
-                  {listings.map((listing) => <li className="admin-page__listing" key={listing._id}>
-                    {listing.images?.[0]?.url && <img src={listing.images[0].url} alt="" />}
-                    <div><Link to={`/listings/${listing._id}`}>{listing.title}</Link><small>${Number(listing.price).toFixed(2)} · {listing.soldAt ? 'Sold' : 'Available'}</small></div>
-                    <button type="button" disabled={Boolean(pending)} onClick={() => removeListing(listing)}>{pending === `listing:${listing._id}` ? 'Deleting…' : 'Delete'}</button>
-                  </li>)}
-                </ul>
-              )}
-              <div className="admin-page__pagination">
-                <button disabled={listingPage === 1 || loadingListings} onClick={() => setListingPage(listingPage - 1)}>Previous</button>
-                <span>Page {listingPage} of {listingPages}</span>
-                <button disabled={listingPage >= listingPages || loadingListings} onClick={() => setListingPage(listingPage + 1)}>Next</button>
-              </div>
-            </>}
-          </section>
+        <p>Manage users, listings, and ban appeals.</p>
+        <div className="admin-page__mode-panel">
+          <nav className="admin-page__modes" aria-label="Admin sections">
+            {ADMIN_MODES.map(({ id, label }) => (
+              <button
+                key={id}
+                type="button"
+                className={currentMode === id ? 'admin-page__mode admin-page__mode--active' : 'admin-page__mode'}
+                aria-pressed={currentMode === id}
+                onClick={() => changeMode(id)}
+              >
+                {label}
+              </button>
+            ))}
+          </nav>
+          {error && <p role="alert" className="admin-page__error">{error}</p>}
+          {notice && <p role="status" className="admin-page__notice">{notice}</p>}
+          <ActiveComponent
+            {...sharedProps}
+            refreshKey={userRefresh}
+            onReviewed={() => setUserRefresh((value) => value + 1)}
+          />
         </div>
       </div>
     </main>

@@ -1,0 +1,86 @@
+.admin-page__appeals {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: white;
+  border: 1px solid #dbe4f0;
+  border-radius: 1rem;
+}
+
+.admin-page__appeals .admin-page__section-header,
+.admin-page__appeal > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.admin-page__appeals button {
+  padding: 0.5rem 0.75rem;
+  color: #0649bd;
+  border: 1px solid #0649bd;
+  border-radius: 0.5rem;
+}
+
+.admin-page__appeals button:hover:not(:disabled) {
+  color: white;
+  background-color: #0649bd;
+}
+
+.admin-page__appeals button.reject {
+  padding: 0.5rem 0.75rem;
+  color: #a02121;
+  border: 1px solid #a02121;
+  border-radius: 0.5rem;
+}
+
+.admin-page__appeals button.reject:hover:not(:disabled) {
+  color: white;
+  background-color: #a02121;
+}
+
+.admin-page__appeals .admin-page__list {
+  display: grid;
+  gap: 0.65rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-page__appeal {
+  padding: 1rem;
+  border: 1px solid #dbe4f0;
+  border-radius: 0.75rem;
+}
+
+.admin-page__appeal p {
+  margin: 0.5rem 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.admin-page__appeals .admin-page__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.admin-page__appeals .admin-page__pagination button {
+  border: 0px;
+  color: #005bf9;
+}
+
+.admin-page__appeals .admin-page__pagination button:hover:not(:disabled) {
+  color: #0649bd;
+  text-decoration: underline;
+  background: transparent;
+}
+
+@media (max-width: 480px) {
+  .admin-page__appeals .admin-page__section-header,
+  .admin-page__appeal > div {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

@@ -24,9 +24,9 @@ async function withRouter(path, router, run) {
   }
 }
 
-test('admin routes reject non-admins, protect admins, and ban ordinary users', async () => {
+test('admin routes reject non-admins, protect admins, and give each new ban a fresh appeal window', async () => {
   const closed = [];
-  const user = { _id: id, uid: 'buyer', isBanned: false, async save() {} };
+  const user = { _id: id, uid: 'buyer', isBanned: false, lastAppealAt: new Date(), async save() {} };
   const router = createAdminRouter({
     authenticate: auth,
     getAdminUids: () => new Set(['admin']),
@@ -49,6 +49,7 @@ test('admin routes reject non-admins, protect admins, and ban ordinary users', a
     assert.equal(user.isBanned, true);
     assert.equal(user.banReason, 'Repeated prohibited listings');
     assert.equal(user.appeal.status, 'rejected');
+    assert.equal(user.lastAppealAt, null);
     assert.deepEqual(closed, ['buyer']);
     const unbanned = await send('admin', false);
     assert.equal(unbanned.status, 200);
@@ -94,11 +95,12 @@ test('admin can page through a selected user’s listings', async () => {
     },
   });
   await withRouter('/api/admin', router, async (base) => {
-    const response = await fetch(`${base}/users/${id}/listings?page=2&limit=20`, { headers: { 'x-uid': 'admin' } });
+    const response = await fetch(`${base}/users/${id}/listings?page=2`, { headers: { 'x-uid': 'admin' } });
     assert.equal(response.status, 200);
-    assert.deepEqual(await response.json(), { listings: [{ _id: id, title: 'Book' }], page: 2, pages: 2, total: 21 });
+    assert.deepEqual(await response.json(), { listings: [{ _id: id, title: 'Book' }], page: 2, pages: 3, total: 21 });
     assert.deepEqual(calls[0], { seller: id });
-    assert.equal(calls[2], 20);
+    assert.equal(calls[2], 10);
+    assert.equal(calls[3], 10);
     assert.equal((await fetch(`${base}/users/${id}/listings`, { headers: { 'x-uid': 'buyer' } })).status, 403);
   });
 });

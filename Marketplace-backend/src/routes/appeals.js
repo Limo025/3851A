@@ -13,8 +13,15 @@ router.post('/', async (req, res) => {
   const user = await UserModel.findOne({ uid: decoded.uid });
   if (!user?.isBanned) return res.status(403).json({ error: 'Only banned accounts can appeal.' });
   const now = new Date();
-  const claimed = await UserModel.findOneAndUpdate({ _id: user._id, isBanned: true, 'appeal.status': { $ne: 'pending' }, $or: [{ lastAppealAt: null }, { lastAppealAt: { $lte: new Date(now - 24 * 60 * 60 * 1000) } }] }, { $set: { lastAppealAt: now, appeal: { reason, status: 'pending', submittedAt: now } } }, { returnDocument: 'after', runValidators: true });
-  if (!claimed) return res.status(429).json({ error: 'An appeal is already pending, or you submitted one within the last 24 hours.' });
+  const cooldownStart = new Date(now - 24 * 60 * 60 * 1000);
+  if (user.appeal?.status === 'pending') {
+    return res.status(409).json({ error: 'You already have an appeal pending administrator review.' });
+  }
+  if (user.lastAppealAt && new Date(user.lastAppealAt) > cooldownStart) {
+    return res.status(429).json({ error: 'You can submit another appeal 24 hours after your previous submission.' });
+  }
+  const claimed = await UserModel.findOneAndUpdate({ _id: user._id, isBanned: true, 'appeal.status': { $ne: 'pending' }, $or: [{ lastAppealAt: null }, { lastAppealAt: { $lte: cooldownStart } }] }, { $set: { lastAppealAt: now, appeal: { reason, status: 'pending', submittedAt: now } } }, { returnDocument: 'after', runValidators: true });
+  if (!claimed) return res.status(409).json({ error: 'Your appeal status changed. Refresh the page and try again.' });
   return res.json({ message: 'Your appeal has been submitted for administrator review.' });
 });
 return router;

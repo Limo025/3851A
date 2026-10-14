@@ -106,7 +106,7 @@ export function createAuthRouter({
                 { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true },       // fix bcs new here is deprecated
             );
 
-            if (user?.isBanned) return res.status(403).json(banResponse({ reason: user.banReason || '', appealToken: data.idToken }));
+            if (user?.isBanned) return res.status(403).json(banResponse({ reason: user.banReason || '', appealToken: data.idToken, appealExpiresIn: data.expiresIn }));
 
             res.json({
                 idToken: data.idToken,

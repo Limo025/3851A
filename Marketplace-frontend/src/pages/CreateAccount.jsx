@@ -30,7 +30,6 @@ function App() {
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
-      width: '100vw',
       minHeight: '100vh',
     };
 
@@ -155,7 +154,7 @@ function App() {
               />
               <span>
                 I agree to the{' '}
-                <a href="#" className="underline">Terms and Conditions</a>.
+                <a href="#" className="form-link">Terms and Conditions</a>.
               </span>
             </label>
 
@@ -170,7 +169,7 @@ function App() {
               />
               <span>
                 I acknowledge the Marketplace's{' '}
-                <a href="#" className="underline">Privacy Policy</a>.
+                <a href="#" className="form-link">Privacy Policy</a>.
               </span>
             </label>
 
@@ -185,19 +184,19 @@ function App() {
               />
               <span>
                 I agree to the UON {' '}
-                <a href="https://policies.newcastle.edu.au/document/view-current.php?id=204" className="underline">Code of Conduct</a>.
+                <a href="https://policies.newcastle.edu.au/document/view-current.php?id=204" className="form-link">Code of Conduct</a>.
               </span>
             </label>
           </div>
 
-          <Button className="w-full p-6 text-xl font-['FuseV2']" onClick={createAccount} disabled={loading}>
+          <Button className="form-submit-button w-full p-6 text-xl font-['FuseV2']" onClick={createAccount} disabled={loading}>
             {loading ? 'Creating account…' : 'Create Account'}
           </Button>
 
           <hr className="w-full" />
 
           <p className="text-lg font-normal">Already have an account? 
-            <Link to="/login" className="w-full pl-1.5">Log In</Link>
+            <Link to="/login" className="form-link w-full pl-1.5">Log In</Link>
           </p>
           
       </div>
