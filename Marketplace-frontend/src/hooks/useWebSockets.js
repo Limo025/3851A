@@ -36,7 +36,9 @@ export const useWebSocket = (token) => {
         if (!active) return;
         retryCount = 0;
         setIsConnected(true);
-        useChatStore.getState().loadUnreadConversations();
+        const chat = useChatStore.getState();
+        chat.loadUnreadConversations();
+        if (chat.isMessagesPageOpen) chat.getAllConversations(chat.currentMode);
       };
 
       ws.onmessage = (event) => {

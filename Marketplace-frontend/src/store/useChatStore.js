@@ -5,6 +5,7 @@ import { toast as messageToast } from '../components/ui/toast.jsx';
 
 const validModes = new Set(['buyer', 'seller']);
 let chatStateVersion = 0;
+let conversationsRequestId = 0;
 let messagesRequestId = 0;
 let unreadStateVersion = 0;
 
@@ -34,9 +35,11 @@ export const useChatStore = create((set, get) => ({
   isUserLoading: false,
   isMessagesLoading: false,
   isSendingMessage: false,
+  isDeletingConversation: false,
 
   resetChatState: () => {
     chatStateVersion += 1;
+    conversationsRequestId += 1;
     messagesRequestId += 1;
     unreadStateVersion += 1;
     set({
@@ -48,6 +51,7 @@ export const useChatStore = create((set, get) => ({
       isUserLoading: false,
       isMessagesLoading: false,
       isSendingMessage: false,
+      isDeletingConversation: false,
     });
   },
 
@@ -55,6 +59,7 @@ export const useChatStore = create((set, get) => ({
     if (!validModes.has(mode)) return;
 
     window.localStorage.setItem('currentMode', mode);
+    conversationsRequestId += 1;
     messagesRequestId += 1;
     set({
       currentMode: mode,
@@ -88,6 +93,7 @@ export const useChatStore = create((set, get) => ({
 
   getAllConversations: async (mode = get().currentMode) => {
     const requestVersion = chatStateVersion;
+    const requestId = ++conversationsRequestId;
     const role = validModes.has(mode) ? mode : 'buyer';
     set({ isUserLoading: true });
 
@@ -98,16 +104,25 @@ export const useChatStore = create((set, get) => ({
       const nextConversations = Array.isArray(conversations)
         ? sortConversations(conversations)
         : [];
-      if (requestVersion !== chatStateVersion) return [];
-      set({ conversations: nextConversations });
+      if (requestVersion !== chatStateVersion || requestId !== conversationsRequestId) return [];
+      set((state) => {
+        const selectedId = String(state.selectedUser?._id || '');
+        const selectedStillVisible = state.selectedUser?.isDraft
+          || nextConversations.some((conversation) => String(conversation._id) === selectedId);
+        return {
+          conversations: nextConversations,
+          selectedUser: selectedStillVisible ? state.selectedUser : null,
+          messages: selectedStillVisible ? state.messages : [],
+        };
+      });
       return nextConversations;
     } catch (error) {
-      if (requestVersion !== chatStateVersion) return [];
+      if (requestVersion !== chatStateVersion || requestId !== conversationsRequestId) return [];
       set({ conversations: [] });
       toast.error(error.message || 'Could not load conversations', { id: 'load-conversations-error' });
       return [];
     } finally {
-      if (requestVersion === chatStateVersion) {
+      if (requestVersion === chatStateVersion && requestId === conversationsRequestId) {
         set({ isUserLoading: false });
       }
     }
@@ -258,6 +273,53 @@ export const useChatStore = create((set, get) => ({
     } finally {
       if (requestVersion === chatStateVersion) {
         set({ isSendingMessage: false });
+      }
+    }
+  },
+
+  deleteConversation: async (conversationId) => {
+    if (!conversationId || String(conversationId).startsWith('draft:')) return false;
+
+    const requestVersion = chatStateVersion;
+    set({ isDeletingConversation: true });
+    try {
+      await apiFetch(`/api/chat/conversations/${encodeURIComponent(conversationId)}`, {
+        method: 'DELETE',
+        auth: true,
+      });
+      if (requestVersion !== chatStateVersion) return false;
+
+      conversationsRequestId += 1;
+      messagesRequestId += 1;
+      unreadStateVersion += 1;
+      set((state) => {
+        const roles = { ...state.unreadConversationRoles };
+        delete roles[String(conversationId)];
+        const wasSelected = String(state.selectedUser?._id) === String(conversationId);
+        return {
+          conversations: state.conversations.filter(
+            (conversation) => String(conversation._id) !== String(conversationId),
+          ),
+          selectedUser: wasSelected ? null : state.selectedUser,
+          messages: wasSelected ? [] : state.messages,
+          unreadConversationIds: state.unreadConversationIds.filter(
+            (id) => String(id) !== String(conversationId),
+          ),
+          unreadConversationRoles: roles,
+          isUserLoading: false,
+          isMessagesLoading: wasSelected ? false : state.isMessagesLoading,
+        };
+      });
+      toast.success('Conversation deleted');
+      return true;
+    } catch (error) {
+      if (requestVersion === chatStateVersion) {
+        toast.error(error.message || 'Could not delete conversation');
+      }
+      return false;
+    } finally {
+      if (requestVersion === chatStateVersion) {
+        set({ isDeletingConversation: false });
       }
     }
   },

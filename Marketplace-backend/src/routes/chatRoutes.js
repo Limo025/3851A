@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllConversations, getUnreadConversations, markConversationRead, getConversationWithName, getOrCreateConversation, getMessagesWithConvoId, getConversationWithItem, sendMessage } from '../controllers/messageController.js';
+import { deleteConversation, getAllConversations, getUnreadConversations, markConversationRead, getConversationWithName, getOrCreateConversation, getMessagesWithConvoId, getConversationWithItem, sendMessage } from '../controllers/messageController.js';
 import { verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -9,6 +9,7 @@ const router = express.Router();
 router.get('/', verifyToken, getAllConversations)
 router.get('/unread', verifyToken, getUnreadConversations)
 router.post('/messages/:conversationId/read', verifyToken, markConversationRead)
+router.delete('/conversations/:conversationId', verifyToken, deleteConversation)
 
 // One API to load the convo from the all contacts bar
 router.get('/getorcreate/:userId', verifyToken, getOrCreateConversation)

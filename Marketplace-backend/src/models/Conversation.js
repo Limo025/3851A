@@ -9,11 +9,20 @@ const conversationSchema = new mongoose.Schema(
     lastMessageAt: { type: Date, default: Date.now },
     lastMessageSenderId: { type: String },
     buyerReadAt: { type: Date },
-    sellerReadAt: { type: Date }
+    sellerReadAt: { type: Date },
+    buyerDeletedAt: { type: Date },
+    sellerDeletedAt: { type: Date }
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true },
+    toJSON: {
+      virtuals: true,
+      transform: (_document, result) => {
+        delete result.buyerDeletedAt;
+        delete result.sellerDeletedAt;
+        return result;
+      },
+    },
     toObject: { virtuals: true },
   }
 );
@@ -34,5 +43,7 @@ conversationSchema.virtual('sellerDetails', {
 });
 // A buyer and seller can have only one conversation for a given listing.
 conversationSchema.index({ buyer: 1, seller: 1, listing: 1 }, { unique: true });
+conversationSchema.index({ buyer: 1, lastMessageAt: -1 });
+conversationSchema.index({ seller: 1, lastMessageAt: -1 });
 
 export const Conversation = mongoose.model('Conversation', conversationSchema);
