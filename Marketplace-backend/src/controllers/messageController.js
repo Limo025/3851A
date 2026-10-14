@@ -1,5 +1,6 @@
 import { Message } from '../models/Message.js';
 import { Conversation } from '../models/Conversation.js';
+import mongoose from 'mongoose';
 import Listing from '../models/Listing.js'
 import imageStorage from '../services/imageStorage.js';
 import User from '../models/User.js';
@@ -58,6 +59,10 @@ export const getUnreadConversations = async (req, res) => {
 
 export const markConversationRead = async (req, res) => {
   try {
+    if (!mongoose.isValidObjectId(req.params.conversationId)) {
+      return res.status(400).json({ error: 'Invalid conversation ID' });
+    }
+
     const userId = getUserId(req);
     const conversation = await Conversation.findOne({
       _id: req.params.conversationId,

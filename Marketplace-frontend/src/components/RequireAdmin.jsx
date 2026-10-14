@@ -24,7 +24,14 @@ export default function RequireAdmin({ children }) {
     }
 
     apiFetch('/api/admin/me', { auth: true, signal: controller.signal })
-      .then(() => { if (!controller.signal.aborted) setAllowed(true); })
+      .then(({ isAdmin }) => {
+        if (controller.signal.aborted) return;
+        if (isAdmin === true) {
+          setAllowed(true);
+        } else {
+          denyAccess();
+        }
+      })
       .catch(() => { if (!controller.signal.aborted) denyAccess(); });
 
     return () => controller.abort();

@@ -77,7 +77,13 @@ export const useChatStore = create((set, get) => ({
   startConversationDraft: (conversation) => {
     messagesRequestId += 1;
     window.localStorage.setItem('currentMode', 'buyer');
-    set({ currentMode: 'buyer', selectedUser: conversation, messages: [] });
+    set({
+      currentMode: 'buyer',
+      selectedUser: conversation,
+      messages: [],
+      isMessagesLoading: false,
+      isSendingMessage: false,
+    });
   },
 
   getAllConversations: async (mode = get().currentMode) => {
@@ -128,7 +134,7 @@ export const useChatStore = create((set, get) => ({
   },
 
   markConversationRead: async (conversationId) => {
-    if (!conversationId) return;
+    if (!conversationId || String(conversationId).startsWith('draft:')) return;
     const requestVersion = chatStateVersion;
     const unreadVersion = unreadStateVersion;
     try {
@@ -153,6 +159,11 @@ export const useChatStore = create((set, get) => ({
 
   getMessages: async (conversationId, mode = get().currentMode) => {
     if (!conversationId) return [];
+
+    if (String(conversationId).startsWith('draft:')) {
+      set({ messages: [], isMessagesLoading: false });
+      return [];
+    }
 
     const requestVersion = chatStateVersion;
     const requestId = ++messagesRequestId;
@@ -189,7 +200,7 @@ export const useChatStore = create((set, get) => ({
 
   sendMessage: async ({ conversationId, recipientId, listingId, text, image }) => {
     const normalizedText = typeof text === 'string' ? text.trim() : '';
-    if (!recipientId || !listingId || (!normalizedText && !image)) {
+    if (!recipientId || (!conversationId && !listingId) || (!normalizedText && !image)) {
       toast.error('A recipient, listing, and message or image are required');
       return null;
     }

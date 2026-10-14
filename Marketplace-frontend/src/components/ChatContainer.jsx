@@ -62,6 +62,7 @@ export default function ChatContainer({ user: conversation }) {
   const recipientId = currentMode === 'buyer' ? conversation.seller : conversation.buyer;
   const recipientName = recipient?.username || 'Marketplace user';
   const listingId = conversation.listing?._id || conversation.listing;
+  const isListingAvailable = Boolean(conversation.listing);
 
   useLayoutEffect(() => {
     if (isMessagesLoading) {
@@ -134,57 +135,58 @@ export default function ChatContainer({ user: conversation }) {
 
   return (
     <section className="flex h-full min-h-0 flex-col bg-white" aria-label={`Chat with ${recipientName}`}>
-      <header className="border-b border-blue-800 bg-blue-700 px-5 py-4 text-white shadow-sm">
+      <header className="border-b border-grey-200 bg-[#203964] px-5 py-4 text-white shadow-sm">
         <h2 className="font-semibold">{recipientName}</h2>
-        <p className="truncate text-sm text-cyan-100">{conversation.listing?.title || 'Marketplace listing'}</p>
+        <p className="truncate text-sm text-cyan-100">{conversation.listing?.title || 'Listing unavailable'}</p>
       </header>
 
       {recipientIsBanned && <p className="border-b border-red-200 bg-red-50 px-5 py-3 text-sm font-medium text-red-800" role="alert">This user has been banned.</p>}
       {listingIsSold && <p className="border-b border-amber-200 bg-amber-50 px-5 py-3 text-sm font-medium text-amber-900" role="status">This item is sold out.</p>}
+      {!isListingAvailable && <p className="border-b border-amber-200 bg-amber-50 px-5 py-3 text-sm font-medium text-amber-900" role="status">This item is no longer available</p>}
 
       <div className="relative min-h-0 flex-1">
-      <div ref={messageListRef} onScroll={handleMessageScroll} className="h-full space-y-4 overflow-y-auto p-4" aria-live="polite">
-        {isMessagesLoading ? (
-          <p className="text-center text-sm text-slate-500">Loading messages…</p>
-        ) : messages.length === 0 ? (
-          <p className="text-center text-sm text-slate-500">No messages yet. Start the conversation.</p>
-        ) : messages.map((message, index) => {
-          const isOwnMessage = message.senderId === currentUserId;
-          const day = messageDay(message.createdAt);
-          const showDayDivider = day && day !== messageDay(messages[index - 1]?.createdAt);
-          return (
-            <Fragment key={message._id}>
-            {showDayDivider && (
-              <div className="flex items-center gap-3 py-2 text-xs font-medium text-slate-500" aria-label={`Messages from ${formatMessageDay(message.createdAt)}`}>
-                <span className="h-px flex-1 bg-slate-200" aria-hidden="true" />
-                <span>{formatMessageDay(message.createdAt)}</span>
-                <span className="h-px flex-1 bg-slate-200" aria-hidden="true" />
-              </div>
-            )}
-            <Message align={isOwnMessage ? 'end' : 'start'}>
-              <MessageAvatar>
-                <Avatar><AvatarFallback>{initials(isOwnMessage ? 'You' : recipientName)}</AvatarFallback></Avatar>
-              </MessageAvatar>
-              <MessageContent>
-                <Bubble variant={isOwnMessage ? 'default' : 'tinted'}>
-                  <BubbleContent>
-                    {message.image ? (
-                      <a href={message.image} target="_blank" rel="noreferrer">
-                        <img className="mb-2 max-h-72 max-w-full rounded-lg object-contain" src={message.image} alt="Message attachment" onLoad={() => {
-                          if (isNearBottom.current) messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight });
-                        }} />
-                      </a>
-                    ) : null}
-                    {message.text ? <p className="whitespace-pre-wrap">{message.text}</p> : null}
-                  </BubbleContent>
-                </Bubble>
-                <MessageFooter>{formatMessageTime(message.createdAt)}</MessageFooter>
-              </MessageContent>
-            </Message>
-            </Fragment>
-          );
-        })}
-      </div>
+        <div ref={messageListRef} onScroll={handleMessageScroll} className="h-full space-y-4 overflow-y-auto p-4" aria-live="polite">
+          {isMessagesLoading ? (
+            <p className="text-center text-sm text-slate-500">Loading messages…</p>
+          ) : messages.length === 0 ? (
+            <p className="text-center text-sm text-slate-500">No messages yet. Start the conversation.</p>
+          ) : messages.map((message, index) => {
+            const isOwnMessage = message.senderId === currentUserId;
+            const day = messageDay(message.createdAt);
+            const showDayDivider = day && day !== messageDay(messages[index - 1]?.createdAt);
+            return (
+              <Fragment key={message._id}>
+              {showDayDivider && (
+                <div className="flex items-center gap-3 py-2 text-xs font-medium text-slate-500" aria-label={`Messages from ${formatMessageDay(message.createdAt)}`}>
+                  <span className="h-px flex-1 bg-slate-200" aria-hidden="true" />
+                  <span>{formatMessageDay(message.createdAt)}</span>
+                  <span className="h-px flex-1 bg-slate-200" aria-hidden="true" />
+                </div>
+              )}
+              <Message align={isOwnMessage ? 'end' : 'start'}>
+                <MessageAvatar>
+                  <Avatar><AvatarFallback>{initials(isOwnMessage ? 'You' : recipientName)}</AvatarFallback></Avatar>
+                </MessageAvatar>
+                <MessageContent>
+                  <Bubble variant={isOwnMessage ? 'default' : 'tinted'}>
+                    <BubbleContent>
+                      {message.image ? (
+                        <a href={message.image} target="_blank" rel="noreferrer">
+                          <img className="mb-2 max-h-72 max-w-full rounded-lg object-contain" src={message.image} alt="Message attachment" onLoad={() => {
+                            if (isNearBottom.current) messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight });
+                          }} />
+                        </a>
+                      ) : null}
+                      {message.text ? <p className="whitespace-pre-wrap">{message.text}</p> : null}
+                    </BubbleContent>
+                  </Bubble>
+                  <MessageFooter>{formatMessageTime(message.createdAt)}</MessageFooter>
+                </MessageContent>
+              </Message>
+              </Fragment>
+            );
+          })}
+        </div>
       {showJumpToLatest && <Button type="button" size="sm" className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full shadow-lg" onClick={scrollToLatest}><ArrowDown className="size-4" />Latest messages</Button>}
       </div>
 

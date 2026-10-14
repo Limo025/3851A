@@ -18,11 +18,13 @@ export function createAdminRouter({
 } = {}) {
 const router = express.Router();
 
-router.use(authenticate, (req, res, next) => (
+router.use(authenticate);
+
+router.get('/me', (req, res) => res.json({ isAdmin: getAdminUids().has(req.user.uid) }));
+
+router.use((req, res, next) => (
   getAdminUids().has(req.user.uid) ? next() : res.status(403).json({ error: 'Admin access required' })
 ));
-
-router.get('/me', (req, res) => res.json({ isAdmin: true }));
 
 router.get('/appeals', async (req, res) => {
   const page = Number(req.query.page ?? 1);

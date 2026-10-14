@@ -24,6 +24,29 @@ async function withRouter(path, router, run) {
   }
 }
 
+test('admin status returns a boolean without granting access to admin routes', async () => {
+  const router = createAdminRouter({
+    authenticate: auth,
+    getAdminUids: () => new Set(['admin']),
+  });
+
+  await withRouter('/api/admin', router, async (base) => {
+    const unauthenticated = await fetch(`${base}/me`);
+    assert.equal(unauthenticated.status, 401);
+
+    const regularUser = await fetch(`${base}/me`, { headers: { 'x-uid': 'buyer' } });
+    assert.equal(regularUser.status, 200);
+    assert.deepEqual(await regularUser.json(), { isAdmin: false });
+
+    const admin = await fetch(`${base}/me`, { headers: { 'x-uid': 'admin' } });
+    assert.equal(admin.status, 200);
+    assert.deepEqual(await admin.json(), { isAdmin: true });
+
+    const protectedRoute = await fetch(`${base}/users`, { headers: { 'x-uid': 'buyer' } });
+    assert.equal(protectedRoute.status, 403);
+  });
+});
+
 test('admin routes reject non-admins, protect admins, and ban ordinary users', async () => {
   const closed = [];
   const user = { _id: id, uid: 'buyer', isBanned: false, async save() {} };

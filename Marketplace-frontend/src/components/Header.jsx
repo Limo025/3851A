@@ -32,7 +32,9 @@ export default function Header()  {
         if (!authView.showLogoutButton) return;
         const controller = new AbortController();
         apiFetch('/api/admin/me', { auth: true, signal: controller.signal })
-            .then(() => { if (!controller.signal.aborted) setIsAdmin(true); })
+            .then(({ isAdmin: userIsAdmin }) => {
+                if (!controller.signal.aborted) setIsAdmin(userIsAdmin === true);
+            })
             .catch(() => { if (!controller.signal.aborted) setIsAdmin(false); });
         return () => controller.abort();
     }, [authView.showLogoutButton]);
