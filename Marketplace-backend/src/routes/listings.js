@@ -16,7 +16,7 @@ import {
   ValidationError,
 } from '../validation/listings.js';
 
-const SAFE_SELLER_FIELDS = '_id uid username';
+const SAFE_SELLER_FIELDS = '_id uid username avatar';
 const withAvailability = (listing) => ({ ...listing, quantity: listing.quantity ?? 1, soldAt: listing.soldAt ?? null });
 
 async function verifyToken(req, res, next) {

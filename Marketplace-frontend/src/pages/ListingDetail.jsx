@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar.jsx';
 import { apiFetch } from '../api/client.js';
 import { handleAuthenticationError } from '../auth/handleAuthenticationError.js';
 import { session } from '../auth/session.js';
@@ -10,6 +11,10 @@ import '../css/listings.css';
 
 function displayValue(value, fallback = 'Not specified') {
   return value || fallback;
+}
+
+function initials(name) {
+  return (name || 'Unknown seller').split(/\s+/).map((part) => part[0]).join('').slice(0, 2).toUpperCase();
 }
 
 export default function ListingDetail() {
@@ -194,7 +199,20 @@ export default function ListingDetail() {
           <p className="listing-detail__description">{displayValue(listing.description, 'No description provided.')}</p>
           <dl className="listing-detail__details">
             <div><dt>Condition</dt><dd>{displayValue(listing.condition)}</dd></div>
-            <div><dt>Seller</dt><dd>{listing.seller?._id ? <Link to={`/users/${listing.seller._id}`}>{displayValue(listing.seller.username, 'Unknown seller')}</Link> : 'Unknown seller'}</dd></div>
+            <div className="listing-detail__seller-row">
+              <dt>Seller</dt>
+              <dd>
+                {listing.seller?._id ? (
+                  <Link className="listing-detail__seller" to={`/users/${listing.seller._id}`}>
+                    <Avatar size="lg">
+                      {listing.seller.avatar?.url ? <AvatarImage src={listing.seller.avatar.url} alt="" /> : null}
+                      <AvatarFallback>{initials(listing.seller.username)}</AvatarFallback>
+                    </Avatar>
+                    <span>{displayValue(listing.seller.username, 'Unknown seller')}</span>
+                  </Link>
+                ) : 'Unknown seller'}
+              </dd>
+            </div>
             <div><dt>Listed</dt><dd>{formatListingDate(listing.createdAt)}</dd></div>
           </dl>
           {watchlistFeedback ? <p className="listing-detail__watchlist-feedback" role="status">{watchlistFeedback}</p> : null}
