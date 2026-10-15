@@ -112,7 +112,7 @@ export default function UserPage() {
               {[5, 4, 3, 2, 1].map((number) => <option key={number} value={number}>{number} {number === 1 ? 'star' : 'stars'}</option>)}
             </select>
             <p className="profile-form__hint">You must have messaged this seller before you can rate them.</p>
-            <button className="listing-form__submit" disabled={busy}>{busy ? 'Saving…' : 'Save rating'}</button>
+            <button className="listing-form__submit listing-form__submit--blue" disabled={busy}>{busy ? 'Saving…' : 'Save rating'}</button>
           </form>
         </div>
 

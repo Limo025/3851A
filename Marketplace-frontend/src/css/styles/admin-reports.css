@@ -1,6 +1,60 @@
-.admin-reports ul { display: grid; gap: 16px; list-style: none; padding: 0; }
-.admin-reports li { border: 1px solid #d6deed; padding: 18px; }
+.admin-reports {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: white;
+  border: 1px solid #dbe4f0;
+  border-radius: 1rem;
+}
+
+.admin-reports .admin-page__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.admin-reports button {
+  padding: 0.5rem 0.75rem;
+  color: #0649bd;
+  border: 1px solid #0649bd;
+  border-radius: 0.5rem;
+}
+
+.admin-reports button:hover:not(:disabled) {
+  color: white;
+  background-color: #0649bd;
+}
+
+.admin-reports ul { display: grid; gap: 0.65rem; margin: 1rem 0; list-style: none; padding: 0; }
+.admin-reports li { border: 1px solid #dbe4f0; border-radius: 0.75rem; padding: 1rem; }
 .admin-reports h2 { margin: 0; }
-.admin-reports__filters { margin-bottom: 18px; }
+.admin-reports__filters { margin: 1rem 0; }
 .admin-reports__actions { display: flex; gap: 10px; margin-top: 12px; }
-.admin-reports button, .admin-reports select { padding: 8px 12px; }
+.admin-reports select { padding: 8px 12px; }
+
+.admin-reports .admin-page__pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.admin-reports .admin-page__pagination button {
+  border: 0;
+  color: #005bf9;
+}
+
+.admin-reports .admin-page__pagination button:hover:not(:disabled) {
+  color: #0649bd;
+  text-decoration: underline;
+  background: transparent;
+}
+
+@media (max-width: 480px) {
+  .admin-reports .admin-page__section-header,
+  .admin-reports__actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}
