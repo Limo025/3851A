@@ -9,10 +9,15 @@ export default function AdminReports({ pending, setPending, setError, setNotice,
   const [page, setPage] = useState(1);
   const [data, setData] = useState({ reports: [], pages: 1 });
   const [refresh, setRefresh] = useState(0);
+  const [loading, setLoading] = useState(true);
   const load = useCallback(() => loadAdminReports({ status, page }), [status, page]);
   useEffect(() => {
     let active = true;
-    load().then((result) => { if (active) { setData(result); setError(''); } }).catch((error) => { if (active) report(error); });
+    setLoading(true);
+    load()
+      .then((result) => { if (active) { setData(result); setError(''); } })
+      .catch((error) => { if (active) report(error); })
+      .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [load, refresh, report, setError]);
 
@@ -48,8 +53,12 @@ export default function AdminReports({ pending, setPending, setError, setNotice,
   }
 
   return <section className="admin-reports">
+    <div className="admin-page__section-header">
+      <h2>Reports</h2>
+      <button type="button" disabled={loading || Boolean(pending)} onClick={() => setRefresh((value) => value + 1)}>Refresh reports</button>
+    </div>
     <div className="admin-reports__filters"><label>Status <select value={status} onChange={(event) => { setStatus(event.target.value); setPage(1); }}><option value="pending">Pending</option><option value="resolved">Resolved</option><option value="dismissed">Dismissed</option></select></label></div>
-    {!data.reports?.length ? <p>No {status} reports.</p> : <ul>{data.reports.map((item) => <li key={item._id}>
+    {loading ? <p>Loading reports...</p> : !data.reports?.length ? <p>No {status} reports.</p> : <ul>{data.reports.map((item) => <li key={item._id}>
       <h2>{item.targetLabel}</h2><p><strong>{item.targetType}</strong> · {item.reason}</p><p>{item.description}</p><time>{new Date(item.createdAt).toLocaleString('en-AU')}</time>
       <div>{item.targetUser?._id && <Link to={`/users/${item.targetUser._id}`}>View user</Link>}{item.targetListing?._id && <Link to={`/listings/${item.targetListing._id}`}>View listing</Link>}</div>
       {item.status === 'pending' && <div className="admin-reports__actions">
@@ -58,6 +67,6 @@ export default function AdminReports({ pending, setPending, setError, setNotice,
         <button disabled={pending === `report:${item._id}`} onClick={() => review(item, 'resolved')}>Resolve</button><button disabled={pending === `report:${item._id}`} onClick={() => review(item, 'dismissed')}>Dismiss</button>
       </div>}
     </li>)}</ul>}
-    <div><button disabled={page <= 1} onClick={() => setPage(page - 1)}>Previous</button><span> Page {page} of {data.pages || 1} </span><button disabled={page >= (data.pages || 1)} onClick={() => setPage(page + 1)}>Next</button></div>
+    <div className="admin-page__pagination"><button disabled={page <= 1 || loading} onClick={() => setPage((value) => value - 1)}>Previous</button><span>Page {page} of {data.pages || 1}</span><button disabled={page >= (data.pages || 1) || loading} onClick={() => setPage((value) => value + 1)}>Next</button></div>
   </section>;
 }

@@ -30,13 +30,16 @@ export default function Settings() {
     <h1>Settings</h1>
     {message && <p role="status">{message}</p>}
     {!user ? <p>{message ? '' : 'Loading…'}</p> : <>
-      {user.avatarUrl ? <img src={user.avatarUrl} alt={`${user.username}'s avatar`} className="h-24 w-24 rounded-full object-cover" /> : <div className="flex h-24 w-24 items-center justify-center rounded-full bg-slate-200 text-2xl" aria-label="No profile picture">{(user.username || '?')[0]}</div>}
-      <form onSubmit={save} className="listing-form">
+      <form onSubmit={save} className="listing-form mt-6">
+        <div className="mb-4 flex items-center gap-4 p-2">
+          {user.avatarUrl ? <img src={user.avatarUrl} alt={`${user.username}'s avatar`} className="h-24 w-24 rounded-full object-cover" /> : <div className="flex h-24 w-24 items-center justify-center rounded-full bg-slate-200 text-2xl" aria-label="No profile picture">{(user.username || '?')[0]}</div>}
+          <strong className="text-xl text-[#00225e]">{user.username || 'Marketplace user'}</strong>
+        </div>
         <label htmlFor="profile-name">Display name</label>
         <input id="profile-name" required maxLength={50} value={name} onChange={(event) => setName(event.target.value)} />
         <label htmlFor="profile-avatar">Profile picture (JPEG, PNG or WebP, up to 5 MB)</label>
         <input id="profile-avatar" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => setAvatar(event.target.files?.[0] || null)} />
-        <button className="listing-form__submit" disabled={busy}>{busy ? 'Saving…' : 'Save profile'}</button>
+        <button className="listing-form__submit settings-save-profile" disabled={busy}>{busy ? 'Saving…' : 'Save profile'}</button>
       </form>
     </>}
   </div></main>;

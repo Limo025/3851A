@@ -673,6 +673,16 @@
   min-width: 150px;
 }
 
+.settings-save-profile {
+  background: #005bf9;
+  border-color: #005bf9;
+}
+
+.settings-save-profile:hover:not(:disabled) {
+  background: #0048c7;
+  border-color: #0048c7;
+}
+
 .listing-form__submit:disabled {
   background: #77839a;
   border-color: #77839a;
