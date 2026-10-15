@@ -1,5 +1,6 @@
 import { Message } from '../models/Message.js';
 import { Conversation } from '../models/Conversation.js';
+import mongoose from 'mongoose';
 import Listing from '../models/Listing.js'
 import imageStorage from '../services/imageStorage.js';
 import User from '../models/User.js';
@@ -13,6 +14,25 @@ const populateConversation = (query) =>
     .populate('buyerDetails', CHAT_USER_FIELDS)
     .populate('sellerDetails', CHAT_USER_FIELDS)
     .populate('listing', CHAT_LISTING_FIELDS);
+
+const getConversationRole = (conversation, userId) => {
+  if (String(conversation.buyer) === String(userId)) return 'buyer';
+  if (String(conversation.seller) === String(userId)) return 'seller';
+  return null;
+};
+
+const getDeletedAt = (conversation, userId) => {
+  const role = getConversationRole(conversation, userId);
+  return role ? conversation[`${role}DeletedAt`] : null;
+};
+
+const visibleConversationFilter = (role, userId) => ({
+  [role]: userId,
+  $or: [
+    { [`${role}DeletedAt`]: null },
+    { $expr: { $gt: ['$lastMessageAt', `$${role}DeletedAt`] } },
+  ],
+});
 
 export const buildTransactionSnapshot = (listing) => ({
   listingId: String(listing?._id || ''),
@@ -69,10 +89,8 @@ export const getAllConversations = async (req, res) => {
     
     const userId = getUserId(req);
     const { role } = req.query;
-    let filter = {buyer: userId};   //Default to buyer
-    if (role === 'seller') {
-      filter = { seller: userId };
-    }
+    const selectedRole = role === 'seller' ? 'seller' : 'buyer';
+    const filter = visibleConversationFilter(selectedRole, userId);
     const conversations = await populateConversation(
       Conversation.find(filter).sort({ lastMessageAt: -1 }),
     );
@@ -91,9 +109,11 @@ export const getUnreadConversations = async (req, res) => {
         { buyer: userId, seller: { $ne: userId } },
         { seller: userId, buyer: { $ne: userId } },
       ],
-    }).select('_id buyer seller lastMessageAt lastMessageSenderId buyerReadAt sellerReadAt');
+    }).select('_id buyer seller lastMessageAt lastMessageSenderId buyerReadAt sellerReadAt buyerDeletedAt sellerDeletedAt');
     const unreadConversations = conversations.filter((conversation) => {
       if (!conversation.lastMessageSenderId || conversation.lastMessageSenderId === userId) return false;
+      const deletedAt = getDeletedAt(conversation, userId);
+      if (deletedAt && conversation.lastMessageAt <= deletedAt) return false;
       const readAt = conversation.buyer === userId ? conversation.buyerReadAt : conversation.sellerReadAt;
       return !readAt || conversation.lastMessageAt > readAt;
     }).map((conversation) => ({
@@ -108,6 +128,10 @@ export const getUnreadConversations = async (req, res) => {
 
 export const markConversationRead = async (req, res) => {
   try {
+    if (!mongoose.isValidObjectId(req.params.conversationId)) {
+      return res.status(400).json({ error: 'Invalid conversation ID' });
+    }
+
     const userId = getUserId(req);
     const conversation = await Conversation.findOne({
       _id: req.params.conversationId,
@@ -120,6 +144,31 @@ export const markConversationRead = async (req, res) => {
     res.sendStatus(204);
   } catch (error) {
     res.status(500).json({ error: 'Failed to mark conversation as read' });
+  }
+};
+
+export const deleteConversation = async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    if (!mongoose.isValidObjectId(conversationId)) {
+      return res.status(400).json({ error: 'Invalid conversation ID' });
+    }
+
+    const userId = getUserId(req);
+    const conversation = await Conversation.findOne({
+      _id: conversationId,
+      $or: [{ buyer: userId }, { seller: userId }],
+    });
+    if (!conversation) return res.status(404).json({ error: 'Conversation not found' });
+
+    const role = getConversationRole(conversation, userId);
+    const deletedAt = new Date();
+    conversation[`${role}DeletedAt`] = deletedAt;
+    await conversation.save();
+    res.sendStatus(204);
+  } catch (error) {
+    console.log('Error in deleteConversation controller: ', error.message);
+    res.status(500).json({ error: 'Failed to delete conversation' });
   }
 };
 
@@ -184,7 +233,11 @@ export const getOrCreateConversation = async (req, res) => {
 
     const conversation = await getOrCreateConversationHelper(senderId, recipientId, listingId);
     const populatedConversation = await populateConversation(Conversation.findById(conversation._id));
-    const messages = await Message.find({ conversationId: conversation._id }).sort({ createdAt: 1 });
+    const deletedAt = getDeletedAt(conversation, senderId);
+    const messages = await Message.find({
+      conversationId: conversation._id,
+      ...(deletedAt && { createdAt: { $gt: deletedAt } }),
+    }).sort({ createdAt: 1 });
 
     res.status(200).json({ conversation: populatedConversation, messages });
   } catch (error) {
@@ -280,9 +333,9 @@ export const sendMessage = async (req, res) => {
       conversationId,
       {
         lastMessage: normalizedText || (image ? 'Image' : ''),
-        lastMessageAt: new Date(),
+        lastMessageAt: newMessage.createdAt,
         lastMessageSenderId: senderId,
-        [conversation.buyer === senderId ? 'buyerReadAt' : 'sellerReadAt']: new Date(),
+        [conversation.buyer === senderId ? 'buyerReadAt' : 'sellerReadAt']: newMessage.createdAt,
       },
       { returnDocument: 'after' }
     );
@@ -323,7 +376,11 @@ export const getMessagesWithConvoId = async (req, res) => {
       return res.status(403).json({ error: 'Not authorized to view this conversation' });
     }
 
-    const messages = await Message.find({ conversationId }).sort({ createdAt: 1 });
+    const deletedAt = getDeletedAt(conversation, userId);
+    const messages = await Message.find({
+      conversationId,
+      ...(deletedAt && { createdAt: { $gt: deletedAt } }),
+    }).sort({ createdAt: 1 });
 
     res.status(200).json({ conversation, messages });
   } catch (error) {

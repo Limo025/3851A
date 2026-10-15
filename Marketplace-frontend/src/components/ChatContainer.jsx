@@ -1,6 +1,6 @@
 import { Fragment, useLayoutEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
-import { ArrowDown, Paperclip, Send, X } from 'lucide-react';
+import { ArrowDown, Paperclip, Send, Trash2, X } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Bubble, BubbleContent } from '@/components/ui/bubble';
 import { Message, MessageAvatar, MessageContent, MessageFooter } from '@/components/ui/message';
@@ -58,7 +58,7 @@ export default function ChatContainer({ user: conversation }) {
   const [reportReason, setReportReason] = useState(USER_REPORT_REASONS[0]);
   const [reportDescription, setReportDescription] = useState('');
   const [reporting, setReporting] = useState(false);
-  const { messages, currentMode, isMessagesLoading, isSendingMessage, isConfirmingTransaction, sendMessage, confirmTransaction } = useChatStore();
+  const { messages, currentMode, isMessagesLoading, isSendingMessage, isConfirmingTransaction, sendMessage, confirmTransaction, isDeletingConversation, deleteConversation } = useChatStore();
 
   const currentUserId = currentMode === 'buyer' ? conversation.buyer : conversation.seller;
   const currentUser = currentMode === 'buyer' ? conversation.buyerDetails : conversation.sellerDetails;
@@ -68,6 +68,7 @@ export default function ChatContainer({ user: conversation }) {
   const recipientId = currentMode === 'buyer' ? conversation.seller : conversation.buyer;
   const recipientName = recipient?.username || 'Marketplace user';
   const listingId = conversation.listing?._id || conversation.listing;
+  const isListingAvailable = Boolean(conversation.listing);
 
   useLayoutEffect(() => {
     if (isMessagesLoading) {
@@ -123,7 +124,7 @@ export default function ChatContainer({ user: conversation }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
-    if (recipientIsBanned || (!text.trim() && !image) || isSendingMessage) return;
+    if (recipientIsBanned || (!text.trim() && !image) || isSendingMessage || isDeletingConversation) return;
 
     const sent = await sendMessage({
       conversationId: conversation.isDraft ? undefined : conversation._id,
@@ -147,15 +148,32 @@ export default function ChatContainer({ user: conversation }) {
     finally { setReporting(false); }
   }
 
+  async function handleDeleteConversation() {
+    if (conversation.isDraft || isDeletingConversation || isSendingMessage) return;
+    const confirmed = window.confirm(
+      'Delete conversation? This removes it from your inbox only. The other participant will still be able to see it.',
+    );
+    if (confirmed) await deleteConversation(conversation._id);
+  }
+
   return (
     <section className="flex h-full min-h-0 flex-col bg-white" aria-label={`Chat with ${recipientName}`}>
-      <header className="border-b border-blue-800 bg-blue-700 px-5 py-4 text-white shadow-sm">
-        <h2 className="font-semibold">{recipientName}</h2>
-        <p className="truncate text-sm text-cyan-100">{conversation.listing?.title || 'Marketplace listing'}</p>
+      <header className="flex items-center justify-between gap-4 border-b border-grey-200 bg-[#203964] px-5 py-4 text-white shadow-sm">
+        <div className="min-w-0">
+          <h2 className="truncate font-semibold">{recipientName}</h2>
+          <p className="truncate text-sm text-cyan-100">{conversation.listing?.title || 'Listing unavailable'}</p>
+        </div>
+        {!conversation.isDraft && (
+          <Button type="button" variant="ghost" size="icon-sm" className="shrink-0 text-white hover:bg-white/15 hover:text-white" aria-label="Delete conversation" disabled={isDeletingConversation || isSendingMessage} onClick={handleDeleteConversation}>
+            <Trash2 />
+          </Button>
+        )}
       </header>
 
       {recipientIsBanned && <p className="border-b border-red-200 bg-red-50 px-5 py-3 text-sm font-medium text-red-800" role="alert">This user has been banned.</p>}
       {listingIsSold && <p className="border-b border-amber-200 bg-amber-50 px-5 py-3 text-sm font-medium text-amber-900" role="status">This item is sold out.</p>}
+      {!isListingAvailable && <p className="border-b border-amber-200 bg-amber-50 px-5 py-3 text-sm font-medium text-amber-900" role="status">This item is no longer available</p>}
+
       {!conversation.isDraft && <div className="flex flex-wrap gap-2 border-b border-slate-200 p-3">
         <Button type="button" disabled={isConfirmingTransaction || Boolean(conversation.transactionConfirmedAt)} onClick={() => confirmTransaction(conversation._id)}>{isConfirmingTransaction ? 'Confirming…' : getTransactionConfirmationLabel(conversation, currentMode)}</Button>
         <Button type="button" variant="outline" onClick={() => setShowReport((open) => !open)}>Report user</Button>
@@ -227,9 +245,9 @@ export default function ChatContainer({ user: conversation }) {
         ) : null}
         <div className="flex items-center gap-2">
           <input ref={fileInputRef} className="sr-only" type="file" accept="image/jpeg,image/png,image/webp,image/gif" disabled={recipientIsBanned} onChange={handleImageChange} />
-          <Button type="button" variant="outline" size="icon-lg" aria-label="Attach image" disabled={recipientIsBanned || isSendingMessage} onClick={() => fileInputRef.current?.click()}><Paperclip /></Button>
-          <Input className="h-9" value={text} placeholder={recipientIsBanned ? 'This user has been banned' : `Message ${recipientName}`} aria-label="Message" readOnly={recipientIsBanned || isSendingMessage} onChange={(event) => setText(event.target.value)} />
-          <Button type="submit" size="icon-lg" aria-label="Send message" disabled={recipientIsBanned || isSendingMessage || (!text.trim() && !image)}><Send /></Button>
+          <Button type="button" variant="outline" size="icon-lg" aria-label="Attach image" disabled={recipientIsBanned || isSendingMessage || isDeletingConversation} onClick={() => fileInputRef.current?.click()}><Paperclip /></Button>
+          <Input className="h-9" value={text} placeholder={recipientIsBanned ? 'This user has been banned' : `Message ${recipientName}`} aria-label="Message" readOnly={recipientIsBanned || isSendingMessage || isDeletingConversation} onChange={(event) => setText(event.target.value)} />
+          <Button type="submit" size="icon-lg" aria-label="Send message" disabled={recipientIsBanned || isSendingMessage || isDeletingConversation || (!text.trim() && !image)}><Send /></Button>
         </div>
       </form>
     </section>

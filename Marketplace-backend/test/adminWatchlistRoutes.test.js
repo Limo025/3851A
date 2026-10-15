@@ -24,7 +24,7 @@ async function withRouter(path, router, run) {
   }
 }
 
-test('admin routes reject non-admins, protect admins, and give each new ban a fresh appeal window', async () => {
+test('admin status returns a boolean without granting access to admin routes', async () => {
   const closed = [];
   const user = { _id: id, uid: 'buyer', isBanned: false, lastAppealAt: new Date(), async save() {} };
   const router = createAdminRouter({

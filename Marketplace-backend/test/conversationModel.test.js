@@ -16,6 +16,22 @@ test('conversation serializes populated buyer and seller details', () => {
   assert.equal(Conversation.schema.get('toObject').virtuals, true);
 });
 
+test('conversation deletion timestamps are retained internally but omitted from API JSON', () => {
+  const deletedAt = new Date('2026-10-14T04:00:00.000Z');
+  const conversation = new Conversation({
+    buyer: 'buyer-1',
+    seller: 'seller-1',
+    listing: '507f1f77bcf86cd799439011',
+    buyerDeletedAt: deletedAt,
+    sellerDeletedAt: deletedAt,
+  });
+
+  assert.equal(conversation.buyerDeletedAt, deletedAt);
+  assert.equal(conversation.sellerDeletedAt, deletedAt);
+  assert.equal('buyerDeletedAt' in conversation.toJSON(), false);
+  assert.equal('sellerDeletedAt' in conversation.toJSON(), false);
+});
+
 test('conversation user virtuals join Firebase UIDs to User.uid', () => {
   const buyerDetails = Conversation.schema.virtualpath('buyerDetails').options;
   const sellerDetails = Conversation.schema.virtualpath('sellerDetails').options;
@@ -51,4 +67,6 @@ test('conversation uniqueness is scoped to buyer, seller, and listing', () => {
     && options.unique === true
   )));
   assert.equal(indexes.some(([fields]) => 'participants' in fields), false);
+  assert.ok(indexes.some(([fields]) => fields.buyer === 1 && fields.lastMessageAt === -1));
+  assert.ok(indexes.some(([fields]) => fields.seller === 1 && fields.lastMessageAt === -1));
 });
