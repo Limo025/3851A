@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllConversations, getUnreadConversations, markConversationRead, getConversationWithName, getOrCreateConversation, getMessagesWithConvoId, getConversationWithItem, sendMessage } from '../controllers/messageController.js';
+import { confirmTransaction, getAllConversations, getTransactionHistory, getUnreadConversations, markConversationRead, getConversationWithName, getOrCreateConversation, getMessagesWithConvoId, getConversationWithItem, sendMessage } from '../controllers/messageController.js';
 import { verifyToken } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -8,6 +8,8 @@ const router = express.Router();
 
 router.get('/', verifyToken, getAllConversations)
 router.get('/unread', verifyToken, getUnreadConversations)
+router.get('/transaction-history', verifyToken, getTransactionHistory)
+router.patch('/conversations/:conversationId/confirm-transaction', verifyToken, confirmTransaction)
 router.post('/messages/:conversationId/read', verifyToken, markConversationRead)
 
 // One API to load the convo from the all contacts bar

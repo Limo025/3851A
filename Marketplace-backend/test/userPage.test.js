@@ -9,6 +9,23 @@ import { Conversation } from '../src/models/Conversation.js';
 import { Message } from '../src/models/Message.js';
 import appeals from '../src/routes/appeals.js';
 
+test('current profile returns public fields and rating summary', async () => {
+  const originalAggregate = Rating.aggregate;
+  Rating.aggregate = async () => [{ average: 4.25, count: 4 }];
+  const currentUser = { _id: '507f1f77bcf86cd799439011', uid: 'private-uid', email: 'private@example.com', username: 'Me', avatar: {} };
+  const router = createUsersRouter({ authenticate(req, res, next) { req.currentUser = currentUser; req.user = { uid: currentUser.uid }; next(); } });
+  const server = express().use(router).listen(0, '127.0.0.1');
+  await once(server, 'listening');
+  try {
+    const response = await fetch(`http://127.0.0.1:${server.address().port}/me`);
+    const body = await response.json();
+    assert.deepEqual(body, { id: String(currentUser._id), username: 'Me', avatarUrl: null, rating: { average: 4.25, count: 4 } });
+  } finally {
+    Rating.aggregate = originalAggregate;
+    await new Promise(resolve => server.close(resolve));
+  }
+});
+
 test('public profile hides private fields and banned sellers have no available listings', async () => {
   const originalFind = User.findById;
   const originalAggregate = Rating.aggregate;

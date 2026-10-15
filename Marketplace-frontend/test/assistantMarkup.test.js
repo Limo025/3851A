@@ -19,7 +19,7 @@ const EXPLICIT_ROUTE_SIGNATURES = Object.freeze([
   '<Routepath="/createAccount"element={<CreateAccount/>}/>',
   '<Routepath="/search"element={<Search/>}/>',
   '<Routepath="/messages"element={<RequireAuth><Messages/></RequireAuth>}/>',
-  '<Routepath="/settings"element={<Settings/>}/>',
+  '<Routepath="/settings"element={<RequireAuth><Settings/></RequireAuth>}/>',
   '<Routepath="/about"element={<About/>}/>',
   '<Routepath="/watchlist"element={<RequireAuth><Watchlist/></RequireAuth>}/>',
   '<Routepath="/marketplace"element={<Marketplace/>}/>',
@@ -28,7 +28,7 @@ const EXPLICIT_ROUTE_SIGNATURES = Object.freeze([
   '<Routepath="/sell"element={<RequireAuth><CreateListing/></RequireAuth>}/>',
   '<Routepath="/my-listings"element={<RequireAuth><MyListings/></RequireAuth>}/>',
   '<Routepath="/listings/:id/edit"element={<RequireAuth><EditListing/></RequireAuth>}/>',
-  '<Routepath="/purchase-history"element={<RequireAuth><PurchaseHistory/></RequireAuth>}/>',
+  '<Routepath="/transaction-history"element={<RequireAuth><TransactionHistory/></RequireAuth>}/>',
   '<Routepath="/admin"element={<RequireAdmin><Admin/></RequireAdmin>}/>',
   '<Routepath="*"element={<NotFound/>}/>',
 ]);
@@ -53,7 +53,7 @@ const EXPLICIT_MAIN_FIXTURE = `
       <Route path="/createAccount" element={<CreateAccount />} />
       <Route path="/search" element={<Search />} />
       <Route path="/messages" element={<RequireAuth><Messages /></RequireAuth>} />
-      <Route path="/settings" element={<Settings />} />
+      <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
       <Route path="/about" element={<About />} />
       <Route path="/watchlist" element={<RequireAuth><Watchlist /></RequireAuth>} />
       <Route path="/marketplace" element={<Marketplace />} />
@@ -62,7 +62,7 @@ const EXPLICIT_MAIN_FIXTURE = `
       <Route path="/sell" element={<RequireAuth><CreateListing /></RequireAuth>} />
       <Route path="/my-listings" element={<RequireAuth><MyListings /></RequireAuth>} />
       <Route path="/listings/:id/edit" element={<RequireAuth><EditListing /></RequireAuth>} />
-      <Route path="/purchase-history" element={<RequireAuth><PurchaseHistory /></RequireAuth>} />
+      <Route path="/transaction-history" element={<RequireAuth><TransactionHistory /></RequireAuth>} />
       <Route path="/admin" element={<RequireAdmin><Admin /></RequireAdmin>} />
       <Route path="*" element={<NotFound />} />
     </Routes>

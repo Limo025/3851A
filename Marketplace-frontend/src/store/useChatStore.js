@@ -34,6 +34,7 @@ export const useChatStore = create((set, get) => ({
   isUserLoading: false,
   isMessagesLoading: false,
   isSendingMessage: false,
+  isConfirmingTransaction: false,
 
   resetChatState: () => {
     chatStateVersion += 1;
@@ -48,6 +49,7 @@ export const useChatStore = create((set, get) => ({
       isUserLoading: false,
       isMessagesLoading: false,
       isSendingMessage: false,
+      isConfirmingTransaction: false,
     });
   },
 
@@ -248,6 +250,24 @@ export const useChatStore = create((set, get) => ({
       if (requestVersion === chatStateVersion) {
         set({ isSendingMessage: false });
       }
+    }
+  },
+
+  confirmTransaction: async (conversationId) => {
+    if (!conversationId || get().isConfirmingTransaction || get().selectedUser?.transactionConfirmedAt) return null;
+    set({ isConfirmingTransaction: true });
+    try {
+      const confirmed = await apiFetch(`/api/chat/conversations/${encodeURIComponent(conversationId)}/confirm-transaction`, { method: 'PATCH', auth: true });
+      set((state) => ({
+        selectedUser: String(state.selectedUser?._id) === String(conversationId) ? confirmed : state.selectedUser,
+        conversations: state.conversations.map((item) => String(item._id) === String(conversationId) ? confirmed : item),
+      }));
+      return confirmed;
+    } catch (error) {
+      toast.error(error.message || 'Could not confirm transaction');
+      return null;
+    } finally {
+      set({ isConfirmingTransaction: false });
     }
   },
 

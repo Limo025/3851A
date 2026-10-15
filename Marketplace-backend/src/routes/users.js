@@ -10,10 +10,14 @@ import { uploadListingImages } from '../middleware/upload.js';
 import imageStorage from '../services/imageStorage.js';
 
 const publicUser = user => ({ id: String(user._id), username: user.username, avatarUrl: user.avatar?.url || null });
+const ratingSummary = async (userId) => {
+  const stats = await Rating.aggregate([{ $match: { user: userId } }, { $group: { _id: null, average: { $avg: '$score' }, count: { $sum: 1 } } }]);
+  return { average: stats[0]?.average || 0, count: stats[0]?.count || 0 };
+};
 export function createUsersRouter({ authenticate = verifyToken } = {}) {
 const router = express.Router();
 
-router.get('/me', authenticate, (req, res) => res.json(publicUser(req.currentUser)));
+router.get('/me', authenticate, async (req, res) => res.json({ ...publicUser(req.currentUser), rating: await ratingSummary(req.currentUser._id) }));
 router.patch('/me', authenticate, uploadListingImages, async (req, res) => {
   const username = typeof req.body.username === 'string' ? req.body.username.trim() : '';
   if (!username || username.length > 50 || req.files.length > 1) return res.status(400).json({ error: 'Name must be 1–50 characters and only one avatar is allowed.' });

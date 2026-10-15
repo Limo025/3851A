@@ -9,7 +9,15 @@ const conversationSchema = new mongoose.Schema(
     lastMessageAt: { type: Date, default: Date.now },
     lastMessageSenderId: { type: String },
     buyerReadAt: { type: Date },
-    sellerReadAt: { type: Date }
+    sellerReadAt: { type: Date },
+    transactionConfirmedAt: { type: Date, default: null },
+    transactionConfirmedBy: { type: String, default: null },
+    transactionSnapshot: {
+      listingId: String,
+      title: { type: String, maxlength: 120 },
+      price: Number,
+      imageUrl: String,
+    },
   },
   {
     timestamps: true,

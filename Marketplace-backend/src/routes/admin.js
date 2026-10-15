@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import { verifyToken } from '../middleware/auth.js';
 import User from '../models/User.js';
 import Listing from '../models/Listing.js';
+import Report from '../models/Report.js';
 import { closeConnections } from '../sockets/connectionMap.js';
 import { deleteListing } from '../services/deleteListing.js';
 
@@ -12,6 +13,7 @@ export function createAdminRouter({
   authenticate = verifyToken,
   UserModel = User,
   ListingModel = Listing,
+  ReportModel = Report,
   closeUserConnections = closeConnections,
   removeListing = deleteListing,
   getAdminUids = adminUids,
@@ -23,6 +25,34 @@ router.use(authenticate, (req, res, next) => (
 ));
 
 router.get('/me', (req, res) => res.json({ isAdmin: true }));
+
+router.get('/reports', async (req, res) => {
+  const status = req.query.status || 'pending';
+  const page = Number(req.query.page || 1);
+  if (!['pending', 'resolved', 'dismissed'].includes(status) || !Number.isInteger(page) || page < 1 || page > 10000) {
+    return res.status(400).json({ error: 'Invalid report status or page' });
+  }
+  const filter = { status };
+  const [reports, total] = await Promise.all([
+    ReportModel.find(filter).sort({ createdAt: -1, _id: -1 }).skip((page - 1) * 20).limit(20)
+      .populate('reporter', 'username').populate('targetUser', 'username isBanned banReason').populate('targetListing', 'title').lean(),
+    ReportModel.countDocuments(filter),
+  ]);
+  return res.json({ reports, page, pages: Math.max(1, Math.ceil(total / 20)), total });
+});
+
+router.patch('/reports/:id', async (req, res) => {
+  if (!mongoose.isObjectIdOrHexString(req.params.id) || !['resolved', 'dismissed'].includes(req.body?.status)) {
+    return res.status(400).json({ error: 'Invalid report id or status' });
+  }
+  const report = await ReportModel.findOneAndUpdate(
+    { _id: req.params.id, status: 'pending' },
+    { $set: { status: req.body.status, reviewedBy: req.user.uid, reviewedAt: new Date() } },
+    { returnDocument: 'after', runValidators: true },
+  );
+  if (!report) return res.status(409).json({ error: 'This report has already been reviewed.' });
+  return res.json(report);
+});
 
 router.get('/appeals', async (req, res) => {
   const page = Number(req.query.page ?? 1);

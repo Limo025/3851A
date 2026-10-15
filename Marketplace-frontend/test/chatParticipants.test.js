@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getOtherParticipant, isConversationListingSold, isOtherParticipantBanned } from '../src/utils/chatParticipants.js';
+import { getOtherParticipant, getTransactionConfirmationLabel, isConversationListingSold, isOtherParticipantBanned } from '../src/utils/chatParticipants.js';
 
 const conversation = {
   buyerDetails: { username: 'Buyer', isBanned: false },
@@ -18,4 +18,10 @@ test('chat identifies sold and available conversation listings', () => {
   assert.equal(isConversationListingSold({ listing: { soldAt: '2026-09-24T00:00:00.000Z' } }), true);
   assert.equal(isConversationListingSold({ listing: { soldAt: null } }), false);
   assert.equal(isConversationListingSold({ listing: null }), false);
+});
+
+test('chat labels transaction confirmation for the active role and confirmed state', () => {
+  assert.equal(getTransactionConfirmationLabel({}, 'buyer'), 'Confirm purchased');
+  assert.equal(getTransactionConfirmationLabel({}, 'seller'), 'Confirm sold');
+  assert.equal(getTransactionConfirmationLabel({ transactionConfirmedAt: '2026-10-13T00:00:00Z' }, 'buyer'), 'Transaction confirmed');
 });

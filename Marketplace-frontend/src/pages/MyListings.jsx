@@ -6,6 +6,8 @@ import { buildReturnPath } from '../auth/returnPath.js';
 import { session } from '../auth/session.js';
 import ListingGrid from '../components/ListingGrid.jsx';
 import { getAvailabilityErrorMessage, requestListingAvailabilityUpdate } from '../utils/sellerListings.js';
+import { LISTING_CATEGORIES, LISTING_CONDITIONS } from '../utils/listingForm.js';
+import { filterMyListings } from '../utils/myListings.js';
 import '../css/listings.css';
 
 export default function MyListings() {
@@ -15,6 +17,8 @@ export default function MyListings() {
   const activeStatusIds = useRef(new Set());
   const statusControllers = useRef(new Map());
   const [listings, setListings] = useState([]);
+  const [profile, setProfile] = useState(null);
+  const [filters, setFilters] = useState({ search: '', availability: '', category: '', condition: '' });
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState('');
   const [actionError, setActionError] = useState('');
@@ -24,6 +28,7 @@ export default function MyListings() {
 
   useEffect(() => {
     const controllers = statusControllers.current;
+    document.title = 'My Listings | UON Marketplace';
     mounted.current = true;
     return () => {
       mounted.current = false;
@@ -39,12 +44,13 @@ export default function MyListings() {
       setLoading(true);
       setLoadError('');
       try {
-        const data = await apiFetch('/api/listings/mine', {
-          auth: true,
-          signal: controller.signal,
-        });
+        const [data, ownProfile] = await Promise.all([
+          apiFetch('/api/listings/mine', { auth: true, signal: controller.signal }),
+          apiFetch('/api/users/me', { auth: true, signal: controller.signal }),
+        ]);
         if (!controller.signal.aborted) {
           setListings(Array.isArray(data) ? data : []);
+          setProfile(ownProfile);
         }
       } catch (error) {
         if (controller.signal.aborted) return;
@@ -127,7 +133,8 @@ export default function MyListings() {
       </div>
     );
   }
-document.title = "My Listings | UON Marketplace";
+  const filteredListings = filterMyListings(listings, filters);
+  const setFilter = (name) => (event) => setFilters((current) => ({ ...current, [name]: event.target.value }));
   return (
     <main className="marketplace-page">
       <div className="marketplace-page__content">
@@ -136,14 +143,27 @@ document.title = "My Listings | UON Marketplace";
           <p>Manage the items you have listed for the university community.</p>
         </header>
 
+        {profile && <section className="my-listings-profile" aria-label="Your seller profile">
+          {profile.avatarUrl ? <img src={profile.avatarUrl} alt={`${profile.username}'s avatar`} /> : <span className="my-listings-profile__fallback">{(profile.username || '?')[0]}</span>}
+          <div><h2>{profile.username}</h2><p>{Number(profile.rating?.average || 0).toFixed(1)} / 5 ({profile.rating?.count || 0} ratings)</p><Link to="/settings">Edit profile</Link></div>
+        </section>}
+
+        <section className="listing-filters my-listings-filters" aria-label="Filter your listings">
+          <label>Search<input type="search" value={filters.search} onChange={setFilter('search')} placeholder="Search by title" /></label>
+          <label>Availability<select value={filters.availability} onChange={setFilter('availability')}><option value="">All</option><option value="available">Available</option><option value="sold">Sold out</option></select></label>
+          <label>Category<select value={filters.category} onChange={setFilter('category')}><option value="">All</option>{LISTING_CATEGORIES.map((value) => <option key={value}>{value}</option>)}</select></label>
+          <label>Condition<select value={filters.condition} onChange={setFilter('condition')}><option value="">All</option>{LISTING_CONDITIONS.map((value) => <option key={value}>{value}</option>)}</select></label>
+          <button type="button" onClick={() => setFilters({ search: '', availability: '', category: '', condition: '' })}>Reset</button>
+        </section>
+
         {feedback ? <p className="seller-listings__feedback" role="status">{feedback}</p> : null}
         {actionError ? <p className="listing-state listing-state--error seller-listings__action-error" role="alert">{actionError}</p> : null}
 
         <ListingGrid
-          listings={listings}
+          listings={filteredListings}
           loading={loading}
           error={loadError}
-          emptyMessage={<>You have not created any listings yet. <Link to="/sell">Create a listing</Link>.</>}
+          emptyMessage={listings.length ? 'No listings match these filters.' : <>You have not created any listings yet. <Link to="/sell">Create a listing</Link>.</>}
           renderActions={renderActions}
         />
       </div>

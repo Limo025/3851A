@@ -319,6 +319,35 @@
   margin-bottom: 20px;
 }
 
+.my-listings-profile {
+  align-items: center;
+  background: #f5f8ff;
+  display: flex;
+  gap: 18px;
+  margin-bottom: 24px;
+  padding: 18px;
+}
+
+.my-listings-profile img,
+.my-listings-profile__fallback {
+  align-items: center;
+  background: #d6deed;
+  border-radius: 50%;
+  display: flex;
+  height: 72px;
+  justify-content: center;
+  object-fit: cover;
+  width: 72px;
+}
+
+.my-listings-profile h2,
+.my-listings-profile p { margin: 0 0 6px; }
+.my-listings-filters { margin-bottom: 24px; }
+
+.transaction-history__tabs { display: flex; gap: 8px; margin: 24px 0; }
+.transaction-history__tabs button { border: 1px solid #005bf9; padding: 10px 18px; }
+.transaction-history__tabs button[aria-selected='true'] { background: #005bf9; color: white; }
+
 .purchase-history {
   display: grid;
   gap: 14px;
