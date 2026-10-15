@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Star } from 'lucide-react';
 import { Link, useParams } from 'react-router-dom';
 import { apiFetch } from '../api/client.js';
 import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar.jsx';
+import { getSellerProfileRequest } from '../utils/userProfile.js';
 import '../css/listings.css';
 import '../css/user-profile.css';
 
@@ -14,11 +15,7 @@ function initials(name) {
 
 export default function UserPage() {
   const { id } = useParams();
-  const own = !id;
-  const avatarInputRef = useRef(null);
   const [user, setUser] = useState(null);
-  const [name, setName] = useState('');
-  const [avatar, setAvatar] = useState(null);
   const [score, setScore] = useState('5');
   const [page, setPage] = useState(1);
   const [message, setMessage] = useState('');
@@ -27,19 +24,18 @@ export default function UserPage() {
 
   useEffect(() => { setPage(1); }, [id]);
   useEffect(() => {
-    document.title = `${own ? 'My Profile' : 'Seller Profile'} | UON Marketplace`;
-  }, [own]);
+    document.title = 'Seller Profile | UON Marketplace';
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
     setUser(null);
     setMessage('');
     setIsError(false);
-    apiFetch(own ? '/api/users/me' : `/api/users/${id}?page=${page}`, { auth: own })
+    apiFetch(getSellerProfileRequest(id, page))
       .then((data) => {
         if (!cancelled) {
           setUser(data);
-          setName(data.username);
         }
       })
       .catch((error) => {
@@ -49,7 +45,7 @@ export default function UserPage() {
         }
       });
     return () => { cancelled = true; };
-  }, [id, own, page]);
+  }, [id, page]);
 
   async function save(event) {
     event.preventDefault();
@@ -57,19 +53,9 @@ export default function UserPage() {
     setMessage('');
     setIsError(false);
     try {
-      if (own) {
-        const body = new FormData();
-        body.append('username', name);
-        if (avatar) body.append('images', avatar);
-        setUser(await apiFetch('/api/users/me', { auth: true, method: 'PATCH', body }));
-        setAvatar(null);
-        if (avatarInputRef.current) avatarInputRef.current.value = '';
-        setMessage('Profile saved.');
-      } else {
-        await apiFetch(`/api/users/${id}/rating`, { auth: true, method: 'PUT', body: { score: Number(score) } });
-        setUser(await apiFetch(`/api/users/${id}?page=${page}`));
-        setMessage('Rating saved.');
-      }
+      await apiFetch(`/api/users/${id}/rating`, { auth: true, method: 'PUT', body: { score: Number(score) } });
+      setUser(await apiFetch(getSellerProfileRequest(id, page)));
+      setMessage('Rating saved.');
     } catch (error) {
       setMessage(error.message);
       setIsError(true);
@@ -95,11 +81,11 @@ export default function UserPage() {
 
   return (
     <main className="marketplace-page">
-      <div className={`marketplace-page__content${own ? ' listing-form-page' : ''}`}>
+      <div className="marketplace-page__content">
         <header className="marketplace-page__header">
           <div>
-            <h1>{own ? 'My profile' : user.username}</h1>
-            <p>{own ? 'Update your marketplace profile.' : 'Seller profile and available listings.'}</p>
+            <h1>{user.username}</h1>
+            <p>Seller profile and available listings.</p>
           </div>
         </header>
 
@@ -111,71 +97,52 @@ export default function UserPage() {
             </Avatar>
             <div>
               <h2>{user.username}</h2>
-              {!own ? (
-                <p className="profile-summary__rating">
-                  <Star aria-hidden="true" fill="currentColor" />
-                  {rating.average.toFixed(1)} / 5 ({rating.count} {rating.count === 1 ? 'rating' : 'ratings'})
-                </p>
-              ) : null}
+              <p className="profile-summary__rating">
+                <Star aria-hidden="true" fill="currentColor" />
+                {rating.average.toFixed(1)} / 5 ({rating.count} {rating.count === 1 ? 'rating' : 'ratings'})
+              </p>
             </div>
           </section>
 
           {message ? <p className={isError ? 'listing-form__submit-error' : 'profile-feedback'} role={isError ? 'alert' : 'status'}>{message}</p> : null}
 
-          {own ? (
-            <form className="listing-form profile-card__form" onSubmit={save}>
-              <label htmlFor="profile-name">Display name</label>
-              <input id="profile-name" required maxLength={50} value={name} onChange={(event) => setName(event.target.value)} />
-
-              <label htmlFor="profile-avatar">Profile photo</label>
-              <input ref={avatarInputRef} id="profile-avatar" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => setAvatar(event.target.files?.[0] || null)} />
-              <p className="profile-form__hint">JPEG, PNG or WebP, up to 5 MB.</p>
-
-              <button className="listing-form__submit" disabled={busy || !name.trim()}>
-                {busy ? 'Saving…' : 'Save profile'}
-              </button>
-            </form>
-          ) : (
-            <form className="listing-form profile-rating-form" onSubmit={save}>
-              <label htmlFor="user-rating">Rate this seller</label>
-              <select id="user-rating" value={score} onChange={(event) => setScore(event.target.value)}>
-                {[5, 4, 3, 2, 1].map((number) => <option key={number} value={number}>{number} {number === 1 ? 'star' : 'stars'}</option>)}
-              </select>
-              <p className="profile-form__hint">You must have messaged this seller before you can rate them.</p>
-              <button className="listing-form__submit" disabled={busy}>{busy ? 'Saving…' : 'Save rating'}</button>
-            </form>
-          )}
+          <form className="listing-form profile-rating-form" onSubmit={save}>
+            <label htmlFor="user-rating">Rate this seller</label>
+            <select id="user-rating" value={score} onChange={(event) => setScore(event.target.value)}>
+              {[5, 4, 3, 2, 1].map((number) => <option key={number} value={number}>{number} {number === 1 ? 'star' : 'stars'}</option>)}
+            </select>
+            <p className="profile-form__hint">You must have messaged this seller before you can rate them.</p>
+            <button className="listing-form__submit" disabled={busy}>{busy ? 'Saving…' : 'Save rating'}</button>
+          </form>
         </div>
 
-        {!own ? (
-            <section className="profile-listings" aria-labelledby="profile-listings-heading">
-              <div className="profile-listings__header">
-                <h2 id="profile-listings-heading">Available listings</h2>
-                <span>{user.total} {user.total === 1 ? 'item' : 'items'}</span>
-              </div>
-              {listings.length === 0 ? <p className="listing-state">No available listings.</p> : (
-                <div className="listing-grid" role="list">
-                  {listings.map((item) => (
-                    <article className="listing-card" role="listitem" key={item._id}>
-                      {item.images?.[0]?.url ? <img className="listing-card__image" src={item.images[0].url} alt={item.title} loading="lazy" /> : <div className="listing-card__image listing-card__image--empty">No image available</div>}
-                      <div className="listing-card__body">
-                        {item.condition ? <p className="listing-card__category">{item.condition}</p> : null}
-                        <h3 className="listing-card__title"><Link to={`/listings/${item._id}`}>{item.title}</Link></h3>
-                        <p className="listing-card__price">{currencyFormatter.format(item.price)}</p>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              )}
-              {user.pages > 1 ? (
-                <nav className="listing-pagination" aria-label="Seller listings pages">
-                  <button type="button" disabled={page <= 1} onClick={() => setPage((current) => current - 1)}>Previous</button>
-                  <span>Page {page} of {user.pages}</span>
-                  <button type="button" disabled={page >= user.pages} onClick={() => setPage((current) => current + 1)}>Next</button>
-                </nav>
-              ) : null}
-            </section>
-        ) : null}
+        <section className="profile-listings" aria-labelledby="profile-listings-heading">
+          <div className="profile-listings__header">
+            <h2 id="profile-listings-heading">Available listings</h2>
+            <span>{user.total} {user.total === 1 ? 'item' : 'items'}</span>
+          </div>
+          {listings.length === 0 ? <p className="listing-state">No available listings.</p> : (
+            <div className="listing-grid" role="list">
+              {listings.map((item) => (
+                <article className="listing-card" role="listitem" key={item._id}>
+                  {item.images?.[0]?.url ? <img className="listing-card__image" src={item.images[0].url} alt={item.title} loading="lazy" /> : <div className="listing-card__image listing-card__image--empty">No image available</div>}
+                  <div className="listing-card__body">
+                    {item.condition ? <p className="listing-card__category">{item.condition}</p> : null}
+                    <h3 className="listing-card__title"><Link to={`/listings/${item._id}`}>{item.title}</Link></h3>
+                    <p className="listing-card__price">{currencyFormatter.format(item.price)}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
+          {user.pages > 1 ? (
+            <nav className="listing-pagination" aria-label="Seller listings pages">
+              <button type="button" disabled={page <= 1} onClick={() => setPage((current) => current - 1)}>Previous</button>
+              <span>Page {page} of {user.pages}</span>
+              <button type="button" disabled={page >= user.pages} onClick={() => setPage((current) => current + 1)}>Next</button>
+            </nav>
+          ) : null}
+        </section>
       </div>
     </main>
   );
