@@ -14,15 +14,24 @@ import {
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
+const repeatApp = false;
 
 function App() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
+  const parameters = new URLSearchParams(window.location.search);
+  if (parameters != null){
+    if (parameters.has('requireAuth')){
+      if (!repeatApp){
+        toast.error('You must be logged in to access this page. Please log in, or make an account. ');
+      }
+    }
+  }
   const navigate = useNavigate();
   const location = useLocation();
-  const showRequireAuthMessage = new URLSearchParams(location.search).has('requireAuth');
+
+
   const loadingIcon = document.getElementById('loadingIcon');
 
   const backgroundStyle = {
@@ -62,11 +71,6 @@ function App() {
   
   {/* MAIN CONTENT*/}
   <div id="loginPageBackground" style={backgroundStyle}>
-    {showRequireAuthMessage && (
-      <div className="requireAuthMessage" id="requireAuth">
-        <h2>You must be logged in to access this feature. </h2>
-      </div>
-    )}
     <div className='flex flex-col items-center gap-4 p-8'>
       <div className="flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full max-w-sm">
           

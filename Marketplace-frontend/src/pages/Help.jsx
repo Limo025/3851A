@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 
 let isOpen = false;
 
@@ -57,7 +58,7 @@ function App() {
           <img class="helpDropdown" src="src/icon/dropdown.svg" alt="down"></img>
         </div>
         <div class="helpAnswer" id="helpAnswer" hidden>
-          <p>pending response</p>
+          <p>The University of Newcastle Marketplace was created to allow members of the community to purchase and sell items, within their local area.</p>
         </div>
       </div>
 
@@ -67,7 +68,15 @@ function App() {
           <img class="helpDropdown" src="src/icon/dropdown.svg" alt="down"></img>
         </div>
         <div class="helpAnswer" id="helpAnswer" hidden>
-          <p>pending response</p>
+          <p>Click on the account icon to the top of the page (in between the Messages icon and the Sidebar Icon). </p> <br/>
+            <p>To Log into your account, enter in your email address, followed by your password. If you have 
+            forgotten your password, please click on the link stating such, and follow the on-screen instructions. </p>
+            <p> * Note that University of Newcastle accounts are not usable here. Do not enter staff/student information. </p>
+            <br/><p>To Create an account from the Login page, click on 'Create Account', and follow the on-screen instructions
+              to make an account.
+            </p>
+            <p>* Although possible, it is recommended you use different information/passwords to
+               that of your University of Newcastle account, if you have one. </p>
         </div>
       </div>
 
@@ -77,7 +86,26 @@ function App() {
           <img class="helpDropdown" src="src/icon/dropdown.svg" alt="down"></img>
         </div>
         <div class="helpAnswer" id="helpAnswer" hidden>
-          <p>pending response</p>
+          <p>On the page of the item you wish to purchase, click on 'Contact Seller'. You will need to negotiate cost, pickup/delivery, and potentially 
+            verify condition of the item yourself. Ideally, here is a sample structure you could follow: </p>
+            <dl>
+              <br/>
+            <dt> - Click on Contact Seller, on the page of the item. </dt>
+            <dt> - Ask if the item is still available, as there is a change the item may have been sold, and not been updated on the website. </dt>
+            <dd>  "Hey, just wondering if this item is still available?"</dd>
+            <br/>
+            <dt> - If the seller still has the item, it's time to negotiate a price. Normally, the price listed on the website would be fine, however 
+              because this is a marketplace, you are able to haggle/set on a different price. It is recommended you go into communication with the seller
+              being able to pay the price listed, with a discount being a benefit, not an expectation. You should also communicate what payment method 
+              would be acceptable (Cash, Card, Transfer, Trade) </dt>
+            <dd>    * "I saw this item was listed for $100; If you'd like, I can purchase it as that price?" </dd>
+            <dd>    * "You have the item listed for $100, would you be able to do $90?" " </dd>
+            <dd>    * "I can do $100 for this, or $90 if you want to do cash." </dd>
+            <br/>
+            <dt> Once you and the seller have agreed on a price, communicate as to how you'll receive the item. This can include
+              it being delivered to you, or you going to a negotiated address to pick it up. 
+            </dt>
+            </dl>
         </div>
       </div>
 
@@ -87,7 +115,9 @@ function App() {
           <img class="helpDropdown" src="src/icon/dropdown.svg" alt="down"></img>
         </div>
         <div class="helpAnswer" id="helpAnswer" hidden>
-          <p>pending response</p>
+          <p>Not at all! The marketplace is open to all members of the community. Being a student, staff member, or otherwise affiliated
+            with UON is not a requirement to use the marketplace. 
+          </p>
         </div>
       </div>
 
@@ -97,7 +127,7 @@ function App() {
           <img class="helpDropdown" src="src/icon/dropdown.svg" alt="down"></img>
         </div>
         <div class="helpAnswer" id="helpAnswer" hidden>
-          <p>pending response</p>
+          <p>After logging in, head to the 'My Listings' tab located on the sidebar. Click on 'Add Listing', and fill in the information.  </p>
         </div>
       </div>
 
@@ -107,7 +137,22 @@ function App() {
           <img class="helpDropdown" src="src/icon/dropdown.svg" alt="down"></img>
         </div>
         <div class="helpAnswer" id="helpAnswer" hidden>
-          <p>pending response</p>
+          <p>To comply with legal restrictions, items classified as illegal to sell or have, or could otherwise bring harm to people, are not permitted on the website. Our detection system will
+            automatically remove or flag items that could be considered as such. These include:
+          </p>
+          <br/>
+          <i>Airsofts, Air Rifles, BB Guns, Alcohol, Adult Items, Animal Traps, Contracts, Counterfeit Items, Credit and Debit Cards, 
+             items obtained through disasters or tragedy, Embargoed goods, Firearms, Food, Funeral Items, Gift Cards, 
+             Government Items, Hazardous Materials, Human body parts, knives, Lockpicking Items, Lottery Tickets, Military Items,
+             Plants, Police items, Prescription Medicines, items considered Price Gouged, Real Estate, Replica Firearms, Slot Machines, 
+             Social Media Accounts, Stocks, Tobacco, E-cigarettes or Vapes, Stolen Property, Virtual Currency, Vouchers, or Weapons.  </i>
+
+          <br/> <br/>
+          <p> Items flagged as such will be subject to a manual review by Marketplace staff. Items automatically considered as such will be removed
+            automatically. Accounts that repeatedly upload prohibited items for sale will be banned. Furthermore, items with images that are either
+            unrelated to the item, or considered inappropriate or prohibited will be subject to the same actions as items. If necessary, Marketplace will
+            redirect illegal items to law enforcement. 
+          </p>
         </div>
       </div>
 
@@ -117,7 +162,9 @@ function App() {
           <img class="helpDropdown" src="src/icon/dropdown.svg" alt="down"></img>
         </div>
         <div class="helpAnswer" id="helpAnswer" hidden>
-          <p>pending response</p>
+          <p>If you feel as though an item on the marketplace is in breach of our conditions, click on the Report button on an item, and fill in the information. We will manually review
+            the item in question, and take appropriate action.
+          </p>
         </div>
       </div>
       
