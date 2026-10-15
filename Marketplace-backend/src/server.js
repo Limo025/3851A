@@ -15,6 +15,7 @@ import appealRoutes from './routes/appeals.js';
 import { handleUploadError } from './middleware/upload.js';
 import { setupWebSocket } from './config/websocket.js';
 import chatRoutes from './routes/chatRoutes.js';
+import reportRoutes from './routes/reports.js';
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -30,6 +31,7 @@ app.use('/auth', authRoutes);
 app.use('/api/listings', listingRoutes);
 app.use('/api/recently-viewed', recentlyViewedRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/reports', reportRoutes);
 // The marketplace assistant has a separate API from direct messages.
 app.use('/api/assistant', assistantRoutes);
 app.use('/api/admin', adminRoutes);

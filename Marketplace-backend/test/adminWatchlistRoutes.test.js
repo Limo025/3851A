@@ -152,3 +152,24 @@ test('watchlist derives the owner from authentication and rejects sold listings'
     assert.deepEqual(calls[1], { user: 'buyer', listing: id });
   });
 });
+
+test('admin pages pending reports and resolves each report once', async () => {
+  const report = { _id: id, status: 'pending', targetLabel: 'Desk', reason: 'Spam' };
+  const query = {
+    sort() { return this; }, skip() { return this; }, limit() { return this; },
+    populate() { return this; }, async lean() { return [report]; },
+  };
+  let updateFilter;
+  const ReportModel = {
+    find: () => query,
+    countDocuments: async () => 1,
+    findOneAndUpdate: async (filter, update) => { updateFilter = filter; return { ...report, ...update.$set }; },
+  };
+  await withRouter('/api/admin', createAdminRouter({ authenticate: auth, getAdminUids: () => new Set(['admin']), ReportModel }), async (base) => {
+    const list = await fetch(`${base}/reports`, { headers: { 'x-uid': 'admin' } });
+    assert.deepEqual(await list.json(), { reports: [report], page: 1, pages: 1, total: 1 });
+    const reviewed = await fetch(`${base}/reports/${id}`, { method: 'PATCH', headers: { 'x-uid': 'admin', 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'resolved' }) });
+    assert.equal(reviewed.status, 200);
+    assert.equal(updateFilter.status, 'pending');
+  });
+});

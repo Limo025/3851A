@@ -1,7 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './css/index.css'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Navigate, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home.jsx'
 import Login from './pages/Login.jsx'
 import ForgotPassword from './pages/ForgotPassword.jsx'
@@ -23,7 +23,7 @@ import RequireAdmin from './components/RequireAdmin.jsx'
 import About from './pages/About.jsx'
 import Sell from './pages/Sell.jsx'
 import Watchlist from './pages/Watchlist.jsx'
-import PurchaseHistory from './pages/PurchaseHistory.jsx'
+import TransactionHistory from './pages/TransactionHistory.jsx'
 import Admin from './pages/Admin.jsx'
 import Help from './pages/Help.jsx'
 import ChatWidget from './assistant/ChatWidget.jsx'
@@ -67,8 +67,8 @@ createRoot(document.getElementById('root')).render(
         <Route path="/createAccount" element={<CreateAccount />} />
         <Route path="/search" element={<Search />} />
         <Route path="/messages" element={<RequireAuth><Messages /></RequireAuth>} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/profile" element={<RequireAuth><UserPage /></RequireAuth>} />
+        <Route path="/settings" element={<RequireAuth><Settings /></RequireAuth>} />
+        <Route path="/profile" element={<RequireAuth><Navigate to="/settings" replace /></RequireAuth>} />
         <Route path="/users/:id" element={<UserPage />} />
         <Route path="/appeal" element={<Appeal />} />
         <Route path="/about" element={<About />} />
@@ -79,7 +79,8 @@ createRoot(document.getElementById('root')).render(
         <Route path="/sell" element={<RequireAuth><CreateListing /></RequireAuth>} />
         <Route path="/my-listings" element={<RequireAuth><MyListings /></RequireAuth>} />
         <Route path="/listings/:id/edit" element={<RequireAuth><EditListing /></RequireAuth>} />
-        <Route path="/purchase-history" element={<RequireAuth><PurchaseHistory /></RequireAuth>} />
+        <Route path="/transaction-history" element={<RequireAuth><TransactionHistory /></RequireAuth>} />
+        <Route path="/purchase-history" element={<RequireAuth><Navigate to="/transaction-history" replace /></RequireAuth>} />
         <Route path="/admin" element={<RequireAdmin><Admin /></RequireAdmin>} />
         <Route path="*" element={<NotFound />} />
       </Routes>

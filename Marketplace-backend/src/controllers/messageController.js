@@ -13,6 +13,56 @@ const populateConversation = (query) =>
     .populate('buyerDetails', CHAT_USER_FIELDS)
     .populate('sellerDetails', CHAT_USER_FIELDS)
     .populate('listing', CHAT_LISTING_FIELDS);
+
+export const buildTransactionSnapshot = (listing) => ({
+  listingId: String(listing?._id || ''),
+  title: listing?.title || 'Deleted listing',
+  price: listing?.price,
+  imageUrl: listing?.images?.[0]?.url || '',
+});
+
+export const confirmTransaction = async (req, res) => {
+  try {
+    const userId = getUserId(req);
+    const participantFilter = { _id: req.params.conversationId, $or: [{ buyer: userId }, { seller: userId }] };
+    const conversation = await populateConversation(Conversation.findOne(participantFilter));
+    if (!conversation) return res.status(404).json({ error: 'Conversation not found' });
+
+    let confirmed = await populateConversation(Conversation.findOneAndUpdate(
+      { ...participantFilter, transactionConfirmedAt: null },
+      { $set: {
+        transactionConfirmedAt: new Date(),
+        transactionConfirmedBy: userId,
+        transactionSnapshot: buildTransactionSnapshot(conversation.listing),
+      } },
+      { returnDocument: 'after', runValidators: true },
+    ));
+    if (!confirmed) confirmed = await populateConversation(Conversation.findOne(participantFilter));
+    return res.json(confirmed);
+  } catch {
+    return res.status(500).json({ error: 'Failed to confirm transaction' });
+  }
+};
+
+export const getTransactionHistory = async (req, res) => {
+  try {
+    const { role } = req.query;
+    if (!['buyer', 'seller'].includes(role)) return res.status(400).json({ error: 'Role must be buyer or seller' });
+    const page = Number(req.query.page || 1);
+    if (!Number.isInteger(page) || page < 1 || page > 10000) return res.status(400).json({ error: 'Invalid page' });
+    const filter = {
+      [role]: getUserId(req),
+      transactionConfirmedAt: { $ne: null },
+    };
+    const [transactions, total] = await Promise.all([
+      populateConversation(Conversation.find(filter).sort({ transactionConfirmedAt: -1 }).skip((page - 1) * 20).limit(20)),
+      Conversation.countDocuments(filter),
+    ]);
+    return res.json({ transactions, page, pages: Math.max(1, Math.ceil(total / 20)), total });
+  } catch {
+    return res.status(500).json({ error: 'Failed to fetch transaction history' });
+  }
+};
 // Fetch all user's conversation
 export const getAllConversations = async (req, res) => {
   try {

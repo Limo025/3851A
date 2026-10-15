@@ -148,8 +148,7 @@ export default function Header()  {
                                 <Link to="/my-listings" onClick={closeSidebarAndFocusToggle}><p>My Listings</p></Link>
                             )}
                             <Link to="/messages" onClick={closeSidebarAndFocusToggle}><p>Messages</p></Link>
-                            <Link to="/purchase-history" onClick={closeSidebarAndFocusToggle}><p>Purchase History</p></Link>
-                            <Link to="/profile" onClick={closeSidebarAndFocusToggle}><p>My profile</p></Link>
+                            <Link to="/transaction-history" onClick={closeSidebarAndFocusToggle}><p>Transaction History</p></Link>
                             <Link to="/settings" onClick={closeSidebarAndFocusToggle}><p>Settings</p></Link>
                             {isAdmin && <Link to="/admin" onClick={closeSidebarAndFocusToggle}><p>Admin</p></Link>}
                             <p>Help</p>

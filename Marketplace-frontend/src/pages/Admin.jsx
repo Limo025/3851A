@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AdminAppeal from '../components/AdminAppeal.jsx';
 import AdminDefault from '../components/AdminDefault.jsx';
+import AdminReports from '../components/AdminReports.jsx';
 import { handleAuthenticationError } from '../auth/handleAuthenticationError.js';
 import { session } from '../auth/session.js';
 import '../css/styles/admin.css';
@@ -10,6 +11,7 @@ const ADMIN_MODE_STORAGE_KEY = 'adminMode';
 const ADMIN_MODES = [
   { id: 'default', label: 'Users & listings', Component: AdminDefault },
   { id: 'appeal', label: 'Appeals', Component: AdminAppeal },
+  { id: 'reports', label: 'Reports', Component: AdminReports },
 ];
 
 const validAdminModes = new Set(ADMIN_MODES.map(({ id }) => id));
@@ -57,7 +59,7 @@ export default function Admin() {
     <main className="admin-page">
       <div className="admin-page__inner">
         <h1>Admin</h1>
-        <p>Manage users, listings, and ban appeals.</p>
+        <p>Manage users, listings, reports, and ban appeals.</p>
         <div className="admin-page__mode-panel">
           <nav className="admin-page__modes" aria-label="Admin sections">
             {ADMIN_MODES.map(({ id, label }) => (

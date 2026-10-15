@@ -1,57 +1,43 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react';
+import { apiFetch } from '../api/client.js';
 
-let isOpen = false;
+export default function Settings() {
+  const [user, setUser] = useState(null);
+  const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState(null);
+  const [message, setMessage] = useState('');
+  const [busy, setBusy] = useState(false);
 
-function openNav() {
-  if (isOpen == true){
-      document.getElementById("sidebar").style.display = "none";
-      isOpen=false;
-  } else{
-      document.getElementById("sidebar").style.display = "block";
-      isOpen=true;
+  useEffect(() => {
+    document.title = 'Settings | UON Marketplace';
+    apiFetch('/api/users/me', { auth: true })
+      .then((data) => { setUser(data); setName(data.username || ''); })
+      .catch((error) => setMessage(error.message));
+  }, []);
+
+  async function save(event) {
+    event.preventDefault(); setBusy(true); setMessage('');
+    try {
+      const body = new FormData(); body.append('username', name);
+      if (avatar) body.append('images', avatar);
+      const updated = await apiFetch('/api/users/me', { auth: true, method: 'PATCH', body });
+      setUser(updated); setAvatar(null); setMessage('Profile saved.');
+    } catch (error) { setMessage(error.message); }
+    finally { setBusy(false); }
   }
+
+  return <main className="marketplace-page"><div className="marketplace-page__content listing-form-page">
+    <h1>Settings</h1>
+    {message && <p role="status">{message}</p>}
+    {!user ? <p>{message ? '' : 'Loading…'}</p> : <>
+      {user.avatarUrl ? <img src={user.avatarUrl} alt={`${user.username}'s avatar`} className="h-24 w-24 rounded-full object-cover" /> : <div className="flex h-24 w-24 items-center justify-center rounded-full bg-slate-200 text-2xl" aria-label="No profile picture">{(user.username || '?')[0]}</div>}
+      <form onSubmit={save} className="listing-form">
+        <label htmlFor="profile-name">Display name</label>
+        <input id="profile-name" required maxLength={50} value={name} onChange={(event) => setName(event.target.value)} />
+        <label htmlFor="profile-avatar">Profile picture (JPEG, PNG or WebP, up to 5 MB)</label>
+        <input id="profile-avatar" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => setAvatar(event.target.files?.[0] || null)} />
+        <button className="listing-form__submit" disabled={busy}>{busy ? 'Saving…' : 'Save profile'}</button>
+      </form>
+    </>}
+  </div></main>;
 }
-function closeNav() {
-  document.getElementById("sidebar").style.display = "none";
-  isOpen=false;
-}
-
-function handleSearch(event) {
-    if (event.key === 'Enter') {
-        alert('hello world');
-        const query = event.target.value.trim();
-        if (query) {
-            window.location.href = '/search?=' + encodeURIComponent(query);
-        }
-    }
-}
-
-function initialiseSettings(event){
-  // 1. settings should only be visible to users that are logged in. Do a quick check to see if the
-  /*    users logged in, and if not, redirect them to the login page. 
-
-     2. Decide with project peers if personal settings should be stored in the DB or cookies. 
-
-     3. Retrieve settings from DB / Cookies, and set them. 
-
-  */
-}
-function App() {
-  const [count, setCount] = useState(0)
-  document.title = "Settings | UON Marketplace";
-  return (
-<>
-  {/* MAIN CONTENT*/}
-  <div id="contentBackground">
-    <div id="content">
-      <h1> Settings</h1>
-
-    </div>
-  </div>
-</>
-
-
-  )
-}
-
-export default App

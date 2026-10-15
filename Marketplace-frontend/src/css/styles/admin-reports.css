@@ -1,0 +1,6 @@
+.admin-reports ul { display: grid; gap: 16px; list-style: none; padding: 0; }
+.admin-reports li { border: 1px solid #d6deed; padding: 18px; }
+.admin-reports h2 { margin: 0; }
+.admin-reports__filters { margin-bottom: 18px; }
+.admin-reports__actions { display: flex; gap: 10px; margin-top: 12px; }
+.admin-reports button, .admin-reports select { padding: 8px 12px; }

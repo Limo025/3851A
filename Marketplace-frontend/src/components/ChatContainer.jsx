@@ -7,7 +7,8 @@ import { Message, MessageAvatar, MessageContent, MessageFooter } from '@/compone
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useChatStore } from '../store/useChatStore.js';
-import { getOtherParticipant, isConversationListingSold, isOtherParticipantBanned } from '../utils/chatParticipants.js';
+import { getOtherParticipant, getTransactionConfirmationLabel, isConversationListingSold, isOtherParticipantBanned } from '../utils/chatParticipants.js';
+import { submitUserReport, USER_REPORT_REASONS } from '../utils/reports.js';
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp', 'image/gif']);
@@ -53,7 +54,11 @@ export default function ChatContainer({ user: conversation }) {
   const hasScrolledInitially = useRef(false);
   const isNearBottom = useRef(true);
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
-  const { messages, currentMode, isMessagesLoading, isSendingMessage, sendMessage } = useChatStore();
+  const [showReport, setShowReport] = useState(false);
+  const [reportReason, setReportReason] = useState(USER_REPORT_REASONS[0]);
+  const [reportDescription, setReportDescription] = useState('');
+  const [reporting, setReporting] = useState(false);
+  const { messages, currentMode, isMessagesLoading, isSendingMessage, isConfirmingTransaction, sendMessage, confirmTransaction } = useChatStore();
 
   const currentUserId = currentMode === 'buyer' ? conversation.buyer : conversation.seller;
   const currentUser = currentMode === 'buyer' ? conversation.buyerDetails : conversation.sellerDetails;
@@ -133,6 +138,15 @@ export default function ChatContainer({ user: conversation }) {
     }
   }
 
+  async function handleReport(event) {
+    event.preventDefault(); setReporting(true);
+    try {
+      await submitUserReport({ conversationId: conversation._id, reason: reportReason, description: reportDescription });
+      toast.success('Report submitted.'); setReportDescription(''); setShowReport(false);
+    } catch (error) { toast.error(error.message); }
+    finally { setReporting(false); }
+  }
+
   return (
     <section className="flex h-full min-h-0 flex-col bg-white" aria-label={`Chat with ${recipientName}`}>
       <header className="border-b border-blue-800 bg-blue-700 px-5 py-4 text-white shadow-sm">
@@ -142,6 +156,15 @@ export default function ChatContainer({ user: conversation }) {
 
       {recipientIsBanned && <p className="border-b border-red-200 bg-red-50 px-5 py-3 text-sm font-medium text-red-800" role="alert">This user has been banned.</p>}
       {listingIsSold && <p className="border-b border-amber-200 bg-amber-50 px-5 py-3 text-sm font-medium text-amber-900" role="status">This item is sold out.</p>}
+      {!conversation.isDraft && <div className="flex flex-wrap gap-2 border-b border-slate-200 p-3">
+        <Button type="button" disabled={isConfirmingTransaction || Boolean(conversation.transactionConfirmedAt)} onClick={() => confirmTransaction(conversation._id)}>{isConfirmingTransaction ? 'Confirming…' : getTransactionConfirmationLabel(conversation, currentMode)}</Button>
+        <Button type="button" variant="outline" onClick={() => setShowReport((open) => !open)}>Report user</Button>
+      </div>}
+      {showReport && <form className="grid gap-2 border-b border-slate-200 bg-slate-50 p-3" onSubmit={handleReport}>
+        <label htmlFor="chat-report-reason">Reason</label><select id="chat-report-reason" className="border p-2" value={reportReason} onChange={(event) => setReportReason(event.target.value)}>{USER_REPORT_REASONS.map((reason) => <option key={reason}>{reason}</option>)}</select>
+        <label htmlFor="chat-report-description">Details</label><textarea id="chat-report-description" className="border p-2" required minLength={10} maxLength={1000} value={reportDescription} onChange={(event) => setReportDescription(event.target.value)} />
+        <Button disabled={reporting}>{reporting ? 'Submitting…' : 'Submit report'}</Button>
+      </form>}
 
       <div className="relative min-h-0 flex-1">
       <div ref={messageListRef} onScroll={handleMessageScroll} className="h-full space-y-4 overflow-y-auto p-4" aria-live="polite">

@@ -7,6 +7,7 @@ import { session } from '../auth/session.js';
 import { useChatStore } from '../store/useChatStore.js';
 import { formatListingDate, formatListingPrice } from '../utils/listingFormat.js';
 import { saveToWatchlist } from '../utils/watchlist.js';
+import { LISTING_REPORT_REASONS, submitListingReport } from '../utils/reports.js';
 import '../css/listings.css';
 
 function displayValue(value, fallback = 'Not specified') {
@@ -29,7 +30,13 @@ export default function ListingDetail() {
   const [notFound, setNotFound] = useState(false);
   const [watchlistSaving, setWatchlistSaving] = useState(false);
   const [watchlistFeedback, setWatchlistFeedback] = useState('');
+  const [showReport, setShowReport] = useState(false);
+  const [reportReason, setReportReason] = useState(LISTING_REPORT_REASONS[0]);
+  const [reportDescription, setReportDescription] = useState('');
+  const [reporting, setReporting] = useState(false);
   const feedback = location.state?.message ? <p className="listing-detail__feedback" role="status">{location.state.message}</p> : null;
+
+  useEffect(() => { document.title = 'Listing Detail | UON Marketplace'; }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -161,7 +168,23 @@ export default function ListingDetail() {
     }
   }
 
-  document.title = "Listing Detail | UON Marketplace";
+  function openReport() {
+    if (!session.hasSession()) {
+      navigate('/login', { state: { from: `${location.pathname}${location.search}${location.hash}`, message: 'Please log in to report a listing.' } });
+      return;
+    }
+    setShowReport((open) => !open);
+  }
+
+  async function handleReport(event) {
+    event.preventDefault(); setReporting(true); setWatchlistFeedback('');
+    try {
+      await submitListingReport({ listingId: listing._id, reason: reportReason, description: reportDescription });
+      setWatchlistFeedback('Report submitted.'); setReportDescription(''); setShowReport(false);
+    } catch (requestError) { setWatchlistFeedback(requestError.message); }
+    finally { setReporting(false); }
+  }
+
   return (
     <main className="marketplace-page">
       <div className="marketplace-page__content listing-detail">
@@ -228,7 +251,13 @@ export default function ListingDetail() {
             >
               {listing.soldAt ? 'Listing sold' : watchlistSaving ? 'Adding…' : 'Add to Watchlist'}
             </button>
+            {!isOwnListing && <button className="listing-detail__contact" type="button" onClick={openReport}>Report listing</button>}
           </div>
+          {showReport && <form className="listing-form listing-report-form" onSubmit={handleReport}>
+            <label htmlFor="listing-report-reason">Reason</label><select id="listing-report-reason" value={reportReason} onChange={(event) => setReportReason(event.target.value)}>{LISTING_REPORT_REASONS.map((reason) => <option key={reason}>{reason}</option>)}</select>
+            <label htmlFor="listing-report-description">Details</label><textarea id="listing-report-description" required minLength={10} maxLength={1000} value={reportDescription} onChange={(event) => setReportDescription(event.target.value)} />
+            <button className="listing-form__submit" disabled={reporting}>{reporting ? 'Submitting…' : 'Submit report'}</button>
+          </form>}
         </div>
       </div>
     </main>
