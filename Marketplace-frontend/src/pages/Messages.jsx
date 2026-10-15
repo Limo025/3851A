@@ -19,16 +19,16 @@ export default function Messages() {
 
   document.title = "Messages | UON Marketplace";
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-white p-4 md:p-8 flex items-center justify-center">
-      <div className="w-full max-w-6xl h-[80vh] bg-white rounded-2xl shadow-[0_18px_45px_rgba(15,23,42,0.18)] overflow-hidden border-2 border-slate-200 grid grid-cols-4">
+    <div className="font-['Corbel'] min-h-[calc(100vh-4rem)] bg-white p-4 md:p-8 flex items-center justify-center">
+      <div className="w-full max-w-8xl h-[80vh] bg-white rounded-2xl shadow-[0_18px_45px_rgba(15,23,42,0.18)] overflow-hidden border-2 border-slate-200 grid grid-cols-4">
         
         {/* Left Sidebar Box (1/4 Width) */}
-        <aside className="col-span-1 bg-[#005bf9] text-white p-4 flex flex-col border-r border-blue-400">
-          <div className="pb-4 border-b border-blue-400">
+        <aside className="col-span-1 bg-[#5e5e5e] text-black p-4 flex flex-col border-r border-blue-400 font-['Corbel']" >
+          <div className="pb-4 border-b border-black-400">
             <ModeTabSwitch />
           </div>
           
-          <div className="flex-1 overflow-y-auto mt-4">
+          <div className="flex-1 overflow-y-auto mt-4 font-['FuseV2']" >
             <ConversationList />
           </div>
         </aside>
