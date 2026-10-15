@@ -117,8 +117,7 @@
 
 .listing-filters button:hover,
 .listing-pagination button:hover:not(:disabled) {
-  background: #1C7373;
-  border-color: #145252;
+  background: #0048c7;
 }
 
 .listing-filters .listing-filters__clear:hover {
@@ -524,6 +523,22 @@
   overflow-wrap: anywhere;
 }
 
+.listing-detail__seller {
+  align-items: center;
+  display: inline-flex;
+  gap: 10px;
+}
+
+.listing-detail__details .listing-detail__seller-row {
+  align-items: center;
+}
+
+.listing-detail__seller [data-slot='avatar-fallback'] {
+  background: #e6ecf7;
+  color: #154865;
+  font-family: FuseV2Bold, Arial, sans-serif;
+}
+
 .listing-detail__contact {
   background: #005bf9;
   border: 2px solid #005bf9;
@@ -536,8 +551,7 @@
 }
 
 .listing-detail__contact:hover:not(:disabled) {
-  background: #1C7373;
-  border-color: #145252;
+  background: #0048c7;
 }
 
 .listing-detail__contact:disabled {
@@ -591,7 +605,7 @@
 
 .listing-form__submit-error {
   background: #fff0f0;
-  border-left: 5px solid #457EC4;
+  border-left: 5px solid #af0f0f;
   padding: 14px 16px;
 }
 

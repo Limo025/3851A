@@ -1,7 +1,7 @@
 import { Fragment, useLayoutEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { ArrowDown, Paperclip, Send, X } from 'lucide-react';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Bubble, BubbleContent } from '@/components/ui/bubble';
 import { Message, MessageAvatar, MessageContent, MessageFooter } from '@/components/ui/message';
 import { Button } from '@/components/ui/button';
@@ -61,6 +61,7 @@ export default function ChatContainer({ user: conversation }) {
   const { messages, currentMode, isMessagesLoading, isSendingMessage, isConfirmingTransaction, sendMessage, confirmTransaction } = useChatStore();
 
   const currentUserId = currentMode === 'buyer' ? conversation.buyer : conversation.seller;
+  const currentUser = currentMode === 'buyer' ? conversation.buyerDetails : conversation.sellerDetails;
   const recipient = getOtherParticipant(conversation, currentMode);
   const recipientIsBanned = isOtherParticipantBanned(conversation, currentMode);
   const listingIsSold = isConversationListingSold(conversation);
@@ -173,6 +174,9 @@ export default function ChatContainer({ user: conversation }) {
           <p className="text-center text-sm text-slate-500">No messages yet. Start the conversation.</p>
         ) : messages.map((message, index) => {
           const isOwnMessage = message.senderId === currentUserId;
+          const sender = isOwnMessage ? currentUser : recipient;
+          const senderName = sender?.username || (isOwnMessage ? 'You' : recipientName);
+          const senderAvatarUrl = sender?.avatarUrl || sender?.avatar?.url;
           const day = messageDay(message.createdAt);
           const showDayDivider = day && day !== messageDay(messages[index - 1]?.createdAt);
           return (
@@ -186,7 +190,10 @@ export default function ChatContainer({ user: conversation }) {
             )}
             <Message align={isOwnMessage ? 'end' : 'start'}>
               <MessageAvatar>
-                <Avatar><AvatarFallback>{initials(isOwnMessage ? 'You' : recipientName)}</AvatarFallback></Avatar>
+                <Avatar>
+                  {senderAvatarUrl ? <AvatarImage src={senderAvatarUrl} alt={`${senderName}'s avatar`} /> : null}
+                  <AvatarFallback>{initials(senderName)}</AvatarFallback>
+                </Avatar>
               </MessageAvatar>
               <MessageContent>
                 <Bubble variant={isOwnMessage ? 'default' : 'tinted'}>
