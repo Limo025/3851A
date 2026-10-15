@@ -62,7 +62,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/createAccount" element={<CreateAccount />} />
         <Route path="/search" element={<Search />} />
         {/*<Route path="/messages" element={<RequireAuth><Messages /></RequireAuth>} /> */}
-        <Route path="/messages" element={<Messages />} /> 
+        <Route path="/messages" element={<RequireAuth><Messages /></RequireAuth> }/> 
         <Route path="/settings" element={<Settings />} />
         <Route path="/watchlist" element={<RequireAuth><Watchlist /></RequireAuth>} />
         <Route path="/marketplace" element={<Marketplace />} />
