@@ -39,7 +39,7 @@ export default function Settings() {
         <input id="profile-name" required maxLength={50} value={name} onChange={(event) => setName(event.target.value)} />
         <label htmlFor="profile-avatar">Profile picture (JPEG, PNG or WebP, up to 5 MB)</label>
         <input id="profile-avatar" type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => setAvatar(event.target.files?.[0] || null)} />
-        <button className="listing-form__submit settings-save-profile" disabled={busy}>{busy ? 'Saving…' : 'Save profile'}</button>
+        <button className="listing-form__submit listing-form__submit--blue" disabled={busy}>{busy ? 'Saving…' : 'Save profile'}</button>
       </form>
     </>}
   </div></main>;
