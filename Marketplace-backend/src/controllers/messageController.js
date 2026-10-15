@@ -6,7 +6,7 @@ import User from '../models/User.js';
 import { broadcastMessage } from '../sockets/broadcastMessage.js';
 
 const getUserId = (req) => req.user?.uid || req.user?.user_id || req.user?._id;
-export const CHAT_USER_FIELDS = 'username uid isBanned';
+export const CHAT_USER_FIELDS = 'username uid avatar isBanned';
 export const CHAT_LISTING_FIELDS = 'title price images soldAt';
 const populateConversation = (query) =>
   query

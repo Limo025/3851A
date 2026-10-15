@@ -495,6 +495,22 @@
   overflow-wrap: anywhere;
 }
 
+.listing-detail__seller {
+  align-items: center;
+  display: inline-flex;
+  gap: 10px;
+}
+
+.listing-detail__details .listing-detail__seller-row {
+  align-items: center;
+}
+
+.listing-detail__seller [data-slot='avatar-fallback'] {
+  background: #e6ecf7;
+  color: #154865;
+  font-family: FuseV2Bold, Arial, sans-serif;
+}
+
 .listing-detail__contact {
   background: #005bf9;
   border: 2px solid #005bf9;

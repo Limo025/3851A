@@ -4,7 +4,7 @@ import { Conversation } from '../src/models/Conversation.js';
 import { CHAT_LISTING_FIELDS, CHAT_USER_FIELDS } from '../src/controllers/messageController.js';
 
 test('conversation responses include the participant ban status', () => {
-  assert.equal(CHAT_USER_FIELDS, 'username uid isBanned');
+  assert.equal(CHAT_USER_FIELDS, 'username uid avatar isBanned');
 });
 
 test('conversation responses include the listing sold status', () => {
