@@ -18,7 +18,6 @@ import MyListings from './pages/MyListings.jsx'
 import EditListing from './pages/EditListing.jsx'
 import RequireAuth from './components/RequireAuth.jsx'
 import RequireAdmin from './components/RequireAdmin.jsx'
-import About from './pages/About.jsx'
 import Sell from './pages/Sell.jsx'
 import Watchlist from './pages/Watchlist.jsx'
 import PurchaseHistory from './pages/PurchaseHistory.jsx'
@@ -64,7 +63,6 @@ createRoot(document.getElementById('root')).render(
         <Route path="/search" element={<Search />} />
         <Route path="/messages" element={<RequireAuth><Messages /></RequireAuth>} />
         <Route path="/settings" element={<Settings />} />
-        <Route path="/about" element={<About />} />
         <Route path="/watchlist" element={<RequireAuth><Watchlist /></RequireAuth>} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/listings/:id" element={<ListingDetail />} />
