@@ -7,6 +7,10 @@ import { session } from '../auth/session.js';
 import ListingGrid from '../components/ListingGrid.jsx';
 import { getAvailabilityErrorMessage, requestListingAvailabilityUpdate } from '../utils/sellerListings.js';
 import '../css/listings.css';
+import { Button } from "@/components/ui/button"
+
+async function redirectToSell() {
+      window.location.href = "/sell"}
 
 export default function MyListings() {
   const navigate = useNavigate();
@@ -135,7 +139,11 @@ document.title = "My Listings | UON Marketplace";
           <h1>My listings</h1>
           <p>Manage the items you have listed for the university community.</p>
         </header>
+        <br/>
 
+        <Button className="p-6 text-xl font-['FuseV2']" onClick={redirectToSell}>Add a Listing</Button>
+        <br/>
+        <br/>
         {feedback ? <p className="seller-listings__feedback" role="status">{feedback}</p> : null}
         {actionError ? <p className="listing-state listing-state--error seller-listings__action-error" role="alert">{actionError}</p> : null}
 
