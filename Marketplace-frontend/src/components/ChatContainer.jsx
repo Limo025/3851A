@@ -181,7 +181,7 @@ export default function ChatContainer({ user: conversation }) {
       {showReport && <form className="grid gap-2 border-b border-slate-200 bg-slate-50 p-3" onSubmit={handleReport}>
         <label htmlFor="chat-report-reason">Reason</label><select id="chat-report-reason" className="border p-2" value={reportReason} onChange={(event) => setReportReason(event.target.value)}>{USER_REPORT_REASONS.map((reason) => <option key={reason}>{reason}</option>)}</select>
         <label htmlFor="chat-report-description">Details</label><textarea id="chat-report-description" className="border p-2" required minLength={10} maxLength={1000} value={reportDescription} onChange={(event) => setReportDescription(event.target.value)} />
-        <Button disabled={reporting}>{reporting ? 'Submitting…' : 'Submit report'}</Button>
+        <Button type="submit" disabled={reporting}>{reporting ? 'Submitting…' : 'Submit report'}</Button>
       </form>}
 
       <div className="relative min-h-0 flex-1">
