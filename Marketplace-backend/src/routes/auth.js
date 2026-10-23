@@ -3,6 +3,9 @@ import User from '../models/User.js';
 import { banResponse } from '../services/banResponse.js';
 import { fetchWithTimeout, isProviderTimeoutError } from '../services/providerRequest.js';
 
+const PASSWORD_REQUIREMENTS = 'Your password needs at least 1 special character, 1 number, and more than 8 characters.';
+const STRONG_PASSWORD_PATTERN = /^(?=.*\d)(?=.*[^A-Za-z0-9\s]).{9,}$/;
+
 async function defaultFirebaseAuthResolver() {
     const { auth } = await import('../config/firebase.js');
     return auth;
@@ -40,8 +43,8 @@ export function createAuthRouter({
         if (!isValidEmail(email)) {
             return res.status(400).json({ error: 'Invalid email format' });
         }
-        if (password.length < 6) {
-            return res.status(400).json({ error: 'Password must be at least 6 characters' });
+        if (!STRONG_PASSWORD_PATTERN.test(password)) {
+            return res.status(400).json({ error: PASSWORD_REQUIREMENTS });
         }
 
         let firebaseUser;
