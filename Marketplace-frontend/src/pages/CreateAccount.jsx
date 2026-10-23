@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 
 const PASSWORD_REQUIREMENTS = 'Your password needs at least 1 special character, 1 number, and more than 8 characters.';
 const STRONG_PASSWORD_PATTERN = /^(?=.*\d)(?=.*[^A-Za-z0-9\s]).{9,}$/;
-const AGE_REQUIREMENTS = 'You must be between 18 and 120 years old.';
+const AGE_REQUIREMENTS = 'You must be above 18 years old to use this platform';
 
 function birthDateForAge(age) {
   const date = new Date();
