@@ -30,8 +30,8 @@
 
 .marketplace-page__query {
   background: #eaf1ff;
-  border-left: 4px solid #154865;
-  color: #1C7373;
+  border-left: 4px solid #005bf9;
+  color: #005bf9;
   flex: 0 1 auto;
   max-width: 420px;
   overflow-wrap: anywhere;
@@ -97,7 +97,8 @@
 }
 
 .listing-filters button,
-.listing-pagination button {
+.listing-pagination button,
+.listing-filters__clear {
   background: #005bf9;
   border: 2px solid #005bf9;
   border-radius: 4px;
@@ -107,21 +108,10 @@
   padding: 9px 16px;
 }
 
-.listing-filters .listing-filters__clear {
-  background: transparent;
-  border-color: #1C7373;
-  border-radius: 999px;
-  color: black;
-  min-height: 40px;
-}
-
 .listing-filters button:hover,
-.listing-pagination button:hover:not(:disabled) {
+.listing-pagination button:hover:not(:disabled),
+.listing-filters__clear:hover {
   background: #0048c7;
-}
-
-.listing-filters .listing-filters__clear:hover {
-  color: #fff;
 }
 
 .listing-filters button:focus-visible,
@@ -270,7 +260,6 @@
 
 .seller-listing-actions a,
 .seller-listing-actions button {
-  border: 2px solid #145252;
   border-radius: 4px;
   box-sizing: border-box;
   font-family: FuseV2, Arial, sans-serif;
@@ -279,13 +268,15 @@
 }
 
 .seller-listing-actions a {
-  color: #145252;
+  background: #005bf9;
+  color: white;
   text-decoration: none;
 }
 
 .seller-listing-actions button {
-  background: #fff;
-  color: #7a0015;
+  border: 2px solid #005bf9;
+  background: #005bf9;
+  color: white;
   cursor: pointer;
 }
 
@@ -296,8 +287,7 @@
 
 .seller-listing-actions a:hover,
 .seller-listing-actions button:hover:not(:disabled) {
-  background: #f5f8ff;
-  border-color: #00225e;
+  background: #0048c7;
 }
 
 .seller-listing-actions a:focus-visible,
@@ -319,6 +309,7 @@
 }
 
 .my-listings-profile {
+  border: 2px solid #005bf9;
   align-items: center;
   background: #f5f8ff;
   display: flex;
@@ -368,7 +359,7 @@
 }
 
 .purchase-history__item:hover {
-  border-color: #145252;
+  border-color: #005bf9;
 }
 
 .purchase-history__item:focus-visible {
@@ -469,7 +460,7 @@
 }
 
 .listing-detail__thumbnail--selected {
-  border-color: #145252;
+  border-color: #005bf9;
 }
 
 .listing-detail__thumbnail:focus-visible,
@@ -565,8 +556,9 @@
 }
 
 .listing-form {
+  margin-top: 5%;
   background: #f5f8ff;
-  border: 2px solid #145252;
+  border: 2px solid #005bf9;
   display: grid;
   gap: 8px;
   padding: 24px;
@@ -582,7 +574,7 @@
 .listing-form > input,
 .listing-form > textarea,
 .listing-form > select {
-  border: 1px solid #145252;
+  border: 1px solid #005bf9;
   border-radius: 4px;
   box-sizing: border-box;
   font: inherit;
@@ -623,14 +615,18 @@
 .image-uploader__picker,
 .image-uploader__item button,
 .listing-form__submit {
-  background: #145252;
-  border: 2px solid #145252;
+  background: #005bf9;
+  border: 2px solid #005bf9;
   border-radius: 4px;
   color: #fff;
   cursor: pointer;
   display: inline-block;
   font-family: FuseV2, Arial, sans-serif;
   padding: 9px 16px;
+}
+
+.listing-form__submit:hover:not(:disabled) {
+  background: #0048c7;
 }
 
 .image-uploader > input[type='file'] {
@@ -865,22 +861,32 @@
   font-family: FuseV2, Arial, sans-serif;
 }
 
-.watchlist-item button {
-  background: #fff;
-  border: 0;
+.watchlist-item__actions {
+  align-items: center;
   border-top: 1px solid #d6deed;
-  color: #7a0015;
+  display: flex;
+  justify-content: center;
+  padding: clamp(12px, 3vw, 20px);
+}
+
+.watchlist-item button {
+  background: #005bf9;
+  border: 2px solid #005bf9;
+  border-radius: 4px;
+  color: #fff;
   cursor: pointer;
-  font: inherit;
-  padding: 12px;
+  font-family: FuseV2, Arial, sans-serif;
+  min-height: 40px;
+  padding: clamp(8px, 1.5vw, 10px) clamp(14px, 3vw, 20px);
 }
 
 .watchlist-item button:hover:not(:disabled) {
-  background: #f5f8ff;
+  background: #0048c7;
 }
 
 .watchlist-item button:disabled {
-  color: #77839a;
+  background: #77839a;
+  border-color: #77839a;
   cursor: not-allowed;
 }
 
