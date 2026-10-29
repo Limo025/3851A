@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const PASSWORD_REQUIREMENTS = 'Use 15–128 characters. Passphrases, spaces, and Unicode are allowed.';
+const PASSWORD_REQUIREMENTS = 'Use 9–128 characters with at least 1 number and 1 special character.';
 const AGE_REQUIREMENTS = 'You must be above 18 years old to use this platform';
 
 function birthDateForAge(age) {
@@ -139,8 +139,9 @@ function App() {
                   id="password"
                   type="password"
                   value={password}
-                  minLength={15}
+                  minLength={9}
                   maxLength={128}
+                  pattern="^(?=.*\d)(?=.*[^A-Za-z0-9\s]).{9,128}$"
                   placeholder="Your password"
                   required
                   autoComplete="new-password"

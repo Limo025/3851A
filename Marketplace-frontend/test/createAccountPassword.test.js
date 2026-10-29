@@ -8,7 +8,7 @@ import { createServer } from 'vite';
 
 const frontendRoot = fileURLToPath(new URL('..', import.meta.url));
 
-test('create account renders a real form with modern password length controls', async (t) => {
+test('create account renders a real form with the required password composition controls', async (t) => {
   const vite = await createServer({
     root: frontendRoot,
     server: { middlewareMode: true },
@@ -28,8 +28,8 @@ test('create account renders a real form with modern password length controls', 
   ));
 
   assert.match(html, /<form[^>]*>/);
-  assert.match(html, /type="password"[^>]*minLength="15"/);
+  assert.match(html, /type="password"[^>]*minLength="9"/);
   assert.match(html, /type="password"[^>]*maxLength="128"/);
-  assert.doesNotMatch(html, /type="password"[^>]*pattern=/);
+  assert.match(html, /type="password"[^>]*pattern=/);
   assert.match(html, /<button[^>]*type="submit"[^>]*>Create Account<\/button>/);
 });

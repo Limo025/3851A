@@ -240,7 +240,7 @@ test('POST /auth/login creates a marketplace user when Firebase has no MongoDB p
   });
 });
 
-test('POST /auth/register accepts a long passphrase without composition rules', async () => {
+test('POST /auth/register accepts a nine-character password with a number and special character', async () => {
   const created = [];
   const firebaseAuth = {
     createUser: async (details) => {
@@ -258,7 +258,7 @@ test('POST /auth/register accepts a long passphrase without composition rules', 
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: 'student@example.test',
-        password: 'correct horse battery staple',
+        password: 'Short7!aa',
         username: 'student',
       }),
     });
@@ -268,28 +268,30 @@ test('POST /auth/register accepts a long passphrase without composition rules', 
 
   assert.deepEqual(created, [{
     email: 'student@example.test',
-    password: 'correct horse battery staple',
+    password: 'Short7!aa',
     displayName: 'student',
   }]);
 });
 
-test('POST /auth/register rejects passwords shorter than 15 Unicode characters', async () => {
+test('POST /auth/register rejects passwords missing either required composition element', async () => {
   let createCalls = 0;
   const firebaseAuth = { createUser: async () => { createCalls += 1; } };
 
   await withAuthApp(async () => {}, async (baseUrl) => {
-    const response = await fetch(`${baseUrl}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: 'student@example.test',
-        password: 'Short7!aa',
-        username: 'student',
-      }),
-    });
+    for (const password of ['NoSpecial123', 'NoNumber!aa']) {
+      const response = await fetch(`${baseUrl}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: 'student@example.test',
+          password,
+          username: 'student',
+        }),
+      });
 
-    assert.equal(response.status, 400);
-    assert.match((await response.json()).error, /15/);
+      assert.equal(response.status, 400);
+      assert.match((await response.json()).error, /number.*special character/i);
+    }
   }, { firebaseAuth });
 
   assert.equal(createCalls, 0);
