@@ -239,3 +239,101 @@ test('POST /auth/login creates a marketplace user when Firebase has no MongoDB p
     options: { upsert: true, returnDocument: 'after', setDefaultsOnInsert: true },
   });
 });
+
+test('POST /auth/register accepts a long passphrase without composition rules', async () => {
+  const created = [];
+  const firebaseAuth = {
+    createUser: async (details) => {
+      created.push(details);
+      return { uid: 'firebase-passphrase', email: details.email };
+    },
+  };
+  const UserModel = {
+    create: async (details) => ({ ...details }),
+  };
+
+  await withAuthApp(async () => {}, async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: 'student@example.test',
+        password: 'correct horse battery staple',
+        username: 'student',
+      }),
+    });
+
+    assert.equal(response.status, 201);
+  }, { firebaseAuth, UserModel });
+
+  assert.deepEqual(created, [{
+    email: 'student@example.test',
+    password: 'correct horse battery staple',
+    displayName: 'student',
+  }]);
+});
+
+test('POST /auth/register rejects passwords shorter than 15 Unicode characters', async () => {
+  let createCalls = 0;
+  const firebaseAuth = { createUser: async () => { createCalls += 1; } };
+
+  await withAuthApp(async () => {}, async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: 'student@example.test',
+        password: 'Short7!aa',
+        username: 'student',
+      }),
+    });
+
+    assert.equal(response.status, 400);
+    assert.match((await response.json()).error, /15/);
+  }, { firebaseAuth });
+
+  assert.equal(createCalls, 0);
+});
+
+test('POST /auth/register rejects passwords longer than 128 Unicode characters', async () => {
+  let createCalls = 0;
+  const firebaseAuth = { createUser: async () => { createCalls += 1; } };
+
+  await withAuthApp(async () => {}, async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: 'student@example.test',
+        password: 'x'.repeat(129),
+        username: 'student',
+      }),
+    });
+
+    assert.equal(response.status, 400);
+  }, { firebaseAuth });
+
+  assert.equal(createCalls, 0);
+});
+
+test('POST /auth/register rejects a commonly compromised password', async () => {
+  let createCalls = 0;
+  const firebaseAuth = { createUser: async () => { createCalls += 1; } };
+
+  await withAuthApp(async () => {}, async (baseUrl) => {
+    const response = await fetch(`${baseUrl}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: 'student@example.test',
+        password: 'password123456!',
+        username: 'student',
+      }),
+    });
+
+    assert.equal(response.status, 400);
+    assert.match((await response.json()).error, /too common/i);
+  }, { firebaseAuth });
+
+  assert.equal(createCalls, 0);
+});
