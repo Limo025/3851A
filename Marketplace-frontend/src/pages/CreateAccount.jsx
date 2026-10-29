@@ -122,7 +122,7 @@ function App() {
                   onChange={e => setDob(e.target.value)}
                 />
                 <FieldDescription>
-                  You must be between 18 and 120 years old.
+                  You must be at least 18 years old
                 </FieldDescription>
               </Field>
               <Field>
