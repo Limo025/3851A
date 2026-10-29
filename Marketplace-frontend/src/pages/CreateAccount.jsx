@@ -11,6 +11,19 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+const PASSWORD_REQUIREMENTS = 'Your password needs at least 1 special character, 1 number, and more than 8 characters.';
+const STRONG_PASSWORD_PATTERN = /^(?=.*\d)(?=.*[^A-Za-z0-9\s]).{9,}$/;
+const AGE_REQUIREMENTS = 'You must be above 18 years old to use this platform';
+
+function birthDateForAge(age) {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - age);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 function App() {
   const [username, setUsername] = useState('');
   const [dob, setDob] = useState('');
@@ -36,8 +49,16 @@ function App() {
   async function createAccount() {
     setError('');
 
+    if (!dob || dob < birthDateForAge(120) || dob > birthDateForAge(18)) {
+      setError(AGE_REQUIREMENTS);
+      return;
+    }
     if (!terms || !privacy || !conduct) {
       setError('You must agree to all terms before creating an account.');
+      return;
+    }
+    if (!STRONG_PASSWORD_PATTERN.test(password)) {
+      setError(PASSWORD_REQUIREMENTS);
       return;
     }
     if (password !== confirmPassword) {
@@ -64,9 +85,9 @@ function App() {
   
   document.title = "Create Account | UON Marketplace";
   return (
-    <div id="loginPageBackground" className="flex justify-center py-10 px-4" style={backgroundStyle}>
-      <div className='flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full max-w-lg h-fit'>
-        <div className="text-center;">
+    <div id="loginPageBackground" className="flex justify-center py-10 px-4 " style={backgroundStyle}>
+      <div className='flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full h-fit' style={{ maxWidth: '416px' }}>
+        <div className="text-center">
           <img src='src/img/logoHrz.png' alt='University of Newcastle logo'></img>
           <br/>
           <p className="text-3xl font-['Corbel'] text-center">Create Account</p>
@@ -95,11 +116,13 @@ function App() {
                   id="dob"
                   type="date"
                   value={dob}
+                  min={birthDateForAge(120)}
+                  max={birthDateForAge(18)}
                   required
                   onChange={e => setDob(e.target.value)}
                 />
                 <FieldDescription>
-                  You must be at least 18 years of age.
+                  You must be at least 18 years old
                 </FieldDescription>
               </Field>
               <Field>
@@ -120,12 +143,15 @@ function App() {
                   id="password"
                   type="password"
                   value={password}
-                  minLength="8"
+                  minLength={9}
+                  pattern="^(?=.*\d)(?=.*[^A-Za-z0-9\s]).{9,}$"
                   placeholder="Your password"
                   required
+                  aria-describedby="password-requirements"
+                  aria-invalid={error === PASSWORD_REQUIREMENTS}
                   onChange={e => setPassword(e.target.value)}
                 />
-                <FieldDescription>Minimum 8 characters.</FieldDescription>
+                <FieldDescription id="password-requirements">{PASSWORD_REQUIREMENTS}</FieldDescription>
               </Field>
 
               <Field>

@@ -23,9 +23,11 @@ function WatchlistSection({ title, listings, unavailable, removingId, onRemove }
                   <span>{formatListingPrice(listing.price)}</span>
                   {unavailable ? <span className="watchlist-item__status">No longer available</span> : null}
                 </Link>
-                <button type="button" disabled={removingId === listing._id} onClick={() => onRemove(listing)}>
-                  {removingId === listing._id ? 'Removing…' : 'Remove'}
-                </button>
+                <div className="watchlist-item__actions">
+                  <button type="button" disabled={removingId === listing._id} onClick={() => onRemove(listing)}>
+                    {removingId === listing._id ? 'Removing…' : 'Remove'}
+                  </button>
+                </div>
               </li>
             );
           })}
