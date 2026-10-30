@@ -2,9 +2,7 @@ import express from 'express';
 import User from '../models/User.js';
 import { banResponse } from '../services/banResponse.js';
 import { fetchWithTimeout, isProviderTimeoutError } from '../services/providerRequest.js';
-
-const PASSWORD_REQUIREMENTS = 'Your password needs at least 1 special character, 1 number, and more than 8 characters.';
-const STRONG_PASSWORD_PATTERN = /^(?=.*\d)(?=.*[^A-Za-z0-9\s]).{9,}$/;
+import { validatePassword } from '../utils/passwordPolicy.js';
 
 async function defaultFirebaseAuthResolver() {
     const { auth } = await import('../config/firebase.js');
@@ -43,8 +41,9 @@ export function createAuthRouter({
         if (!isValidEmail(email)) {
             return res.status(400).json({ error: 'Invalid email format' });
         }
-        if (!STRONG_PASSWORD_PATTERN.test(password)) {
-            return res.status(400).json({ error: PASSWORD_REQUIREMENTS });
+        const passwordValidation = validatePassword(password);
+        if (passwordValidation.error) {
+            return res.status(400).json({ error: passwordValidation.error });
         }
 
         let firebaseUser;

@@ -11,8 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const PASSWORD_REQUIREMENTS = 'Your password needs at least 1 special character, 1 number, and more than 8 characters.';
-const STRONG_PASSWORD_PATTERN = /^(?=.*\d)(?=.*[^A-Za-z0-9\s]).{9,}$/;
+const PASSWORD_REQUIREMENTS = 'Use 9–128 characters with at least 1 number and 1 special character.';
 const AGE_REQUIREMENTS = 'You must be above 18 years old to use this platform';
 
 function birthDateForAge(age) {
@@ -46,7 +45,8 @@ function App() {
       minHeight: '100vh',
     };
 
-  async function createAccount() {
+  async function createAccount(event) {
+    event.preventDefault();
     setError('');
 
     if (!dob || dob < birthDateForAge(120) || dob > birthDateForAge(18)) {
@@ -55,10 +55,6 @@ function App() {
     }
     if (!terms || !privacy || !conduct) {
       setError('You must agree to all terms before creating an account.');
-      return;
-    }
-    if (!STRONG_PASSWORD_PATTERN.test(password)) {
-      setError(PASSWORD_REQUIREMENTS);
       return;
     }
     if (password !== confirmPassword) {
@@ -86,7 +82,7 @@ function App() {
   document.title = "Create Account | UON Marketplace";
   return (
     <div id="loginPageBackground" className="flex justify-center py-10 px-4 " style={backgroundStyle}>
-      <div className='flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full h-fit' style={{ maxWidth: '416px' }}>
+      <form className='flex flex-col items-start gap-4 bg-white rounded-2xl shadow-lg p-8 w-full h-fit' style={{ maxWidth: '416px' }} onSubmit={createAccount}>
         <div className="text-center">
           <img src='src/img/logoHrz.png' alt='University of Newcastle logo'></img>
           <br/>
@@ -144,11 +140,13 @@ function App() {
                   type="password"
                   value={password}
                   minLength={9}
-                  pattern="^(?=.*\d)(?=.*[^A-Za-z0-9\s]).{9,}$"
+                  maxLength={128}
+                  pattern="^(?=.*\d)(?=.*[^A-Za-z0-9\s]).{9,128}$"
                   placeholder="Your password"
                   required
+                  autoComplete="new-password"
                   aria-describedby="password-requirements"
-                  aria-invalid={error === PASSWORD_REQUIREMENTS}
+                  aria-invalid={error.toLowerCase().includes('password')}
                   onChange={e => setPassword(e.target.value)}
                 />
                 <FieldDescription id="password-requirements">{PASSWORD_REQUIREMENTS}</FieldDescription>
@@ -162,6 +160,7 @@ function App() {
                   value={confirmPassword}
                   placeholder="Confirm password"
                   required
+                  autoComplete="new-password"
                   onChange={e => setConfirmPassword(e.target.value)}
                 />
               </Field>
@@ -215,7 +214,7 @@ function App() {
             </label>
           </div>
 
-          <Button className="form-submit-button w-full p-6 text-xl font-['FuseV2']" onClick={createAccount} disabled={loading}>
+          <Button type="submit" className="form-submit-button w-full p-6 text-xl font-['FuseV2']" disabled={loading}>
             {loading ? 'Creating account…' : 'Create Account'}
           </Button>
 
@@ -225,7 +224,7 @@ function App() {
             <Link to="/login" className="form-link w-full pl-1.5">Log In</Link>
           </p>
           
-      </div>
+      </form>
     </div>
 
 
