@@ -1,6 +1,7 @@
 import { Fragment, useLayoutEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { ArrowDown, Paperclip, Send, Trash2, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Bubble, BubbleContent } from '@/components/ui/bubble';
 import { Message, MessageAvatar, MessageContent, MessageFooter } from '@/components/ui/message';
@@ -67,6 +68,7 @@ export default function ChatContainer({ user: conversation }) {
   const listingIsSold = isConversationListingSold(conversation);
   const recipientId = currentMode === 'buyer' ? conversation.seller : conversation.buyer;
   const recipientName = recipient?.username || 'Marketplace user';
+  const recipientProfileId = recipient?._id;
   const listingId = conversation.listing?._id || conversation.listing;
   const isListingAvailable = Boolean(conversation.listing);
 
@@ -160,8 +162,20 @@ export default function ChatContainer({ user: conversation }) {
     <section className="flex h-full min-h-0 flex-col bg-white" aria-label={`Chat with ${recipientName}`}>
       <header className="flex items-center justify-between gap-4 border-b border-grey-200 bg-[#203964] px-5 py-4 text-white shadow-sm">
         <div className="min-w-0">
-          <h2 className="truncate font-semibold">{recipientName}</h2>
-          <p className="truncate text-sm text-cyan-100">{conversation.listing?.title || 'Listing unavailable'}</p>
+          <h2 className="truncate font-semibold">
+            {recipientProfileId ? (
+              <Link className="text-white! underline decoration-white/70 underline-offset-2 hover:decoration-white" to={`/users/${encodeURIComponent(recipientProfileId)}`}>
+                {recipientName}
+              </Link>
+            ) : recipientName}
+          </h2>
+          <p className="truncate text-sm text-cyan-100">
+            {listingId && conversation.listing?.title ? (
+              <Link className="text-cyan-100! underline decoration-cyan-100/70 underline-offset-2 hover:text-blue-400! hover:decoration-white" to={`/listings/${encodeURIComponent(listingId)}`}>
+                {conversation.listing.title}
+              </Link>
+            ) : 'Listing unavailable'}
+          </p>
         </div>
         {!conversation.isDraft && (
           <Button type="button" variant="ghost" size="icon-sm" className="shrink-0 text-white hover:bg-white/15 hover:text-white" aria-label="Delete conversation" disabled={isDeletingConversation || isSendingMessage} onClick={handleDeleteConversation}>
