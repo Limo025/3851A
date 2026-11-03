@@ -16,6 +16,15 @@
     margin: 0 0 20px;
 }
 
+.homeListings .listing-card__title {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .homeArrows {
     display: flex;
     align-items: center;
