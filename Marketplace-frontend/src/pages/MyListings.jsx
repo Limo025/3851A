@@ -139,8 +139,13 @@ export default function MyListings() {
     <main className="marketplace-page">
       <div className="marketplace-page__content">
         <header className="marketplace-page__header">
-          <h1>My listings</h1>
-          <p>Manage the items you have listed for the university community.</p>
+          <div>
+            <h1>My listings</h1>
+            <p>Manage the items you have listed for the university community.</p>
+          </div>
+          <div className="seller-listing-actions my-listings-header-actions">
+            <Link to="/sell">Add listing</Link>
+          </div>
         </header>
 
         {profile && <section className="my-listings-profile" aria-label="Your seller profile">
