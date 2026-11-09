@@ -308,6 +308,11 @@
   margin-bottom: 20px;
 }
 
+.my-listings-header-actions {
+  flex-shrink: 0;
+  margin-bottom: 28px;
+}
+
 .my-listings-profile {
   border: 2px solid #005bf9;
   align-items: center;
