@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { session } from '../auth/session.js';
 import { setAppealToken } from '../auth/banNotice.js';
@@ -13,6 +13,7 @@ import {
   FieldSet,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { PasswordInput } from "@/components/ui/password-input"
 import { Button } from "@/components/ui/button"
 
 function App() {
@@ -23,6 +24,12 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const loadingIcon = document.getElementById('loadingIcon');
+
+  useEffect(() => {
+    if (location.state?.from) {
+      toast.error('You have to log in to use this.', { id: 'login-required' });
+    }
+  }, [location.key, location.state?.from]);
 
   const backgroundStyle = {
     backgroundImage: ` url(${backgroundImg})`,
@@ -84,9 +91,8 @@ function App() {
             </Field>
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
-              <Input 
+              <PasswordInput
                 id="password" 
-                type="password" 
                 placeholder="Your password"
                 value={password}
                 onChange={e => setPassword(e.target.value)} />
