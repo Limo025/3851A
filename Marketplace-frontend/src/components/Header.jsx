@@ -138,9 +138,7 @@ export default function Header()  {
                     <nav ref={sidebarRef} className="sidebar" id="sidebar" aria-label="Site navigation" hidden={!isSidebarOpen}>
                         <div className="sidebarContent">
                             <div className="sidebarTop">
-                                {authView.showSellerLinks && (
-                                    <Link to="/sell" onClick={closeSidebarAndFocusToggle}><p>Sell</p></Link>
-                                )}
+                                <Link to="/sell" onClick={closeSidebarAndFocusToggle}><p>Sell</p></Link>
                                 <Link to="/watchlist" onClick={closeSidebarAndFocusToggle}><p>Watchlist</p></Link>
                                 <button ref={closeRef} id="sidebarClose" className="closebtn" type="button" aria-label="Close navigation menu" onClick={closeSidebarAndFocusToggle}>&times;</button>
                             </div>
