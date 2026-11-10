@@ -9,6 +9,7 @@ import {
   FieldDescription,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { Button } from "@/components/ui/button";
 
 const PASSWORD_REQUIREMENTS = 'Use 9–128 characters with at least 1 number and 1 special character.';
@@ -135,9 +136,8 @@ function App() {
 
               <Field>
                 <FieldLabel htmlFor="password">Password</FieldLabel>
-                <Input
+                <PasswordInput
                   id="password"
-                  type="password"
                   value={password}
                   minLength={9}
                   maxLength={128}
@@ -154,9 +154,8 @@ function App() {
 
               <Field>
                 <FieldLabel htmlFor="passwordConfirm">Confirm Password</FieldLabel>
-                <Input
+                <PasswordInput
                   id="passwordConfirm"
-                  type="password"
                   value={confirmPassword}
                   placeholder="Confirm password"
                   required
